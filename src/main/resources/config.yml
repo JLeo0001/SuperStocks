@@ -1,0 +1,43 @@
+locale: zh_CN
+
+stock-provider:
+  type: tencent
+  refresh-seconds: 300
+  timeout-seconds: 8
+
+markets:
+  cn:
+    display-name: "A股"
+    symbols:
+      - "sh600519"
+      - "sz000001"
+      - "sh601318"
+      - "sz300750"
+  hk:
+    display-name: "港股"
+    symbols:
+      - "hk00700"
+      - "hk09988"
+      - "hk03690"
+      - "hk00005"
+  us:
+    display-name: "美股"
+    symbols:
+      - "usAAPL"
+      - "usMSFT"
+      - "usTSLA"
+      - "usNVDA"
+
+economy:
+  transaction-tax-percent: 0.5
+  min-shares: 1
+
+gui:
+  main-title: "SuperStocks"
+  market-title-prefix: "市场 - "
+  portfolio-title: "我的持仓"
+  trade-title: "交易确认"
+  size: 54
+
+database:
+  file: "stocks.db"
