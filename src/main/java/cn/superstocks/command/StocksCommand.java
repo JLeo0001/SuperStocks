@@ -1,7 +1,6 @@
 package cn.superstocks.command;
 
 import cn.superstocks.SuperStocksPlugin;
-import cn.superstocks.gui.StocksGui;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,30 +21,30 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("reload")) {
             if (!sender.hasPermission("superstocks.admin")) {
-                sender.sendMessage(StocksGui.color("&c你没有权限执行该命令。"));
+                sender.sendMessage(plugin.language().text("commands.no-permission"));
                 return true;
             }
             plugin.reloadPlugin();
-            sender.sendMessage(StocksGui.color("&aSuperStocks 已重载。"));
+            sender.sendMessage(plugin.language().text("commands.reloaded"));
             return true;
         }
         if (args.length > 0 && args[0].equalsIgnoreCase("sync")) {
             if (!sender.hasPermission("superstocks.admin")) {
-                sender.sendMessage(StocksGui.color("&c你没有权限执行该命令。"));
+                sender.sendMessage(plugin.language().text("commands.no-permission"));
                 return true;
             }
             plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
                 plugin.stockService().refreshNow();
-                sender.sendMessage(StocksGui.color("&a行情同步任务已执行。"));
+                sender.sendMessage(plugin.language().text("commands.sync-started"));
             });
             return true;
         }
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can open the stock GUI.");
+            sender.sendMessage(plugin.language().text("commands.player-only"));
             return true;
         }
         if (!player.hasPermission("superstocks.use")) {
-            player.sendMessage(StocksGui.color("&c你没有权限使用股市。"));
+            player.sendMessage(plugin.language().text("commands.no-permission"));
             return true;
         }
         plugin.gui().openMain(player);

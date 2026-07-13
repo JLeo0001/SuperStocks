@@ -1,0 +1,94 @@
+prefix: "&8[&aSuperStocks&8] "
+
+commands:
+  no-permission: "&c你没有权限执行该命令。"
+  player-only: "&c只有玩家可以打开股市界面。"
+  reloaded: "&aSuperStocks 已重载。"
+  sync-started: "&a行情同步任务已执行。"
+
+messages:
+  quote-unavailable: "&c该股票暂无行情，暂时不能交易。"
+  portfolio-load-failed: "&c读取持仓失败，请联系管理员。"
+  trade-failed: "&c交易失败，请联系管理员。"
+  economy-unavailable: "经济系统未就绪"
+  min-shares: "最低交易数量为 {shares} 股"
+  not-enough-money: "余额不足，需要 {amount}"
+  withdraw-failed: "扣款失败"
+  buy-success: "买入成功：{name} x {shares}，花费 {amount}"
+  not-enough-shares: "持仓不足"
+  deposit-failed: "卖出已记录，但打款失败，请联系管理员"
+  sell-success: "卖出成功：{name} x {shares}，收入 {amount}"
+
+gui:
+  main:
+    title: "&2&lSuperStocks &8| &f交易大厅"
+    market-lore:
+      - "&7进入 &f{market}&7 市场"
+      - "&7配置股票: &f{configured}"
+      - "&7已调取行情: &a{loaded}"
+      - ""
+      - "&e点击查看"
+    portfolio-name: "&6我的持仓"
+    portfolio-lore:
+      - "&7查看股票、成本、市值和盈亏"
+      - "&7当前已缓存行情: &f{loaded_total}&7/&f{configured_total}"
+      - ""
+      - "&e点击打开"
+    stats-name: "&b行情统计"
+    stats-lore:
+      - "&7数据源: &f{provider}"
+      - "&7配置股票数: &f{configured_total}"
+      - "&7已调取股票数: &a{loaded_total}"
+      - "&7刷新间隔: &f{refresh_seconds}s"
+      - ""
+      - "&7最后同步: &f{last_sync}"
+  market:
+    title: "&2市场 &8- &f{market}"
+    missing-name: "&7{symbol}"
+    missing-lore:
+      - "&c暂无行情缓存"
+      - "&7等待下一次同步"
+    stats-name: "&b{market} 统计"
+    stats-lore:
+      - "&7配置股票: &f{configured}"
+      - "&7已调取行情: &a{loaded}"
+      - "&7数据源: &f{provider}"
+  stock:
+    title: "&2股票 &8- &f{name}"
+    quote-lore:
+      - "&8{market}"
+      - "&7代码: &f{symbol}"
+      - "&7价格: &f{price}"
+      - "&7涨跌: {change_color}{change} ({change_percent}%)"
+      - "&7更新时间: &f{updated_at}"
+      - ""
+      - "&e点击交易"
+    buy-name: "&a买入 {shares} 股"
+    buy-lore:
+      - "&7按当前缓存价成交"
+      - "&7预估金额: &f{amount}"
+    sell-name: "&c卖出 {shares} 股"
+    sell-lore:
+      - "&7按当前缓存价成交"
+      - "&7预估收入: &f{amount}"
+  portfolio:
+    title: "&6我的持仓"
+    holding-lore:
+      - "&7代码: &f{symbol}"
+      - "&7数量: &f{shares}"
+      - "&7成本: &f{average_cost}"
+      - "&7现价: &f{price}"
+      - "&7市值: &f{market_value}"
+      - "&7盈亏: {profit_color}{profit}"
+      - ""
+      - "&e点击交易"
+    holding-missing-lore:
+      - "&7代码: &f{symbol}"
+      - "&7数量: &f{shares}"
+      - "&7成本: &f{average_cost}"
+      - "&c暂无行情缓存"
+  common:
+    back-name: "&f返回"
+    back-main-name: "&f返回主界面"
+    close-name: "&c关闭"
+    filler-name: " "

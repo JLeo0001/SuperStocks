@@ -4,9 +4,8 @@ import cn.superstocks.model.StockQuote;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,22 +17,43 @@ import java.util.logging.Level;
 
 public final class StockService {
     private final JavaPlugin plugin;
-    private final StockProvider provider;
+    private StockProvider provider;
+    private String providerName;
     private final Map<String, String> marketNames = new LinkedHashMap<>();
     private final Map<String, List<String>> marketSymbols = new LinkedHashMap<>();
+    private final Map<String, String> marketIcons = new LinkedHashMap<>();
     private final Map<String, String> symbolMarkets = new HashMap<>();
     private final Map<String, StockQuote> cache = new ConcurrentHashMap<>();
+    private volatile Instant lastSync;
+    private volatile int lastFetchedCount;
 
     public StockService(JavaPlugin plugin) {
         this.plugin = plugin;
-        int timeout = plugin.getConfig().getInt("stock-provider.timeout-seconds", 8);
-        this.provider = new TencentStockProvider(Duration.ofSeconds(timeout));
+        reload();
+    }
+
+    public void reload() {
+        reloadProvider();
         reloadMarkets();
+    }
+
+    private void reloadProvider() {
+        ConfigurationSection section = plugin.getConfig().getConfigurationSection("stock-provider");
+        if (section == null) {
+            throw new IllegalStateException("Missing stock-provider config section");
+        }
+        String type = section.getString("type", "tencent").toLowerCase();
+        providerName = section.getString("display-name", type);
+        if (!type.equals("tencent")) {
+            plugin.getLogger().warning("未知行情源 " + type + "，已回退到 tencent");
+        }
+        provider = new TencentStockProvider(section);
     }
 
     public void reloadMarkets() {
         marketNames.clear();
         marketSymbols.clear();
+        marketIcons.clear();
         symbolMarkets.clear();
         ConfigurationSection root = plugin.getConfig().getConfigurationSection("markets");
         if (root == null) {
@@ -41,8 +61,10 @@ public final class StockService {
         }
         for (String market : root.getKeys(false)) {
             String name = root.getString(market + ".display-name", market);
+            String icon = root.getString(market + ".icon", "EMERALD");
             List<String> symbols = new ArrayList<>(root.getStringList(market + ".symbols"));
             marketNames.put(market, name);
+            marketIcons.put(market, icon);
             marketSymbols.put(market, Collections.unmodifiableList(symbols));
             for (String symbol : symbols) {
                 symbolMarkets.put(symbol, market);
@@ -59,9 +81,13 @@ public final class StockService {
         try {
             Map<String, StockQuote> fetched = provider.fetch(symbolMarkets.keySet(), symbolMarkets);
             cache.putAll(fetched);
-            plugin.getLogger().info("已同步 " + fetched.size() + " 条股票行情");
+            lastFetchedCount = fetched.size();
+            lastSync = Instant.now();
+            if (plugin.getConfig().getBoolean("stock-provider.cache.log-success", true)) {
+                plugin.getLogger().info("已同步 " + fetched.size() + " 条股票行情，当前缓存 " + loadedTotal() + "/" + configuredTotal());
+            }
         } catch (Exception ex) {
-            plugin.getLogger().log(Level.WARNING, "同步腾讯财经行情失败，将继续使用旧缓存", ex);
+            plugin.getLogger().log(Level.WARNING, "同步股票行情失败，将继续使用旧缓存", ex);
         }
     }
 
@@ -77,11 +103,51 @@ public final class StockService {
         return Optional.ofNullable(cache.get(symbol));
     }
 
-    public Collection<StockQuote> cachedQuotes() {
-        return Collections.unmodifiableCollection(cache.values());
-    }
-
     public String marketName(String market) {
         return marketNames.getOrDefault(market, market);
+    }
+
+    public String marketIcon(String market) {
+        return marketIcons.getOrDefault(market, "EMERALD");
+    }
+
+    public int configuredTotal() {
+        return symbolMarkets.size();
+    }
+
+    public int configuredCount(String market) {
+        return symbolsForMarket(market).size();
+    }
+
+    public int loadedTotal() {
+        int count = 0;
+        for (String symbol : symbolMarkets.keySet()) {
+            if (cache.containsKey(symbol)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int loadedCount(String market) {
+        int count = 0;
+        for (String symbol : symbolsForMarket(market)) {
+            if (cache.containsKey(symbol)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int lastFetchedCount() {
+        return lastFetchedCount;
+    }
+
+    public Instant lastSync() {
+        return lastSync;
+    }
+
+    public String providerName() {
+        return providerName;
     }
 }

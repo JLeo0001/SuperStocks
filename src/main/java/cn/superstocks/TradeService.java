@@ -1,6 +1,7 @@
 package cn.superstocks;
 
 import cn.superstocks.economy.VaultEconomyHook;
+import cn.superstocks.lang.LanguageManager;
 import cn.superstocks.model.Holding;
 import cn.superstocks.model.StockQuote;
 import cn.superstocks.storage.StockStorage;
@@ -14,35 +15,41 @@ import java.util.UUID;
 public final class TradeService {
     private final VaultEconomyHook economy;
     private final StockStorage storage;
+    private final LanguageManager language;
     private final double taxPercent;
     private final double minShares;
 
-    public TradeService(VaultEconomyHook economy, StockStorage storage, double taxPercent, double minShares) {
+    public TradeService(VaultEconomyHook economy, StockStorage storage, LanguageManager language, double taxPercent, double minShares) {
         this.economy = economy;
         this.storage = storage;
+        this.language = language;
         this.taxPercent = Math.max(0.0D, taxPercent);
         this.minShares = Math.max(1.0D, minShares);
     }
 
     public TradeResult buy(Player player, StockQuote quote, double shares) throws SQLException {
         if (!economy.available()) {
-            return TradeResult.fail("经济系统未就绪");
+            return TradeResult.fail(language.text("messages.economy-unavailable"));
         }
         if (shares < minShares) {
-            return TradeResult.fail("最低交易数量为 " + formatNumber(minShares) + " 股");
+            return TradeResult.fail(language.text("messages.min-shares", language.vars("shares", formatNumber(minShares))));
         }
         double gross = quote.price() * shares;
         double tax = gross * taxPercent / 100.0D;
         double total = gross + tax;
         if (economy.balance(player) + 0.000001D < total) {
-            return TradeResult.fail("余额不足，需要 " + economy.format(total));
+            return TradeResult.fail(language.text("messages.not-enough-money", language.vars("amount", economy.format(total))));
         }
         if (!economy.withdraw(player, total)) {
-            return TradeResult.fail("扣款失败");
+            return TradeResult.fail(language.text("messages.withdraw-failed"));
         }
         try {
             storage.buy(player.getUniqueId(), quote.symbol(), shares, quote.price());
-            return TradeResult.ok("买入成功：" + quote.name() + " x " + formatNumber(shares) + "，花费 " + economy.format(total));
+            return TradeResult.ok(language.text("messages.buy-success", language.vars(
+                    "name", quote.name(),
+                    "shares", formatNumber(shares),
+                    "amount", economy.format(total)
+            )));
         } catch (SQLException ex) {
             economy.deposit(player, total);
             throw ex;
@@ -51,22 +58,26 @@ public final class TradeService {
 
     public TradeResult sell(Player player, StockQuote quote, double shares) throws SQLException {
         if (!economy.available()) {
-            return TradeResult.fail("经济系统未就绪");
+            return TradeResult.fail(language.text("messages.economy-unavailable"));
         }
         if (shares < minShares) {
-            return TradeResult.fail("最低交易数量为 " + formatNumber(minShares) + " 股");
+            return TradeResult.fail(language.text("messages.min-shares", language.vars("shares", formatNumber(minShares))));
         }
         boolean sold = storage.sell(player.getUniqueId(), quote.symbol(), shares, quote.price());
         if (!sold) {
-            return TradeResult.fail("持仓不足");
+            return TradeResult.fail(language.text("messages.not-enough-shares"));
         }
         double gross = quote.price() * shares;
         double tax = gross * taxPercent / 100.0D;
         double total = Math.max(0.0D, gross - tax);
         if (!economy.deposit(player, total)) {
-            return TradeResult.fail("卖出已记录，但打款失败，请联系管理员");
+            return TradeResult.fail(language.text("messages.deposit-failed"));
         }
-        return TradeResult.ok("卖出成功：" + quote.name() + " x " + formatNumber(shares) + "，收入 " + economy.format(total));
+        return TradeResult.ok(language.text("messages.sell-success", language.vars(
+                "name", quote.name(),
+                "shares", formatNumber(shares),
+                "amount", economy.format(total)
+        )));
     }
 
     public List<Holding> holdings(UUID playerId) throws SQLException {

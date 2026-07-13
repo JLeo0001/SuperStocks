@@ -3,6 +3,7 @@ package cn.superstocks;
 import cn.superstocks.command.StocksCommand;
 import cn.superstocks.economy.VaultEconomyHook;
 import cn.superstocks.gui.StocksGui;
+import cn.superstocks.lang.LanguageManager;
 import cn.superstocks.placeholder.SuperStocksExpansion;
 import cn.superstocks.stock.StockService;
 import cn.superstocks.storage.SqliteStockStorage;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 public final class SuperStocksPlugin extends JavaPlugin {
     private VaultEconomyHook economy;
     private StockStorage storage;
+    private LanguageManager language;
     private StockService stockService;
     private TradeService tradeService;
     private StocksGui gui;
@@ -27,6 +29,9 @@ public final class SuperStocksPlugin extends JavaPlugin {
         if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
             getLogger().warning("无法创建插件数据目录");
         }
+
+        language = new LanguageManager(this);
+        language.load();
 
         economy = new VaultEconomyHook(this);
         if (!economy.setup()) {
@@ -46,6 +51,7 @@ public final class SuperStocksPlugin extends JavaPlugin {
         tradeService = new TradeService(
                 economy,
                 storage,
+                language,
                 getConfig().getDouble("economy.transaction-tax-percent", 0.5D),
                 getConfig().getDouble("economy.min-shares", 1.0D)
         );
@@ -86,10 +92,12 @@ public final class SuperStocksPlugin extends JavaPlugin {
 
     public void reloadPlugin() {
         reloadConfig();
-        stockService.reloadMarkets();
+        language.load();
+        stockService.reload();
         tradeService = new TradeService(
                 economy,
                 storage,
+                language,
                 getConfig().getDouble("economy.transaction-tax-percent", 0.5D),
                 getConfig().getDouble("economy.min-shares", 1.0D)
         );
@@ -102,6 +110,10 @@ public final class SuperStocksPlugin extends JavaPlugin {
 
     public StockStorage storage() {
         return storage;
+    }
+
+    public LanguageManager language() {
+        return language;
     }
 
     public StockService stockService() {

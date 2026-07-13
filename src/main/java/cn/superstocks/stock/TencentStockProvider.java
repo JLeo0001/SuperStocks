@@ -1,6 +1,7 @@
 package cn.superstocks.stock;
 
 import cn.superstocks.model.StockQuote;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,18 +13,29 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class TencentStockProvider implements StockProvider {
-    private static final Charset GBK = Charset.forName("GBK");
-
     private final HttpClient client;
     private final Duration timeout;
+    private final String endpoint;
+    private final Charset encoding;
+    private final String separator;
+    private final int maxSymbolsPerRequest;
+    private final String userAgent;
 
-    public TencentStockProvider(Duration timeout) {
-        this.timeout = timeout;
+    public TencentStockProvider(ConfigurationSection config) {
+        int timeoutSeconds = config.getInt("timeout-seconds", 8);
+        this.timeout = Duration.ofSeconds(timeoutSeconds);
+        this.endpoint = config.getString("tencent.endpoint", "https://qt.gtimg.cn/q={symbols}");
+        this.encoding = Charset.forName(config.getString("tencent.encoding", "GBK"));
+        this.separator = config.getString("tencent.symbol-separator", ",");
+        this.maxSymbolsPerRequest = Math.max(1, config.getInt("tencent.max-symbols-per-request", 80));
+        this.userAgent = config.getString("tencent.user-agent", "SuperStocks/1.0");
         this.client = HttpClient.newBuilder()
                 .connectTimeout(timeout)
                 .followRedirects(HttpClient.Redirect.NORMAL)
@@ -36,18 +48,28 @@ public final class TencentStockProvider implements StockProvider {
         if (symbols.isEmpty()) {
             return quotes;
         }
-        String joined = String.join(",", symbols);
-        String url = "https://qt.gtimg.cn/q=" + URLEncoder.encode(joined, StandardCharsets.UTF_8);
+        List<String> ordered = new ArrayList<>(symbols);
+        for (int start = 0; start < ordered.size(); start += maxSymbolsPerRequest) {
+            int end = Math.min(start + maxSymbolsPerRequest, ordered.size());
+            quotes.putAll(fetchBatch(ordered.subList(start, end), symbolMarkets));
+        }
+        return quotes;
+    }
+
+    private Map<String, StockQuote> fetchBatch(List<String> symbols, Map<String, String> symbolMarkets) throws IOException, InterruptedException {
+        Map<String, StockQuote> quotes = new HashMap<>();
+        String joined = String.join(separator, symbols);
+        String url = endpoint.replace("{symbols}", URLEncoder.encode(joined, StandardCharsets.UTF_8));
         HttpRequest request = HttpRequest.newBuilder(URI.create(url))
                 .timeout(timeout)
                 .GET()
-                .header("User-Agent", "SuperStocks/1.0")
+                .header("User-Agent", userAgent)
                 .build();
         HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
             throw new IOException("Tencent quote request failed: HTTP " + response.statusCode());
         }
-        String body = new String(response.body(), GBK);
+        String body = new String(response.body(), encoding);
         for (String line : body.split(";")) {
             StockQuote quote = parseLine(line, symbolMarkets);
             if (quote != null && quote.valid()) {

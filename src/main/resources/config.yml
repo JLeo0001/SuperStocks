@@ -1,13 +1,27 @@
-locale: zh_CN
+# 当前语言文件，位于 plugins/SuperStocks/Language/<language>.yml
+language: zh_CN
 
 stock-provider:
+  # 当前内置支持: tencent
   type: tencent
+  display-name: "腾讯财经"
   refresh-seconds: 300
   timeout-seconds: 8
+  # 腾讯财经参数。保留这些配置是为了接口变动时无需重新编译插件。
+  tencent:
+    endpoint: "https://qt.gtimg.cn/q={symbols}"
+    encoding: "GBK"
+    symbol-separator: ","
+    max-symbols-per-request: 80
+    user-agent: "SuperStocks/1.0"
+  cache:
+    keep-old-quotes-on-failure: true
+    log-success: true
 
 markets:
   cn:
     display-name: "A股"
+    icon: EMERALD
     symbols:
       - "sh600519"
       - "sz000001"
@@ -15,6 +29,7 @@ markets:
       - "sz300750"
   hk:
     display-name: "港股"
+    icon: GOLD_INGOT
     symbols:
       - "hk00700"
       - "hk09988"
@@ -22,6 +37,7 @@ markets:
       - "hk00005"
   us:
     display-name: "美股"
+    icon: DIAMOND
     symbols:
       - "usAAPL"
       - "usMSFT"
@@ -33,11 +49,37 @@ economy:
   min-shares: 1
 
 gui:
-  main-title: "SuperStocks"
-  market-title-prefix: "市场 - "
-  portfolio-title: "我的持仓"
-  trade-title: "交易确认"
-  size: 54
+  main-size: 27
+  market-size: 54
+  stock-size: 27
+  portfolio-size: 54
+  fill-empty-slots: true
+  filler-material: GRAY_STAINED_GLASS_PANE
+  stats-material: KNOWLEDGE_BOOK
+  back-material: ARROW
+  close-material: BARRIER
+  portfolio-material: CHEST
+  quote-up-material: LIME_CONCRETE
+  quote-down-material: RED_CONCRETE
+  quote-flat-material: WHITE_CONCRETE
+  quote-missing-material: GRAY_DYE
+  holding-material: PAPER
+  buy-material: LIME_DYE
+  sell-material: RED_DYE
+  # 交易详情页显示的快捷数量
+  trade-amounts:
+    - 1
+    - 10
+    - 100
+  layout:
+    main-market-slots: [10, 12, 14]
+    main-stats-slot: 4
+    main-portfolio-slot: 22
+    market-stats-slot: 4
+    market-back-slot: 49
+    portfolio-back-slot: 49
+    stock-quote-slot: 4
+    stock-back-slot: 22
 
 database:
   file: "stocks.db"
