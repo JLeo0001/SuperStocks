@@ -1,0 +1,19 @@
+name: SuperStocks
+version: '${version}'
+main: cn.superstocks.SuperStocksPlugin
+api-version: '1.21'
+author: SuperStocks
+softdepend:
+  - Vault
+  - Essentials
+  - PlaceholderAPI
+commands:
+  stocks:
+    description: 打开 SuperStocks 虚拟股市界面
+    usage: /stocks
+    aliases: [stock, market]
+permissions:
+  superstocks.use:
+    default: true
+  superstocks.admin:
+    default: op
