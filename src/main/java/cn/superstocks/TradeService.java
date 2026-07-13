@@ -3,12 +3,17 @@ package cn.superstocks;
 import cn.superstocks.economy.VaultEconomyHook;
 import cn.superstocks.lang.LanguageManager;
 import cn.superstocks.model.Holding;
+import cn.superstocks.model.RankingEntry;
 import cn.superstocks.model.StockQuote;
 import cn.superstocks.storage.StockStorage;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -86,6 +91,33 @@ public final class TradeService {
 
     public Optional<Holding> holding(UUID playerId, String symbol) throws SQLException {
         return storage.holding(playerId, symbol);
+    }
+
+    public List<RankingEntry> rankings(Map<String, Double> prices, boolean winners, int limit) throws SQLException {
+        Map<UUID, double[]> totals = new HashMap<>();
+        for (Holding holding : storage.allHoldings()) {
+            double price = prices.getOrDefault(holding.symbol(), 0.0D);
+            if (price <= 0.0D) {
+                continue;
+            }
+            double[] total = totals.computeIfAbsent(holding.playerId(), ignored -> new double[2]);
+            total[0] += holding.marketValue(price);
+            total[1] += holding.shares() * holding.averageCost();
+        }
+        List<RankingEntry> entries = new ArrayList<>();
+        for (Map.Entry<UUID, double[]> entry : totals.entrySet()) {
+            double value = entry.getValue()[0];
+            double cost = entry.getValue()[1];
+            double profit = value - cost;
+            double percent = cost <= 0.0D ? 0.0D : profit / cost * 100.0D;
+            entries.add(new RankingEntry(entry.getKey(), value, profit, percent));
+        }
+        Comparator<RankingEntry> comparator = Comparator.comparingDouble(RankingEntry::profit);
+        entries.sort(winners ? comparator.reversed() : comparator);
+        if (entries.size() > limit) {
+            return new ArrayList<>(entries.subList(0, limit));
+        }
+        return entries;
     }
 
     public static String formatNumber(double value) {

@@ -21,11 +21,16 @@ public record GuiAction(ActionType type, String value, double amount) {
         return new GuiAction(ActionType.PORTFOLIO, "", 0.0D);
     }
 
+    public static GuiAction ranking(String type) {
+        return new GuiAction(ActionType.RANKING, type, 0.0D);
+    }
+
     public enum ActionType {
         MARKET,
         STOCK,
         BUY,
         SELL,
-        PORTFOLIO
+        PORTFOLIO,
+        RANKING
     }
 }

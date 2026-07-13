@@ -28,14 +28,13 @@ public final class TencentStockProvider implements StockProvider {
     private final int maxSymbolsPerRequest;
     private final String userAgent;
 
-    public TencentStockProvider(ConfigurationSection config) {
-        int timeoutSeconds = config.getInt("timeout-seconds", 8);
+    public TencentStockProvider(ConfigurationSection sourceConfig, int timeoutSeconds) {
         this.timeout = Duration.ofSeconds(timeoutSeconds);
-        this.endpoint = config.getString("tencent.endpoint", "https://qt.gtimg.cn/q={symbols}");
-        this.encoding = Charset.forName(config.getString("tencent.encoding", "GBK"));
-        this.separator = config.getString("tencent.symbol-separator", ",");
-        this.maxSymbolsPerRequest = Math.max(1, config.getInt("tencent.max-symbols-per-request", 80));
-        this.userAgent = config.getString("tencent.user-agent", "SuperStocks/1.0");
+        this.endpoint = sourceConfig.getString("endpoint", "https://qt.gtimg.cn/q={symbols}");
+        this.encoding = Charset.forName(sourceConfig.getString("encoding", "GBK"));
+        this.separator = sourceConfig.getString("symbol-separator", ",");
+        this.maxSymbolsPerRequest = Math.max(1, sourceConfig.getInt("max-symbols-per-request", 80));
+        this.userAgent = sourceConfig.getString("user-agent", "SuperStocks/1.0");
         this.client = HttpClient.newBuilder()
                 .connectTimeout(timeout)
                 .followRedirects(HttpClient.Redirect.NORMAL)
@@ -67,7 +66,7 @@ public final class TencentStockProvider implements StockProvider {
                 .build();
         HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
         if (response.statusCode() < 200 || response.statusCode() >= 300) {
-            throw new IOException("Tencent quote request failed: HTTP " + response.statusCode());
+            throw new IOException("Quote request failed: HTTP " + response.statusCode());
         }
         String body = new String(response.body(), encoding);
         for (String line : body.split(";")) {

@@ -42,12 +42,18 @@ public final class StockService {
         if (section == null) {
             throw new IllegalStateException("Missing stock-provider config section");
         }
-        String type = section.getString("type", "tencent").toLowerCase();
-        providerName = section.getString("display-name", type);
-        if (!type.equals("tencent")) {
-            plugin.getLogger().warning("未知行情源 " + type + "，已回退到 tencent");
+        String active = section.getString("active", section.getString("type", "tencent")).toLowerCase();
+        ConfigurationSection source = section.getConfigurationSection("sources." + active);
+        if (source == null) {
+            plugin.getLogger().warning("未找到行情源配置 " + active + "，已回退到 tencent");
+            active = "tencent";
+            source = section.getConfigurationSection("sources.tencent");
         }
-        provider = new TencentStockProvider(section);
+        if (source == null) {
+            source = section;
+        }
+        providerName = source.getString("display-name", active);
+        provider = new TencentStockProvider(source, section.getInt("timeout-seconds", 8));
     }
 
     public void reloadMarkets() {
@@ -83,7 +89,7 @@ public final class StockService {
             cache.putAll(fetched);
             lastFetchedCount = fetched.size();
             lastSync = Instant.now();
-            if (plugin.getConfig().getBoolean("stock-provider.cache.log-success", true)) {
+            if (plugin.getConfig().getBoolean("stock-provider.log-success", true)) {
                 plugin.getLogger().info("已同步 " + fetched.size() + " 条股票行情，当前缓存 " + loadedTotal() + "/" + configuredTotal());
             }
         } catch (Exception ex) {
@@ -145,6 +151,14 @@ public final class StockService {
 
     public Instant lastSync() {
         return lastSync;
+    }
+
+    public Map<String, Double> priceSnapshot() {
+        Map<String, Double> prices = new HashMap<>();
+        for (Map.Entry<String, StockQuote> entry : cache.entrySet()) {
+            prices.put(entry.getKey(), entry.getValue().price());
+        }
+        return prices;
     }
 
     public String providerName() {

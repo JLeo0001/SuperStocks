@@ -1,23 +1,67 @@
-# 当前语言文件，位于 plugins/SuperStocks/Language/<language>.yml
+# SuperStocks 主配置文件
+# 修改后可使用 /stocks reload 重载大部分配置。
+
+# 当前语言文件名，对应 plugins/SuperStocks/Language/<language>.yml
 language: zh_CN
 
 stock-provider:
-  # 当前内置支持: tencent
-  type: tencent
-  display-name: "腾讯财经"
-  refresh-seconds: 300
-  timeout-seconds: 8
-  # 腾讯财经参数。保留这些配置是为了接口变动时无需重新编译插件。
-  tencent:
-    endpoint: "https://qt.gtimg.cn/q={symbols}"
-    encoding: "GBK"
-    symbol-separator: ","
-    max-symbols-per-request: 80
-    user-agent: "SuperStocks/1.0"
-  cache:
-    keep-old-quotes-on-failure: true
-    log-success: true
+  # 当前启用的数据源，只能选择一个。
+  # 可选: tencent, eastmoney, ths, xueqiu, sina
+  # 说明: 默认腾讯财经已验证可用。其他数据源预留独立配置项，适合接入兼容代理或后续扩展解析器。
+  active: tencent
 
+  # 行情自动刷新间隔，单位秒。不要设置过低，避免外部接口限流。
+  refresh-seconds: 300
+
+  # HTTP 请求超时时间，单位秒。
+  timeout-seconds: 8
+
+  # 同步成功时是否在控制台输出数量统计。
+  log-success: true
+
+  sources:
+    tencent:
+      display-name: "腾讯财经"
+      endpoint: "https://qt.gtimg.cn/q={symbols}"
+      encoding: "GBK"
+      symbol-separator: ","
+      max-symbols-per-request: 80
+      user-agent: "SuperStocks/1.0"
+
+    eastmoney:
+      display-name: "东方财富"
+      endpoint: "https://example.com/eastmoney?q={symbols}"
+      encoding: "UTF-8"
+      symbol-separator: ","
+      max-symbols-per-request: 80
+      user-agent: "SuperStocks/1.0"
+
+    ths:
+      display-name: "同花顺"
+      endpoint: "https://example.com/ths?q={symbols}"
+      encoding: "UTF-8"
+      symbol-separator: ","
+      max-symbols-per-request: 80
+      user-agent: "SuperStocks/1.0"
+
+    xueqiu:
+      display-name: "雪球"
+      endpoint: "https://example.com/xueqiu?q={symbols}"
+      encoding: "UTF-8"
+      symbol-separator: ","
+      max-symbols-per-request: 80
+      user-agent: "SuperStocks/1.0"
+
+    sina:
+      display-name: "新浪财经"
+      endpoint: "https://example.com/sina?q={symbols}"
+      encoding: "GBK"
+      symbol-separator: ","
+      max-symbols-per-request: 80
+      user-agent: "SuperStocks/1.0"
+
+# 市场和股票代码配置。
+# 腾讯财经代码示例: A股 sh600519 / sz000001，港股 hk00700，美股 usAAPL。
 markets:
   cn:
     display-name: "A股"
@@ -27,6 +71,23 @@ markets:
       - "sz000001"
       - "sh601318"
       - "sz300750"
+      - "sh600036"
+      - "sh601899"
+      - "sh600030"
+      - "sh601888"
+      - "sh601012"
+      - "sh600276"
+      - "sz002594"
+      - "sz000858"
+      - "sz002415"
+      - "sz000333"
+      - "sh600900"
+      - "sh601166"
+      - "sh600887"
+      - "sh601398"
+      - "sh601857"
+      - "sh600309"
+
   hk:
     display-name: "港股"
     icon: GOLD_INGOT
@@ -35,6 +96,23 @@ markets:
       - "hk09988"
       - "hk03690"
       - "hk00005"
+      - "hk00941"
+      - "hk01299"
+      - "hk02318"
+      - "hk01810"
+      - "hk09618"
+      - "hk09868"
+      - "hk02015"
+      - "hk01398"
+      - "hk03988"
+      - "hk00939"
+      - "hk00388"
+      - "hk01024"
+      - "hk06618"
+      - "hk02269"
+      - "hk02331"
+      - "hk00241"
+
   us:
     display-name: "美股"
     icon: DIAMOND
@@ -43,22 +121,48 @@ markets:
       - "usMSFT"
       - "usTSLA"
       - "usNVDA"
+      - "usGOOG"
+      - "usGOOGL"
+      - "usAMZN"
+      - "usMETA"
+      - "usNFLX"
+      - "usAMD"
+      - "usINTC"
+      - "usORCL"
+      - "usIBM"
+      - "usBABA"
+      - "usPDD"
+      - "usNIO"
+      - "usXPEV"
+      - "usLI"
+      - "usJPM"
+      - "usV"
 
+# 经济与交易配置。
 economy:
+  # 每次买入/卖出的税率百分比。
   transaction-tax-percent: 0.5
+  # 最低交易股数。
   min-shares: 1
 
+# GUI 界面配置。
 gui:
-  main-size: 27
+  # 大厅改为 45 格，让所有按钮都能对称放在内部区域。
+  main-size: 45
   market-size: 54
   stock-size: 27
   portfolio-size: 54
+  ranking-size: 54
+
+  # 是否用玻璃板填充边框。
   fill-empty-slots: true
   filler-material: GRAY_STAINED_GLASS_PANE
+
   stats-material: KNOWLEDGE_BOOK
   back-material: ARROW
-  close-material: BARRIER
   portfolio-material: CHEST
+  winners-material: NETHER_STAR
+  losers-material: WITHER_SKELETON_SKULL
   quote-up-material: LIME_CONCRETE
   quote-down-material: RED_CONCRETE
   quote-flat-material: WHITE_CONCRETE
@@ -66,20 +170,30 @@ gui:
   holding-material: PAPER
   buy-material: LIME_DYE
   sell-material: RED_DYE
-  # 交易详情页显示的快捷数量
+
+  # 交易详情页显示的快捷数量，最多显示前三个。
   trade-amounts:
     - 1
     - 10
     - 100
+
+  # 排行榜显示前多少名。
+  ranking-limit: 10
+
+  # GUI 槽位。注意不要把按钮放在边框槽位。
   layout:
-    main-market-slots: [10, 12, 14]
-    main-stats-slot: 4
-    main-portfolio-slot: 22
+    main-stats-slot: 13
+    main-market-slots: [20, 22, 24]
+    main-winners-slot: 29
+    main-portfolio-slot: 31
+    main-losers-slot: 33
     market-stats-slot: 4
     market-back-slot: 49
     portfolio-back-slot: 49
+    ranking-back-slot: 49
     stock-quote-slot: 4
     stock-back-slot: 22
 
+# 数据库配置。
 database:
   file: "stocks.db"

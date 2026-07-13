@@ -48,6 +48,19 @@ public final class SqliteStockStorage implements StockStorage {
     }
 
     @Override
+    public List<Holding> allHoldings() throws SQLException {
+        List<Holding> holdings = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("SELECT player_uuid, symbol, shares, average_cost FROM holdings ORDER BY player_uuid, symbol")) {
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    holdings.add(new Holding(UUID.fromString(rs.getString("player_uuid")), rs.getString("symbol"), rs.getDouble("shares"), rs.getDouble("average_cost")));
+                }
+            }
+        }
+        return holdings;
+    }
+
+    @Override
     public Optional<Holding> holding(UUID playerId, String symbol) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("SELECT shares, average_cost FROM holdings WHERE player_uuid = ? AND symbol = ?")) {
             statement.setString(1, playerId.toString());

@@ -9,6 +9,7 @@ commands:
 messages:
   quote-unavailable: "&c该股票暂无行情，暂时不能交易。"
   portfolio-load-failed: "&c读取持仓失败，请联系管理员。"
+  ranking-load-failed: "&c读取排行榜失败，请联系管理员。"
   trade-failed: "&c交易失败，请联系管理员。"
   economy-unavailable: "经济系统未就绪"
   min-shares: "最低交易数量为 {shares} 股"
@@ -34,6 +35,18 @@ gui:
       - "&7当前已缓存行情: &f{loaded_total}&7/&f{configured_total}"
       - ""
       - "&e点击打开"
+    winners-name: "&e股神榜"
+    winners-lore:
+      - "&7按当前浮动盈亏排名"
+      - "&7盈利越高排名越靠前"
+      - ""
+      - "&e点击查看"
+    losers-name: "&c牛马榜"
+    losers-lore:
+      - "&7按当前浮动盈亏排名"
+      - "&7亏损越多排名越靠前"
+      - ""
+      - "&e点击查看"
     stats-name: "&b行情统计"
     stats-lore:
       - "&7数据源: &f{provider}"
@@ -87,6 +100,20 @@ gui:
       - "&7数量: &f{shares}"
       - "&7成本: &f{average_cost}"
       - "&c暂无行情缓存"
+  ranking:
+    winners-title: "&e股神榜"
+    losers-title: "&c牛马榜"
+    entry-name: "&f#{rank} &e{player}"
+    winner-lore:
+      - "&7玩家: &f{player}"
+      - "&7持仓市值: &f{value}"
+      - "&7浮动盈亏: {profit_color}{profit}"
+      - "&7收益率: {profit_color}{profit_percent}%"
+    loser-lore:
+      - "&7玩家: &f{player}"
+      - "&7持仓市值: &f{value}"
+      - "&7浮动盈亏: {profit_color}{profit}"
+      - "&7收益率: {profit_color}{profit_percent}%"
   common:
     back-name: "&f返回"
     back-main-name: "&f返回主界面"

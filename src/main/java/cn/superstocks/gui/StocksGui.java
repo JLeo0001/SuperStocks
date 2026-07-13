@@ -4,10 +4,12 @@ import cn.superstocks.SuperStocksPlugin;
 import cn.superstocks.TradeService;
 import cn.superstocks.lang.LanguageManager;
 import cn.superstocks.model.Holding;
+import cn.superstocks.model.RankingEntry;
 import cn.superstocks.model.StockQuote;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,15 +50,23 @@ public final class StocksGui implements Listener {
         List<Integer> marketSlots = plugin.getConfig().getIntegerList("gui.layout.main-market-slots");
         int index = 0;
         for (Map.Entry<String, String> entry : plugin.stockService().marketNames().entrySet()) {
-            int slot = index < marketSlots.size() ? marketSlots.get(index) : firstEmpty(inventory);
+            int slot = index < marketSlots.size() ? marketSlots.get(index) : firstContentEmpty(inventory);
             inventory.setItem(slot, marketItem(entry.getKey(), entry.getValue()));
             index++;
         }
-        inventory.setItem(slot("gui.layout.main-stats-slot", 4), statsItem());
-        inventory.setItem(slot("gui.layout.main-portfolio-slot", 22), item(material("gui.portfolio-material", Material.CHEST),
+        inventory.setItem(slot("gui.layout.main-stats-slot", 13), statsItem());
+        inventory.setItem(slot("gui.layout.main-winners-slot", 29), item(material("gui.winners-material", Material.NETHER_STAR),
+                lang().text("gui.main.winners-name"),
+                lang().list("gui.main.winners-lore"),
+                GuiAction.ranking("winners")));
+        inventory.setItem(slot("gui.layout.main-portfolio-slot", 31), item(material("gui.portfolio-material", Material.CHEST),
                 lang().text("gui.main.portfolio-name"),
                 lang().list("gui.main.portfolio-lore", commonStatsVars()),
                 GuiAction.portfolio()));
+        inventory.setItem(slot("gui.layout.main-losers-slot", 33), item(material("gui.losers-material", Material.WITHER_SKELETON_SKULL),
+                lang().text("gui.main.losers-name"),
+                lang().list("gui.main.losers-lore"),
+                GuiAction.ranking("losers")));
         player.openInventory(inventory);
     }
 
@@ -65,21 +75,22 @@ public final class StocksGui implements Listener {
         Inventory inventory = createInventory(size("gui.market-size", 54), title);
         decorate(inventory);
         inventory.setItem(slot("gui.layout.market-stats-slot", 4), marketStatsItem(market));
-        int slot = 9;
+        List<Integer> contentSlots = contentSlots(inventory.getSize());
+        int index = 0;
         for (String symbol : plugin.stockService().symbolsForMarket(market)) {
-            if (slot >= inventory.getSize() - 9) {
+            if (index >= contentSlots.size()) {
                 break;
             }
+            int contentSlot = contentSlots.get(index++);
             Optional<StockQuote> quote = plugin.stockService().quote(symbol);
             if (quote.isPresent()) {
-                inventory.setItem(slot, quoteItem(quote.get()));
+                inventory.setItem(contentSlot, quoteItem(quote.get()));
             } else {
-                inventory.setItem(slot, item(material("gui.quote-missing-material", Material.GRAY_DYE),
+                inventory.setItem(contentSlot, item(material("gui.quote-missing-material", Material.GRAY_DYE),
                         lang().text("gui.market.missing-name", lang().vars("symbol", symbol)),
                         lang().list("gui.market.missing-lore"),
                         GuiAction.stock(symbol)));
             }
-            slot++;
         }
         inventory.setItem(slot("gui.layout.market-back-slot", 49), item(material("gui.back-material", Material.ARROW), lang().text("gui.common.back-name"), List.of(), GuiAction.market("__main__")));
         player.openInventory(inventory);
@@ -120,13 +131,14 @@ public final class StocksGui implements Listener {
             try {
                 List<Holding> holdings = plugin.tradeService().holdings(player.getUniqueId());
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    int slot = 9;
+                    List<Integer> contentSlots = contentSlots(inventory.getSize());
+                    int index = 0;
                     for (Holding holding : holdings) {
-                        if (slot >= inventory.getSize() - 9) {
+                        if (index >= contentSlots.size()) {
                             break;
                         }
                         Optional<StockQuote> quote = plugin.stockService().quote(holding.symbol());
-                        inventory.setItem(slot++, holdingItem(holding, quote.orElse(null)));
+                        inventory.setItem(contentSlots.get(index++), holdingItem(holding, quote.orElse(null)));
                     }
                     inventory.setItem(slot("gui.layout.portfolio-back-slot", 49), item(material("gui.back-material", Material.ARROW), lang().text("gui.common.back-name"), List.of(), GuiAction.market("__main__")));
                     player.openInventory(inventory);
@@ -134,6 +146,34 @@ public final class StocksGui implements Listener {
             } catch (SQLException ex) {
                 plugin.getLogger().log(Level.WARNING, "读取持仓失败", ex);
                 Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(lang().text("messages.portfolio-load-failed")));
+            }
+        });
+    }
+
+    public void openRanking(Player player, String type) {
+        boolean winners = !"losers".equalsIgnoreCase(type);
+        String titleKey = winners ? "gui.ranking.winners-title" : "gui.ranking.losers-title";
+        Inventory inventory = createInventory(size("gui.ranking-size", 54), lang().text(titleKey));
+        decorate(inventory);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                List<RankingEntry> entries = plugin.tradeService().rankings(plugin.stockService().priceSnapshot(), winners, plugin.getConfig().getInt("gui.ranking-limit", 10));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    List<Integer> contentSlots = contentSlots(inventory.getSize());
+                    int index = 0;
+                    for (RankingEntry entry : entries) {
+                        if (index >= contentSlots.size()) {
+                            break;
+                        }
+                        inventory.setItem(contentSlots.get(index), rankingItem(entry, index + 1, winners));
+                        index++;
+                    }
+                    inventory.setItem(slot("gui.layout.ranking-back-slot", 49), item(material("gui.back-material", Material.ARROW), lang().text("gui.common.back-name"), List.of(), GuiAction.market("__main__")));
+                    player.openInventory(inventory);
+                });
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.WARNING, "读取排行榜失败", ex);
+                Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(lang().text("messages.ranking-load-failed")));
             }
         });
     }
@@ -169,6 +209,7 @@ public final class StocksGui implements Listener {
             }
             case STOCK -> openStock(player, value);
             case PORTFOLIO -> openPortfolio(player);
+            case RANKING -> openRanking(player, value);
             case BUY -> executeTrade(player, value, amount, true);
             case SELL -> executeTrade(player, value, amount, false);
         }
@@ -231,6 +272,22 @@ public final class StocksGui implements Listener {
         )), GuiAction.stock(quote.symbol()));
     }
 
+    private ItemStack rankingItem(RankingEntry entry, int rank, boolean winners) {
+        OfflinePlayer player = Bukkit.getOfflinePlayer(entry.playerId());
+        String name = player.getName() == null ? entry.playerId().toString().substring(0, 8) : player.getName();
+        String key = winners ? "gui.ranking.winner-lore" : "gui.ranking.loser-lore";
+        Material material = winners ? material("gui.winners-material", Material.NETHER_STAR) : material("gui.losers-material", Material.WITHER_SKELETON_SKULL);
+        return item(material, lang().text("gui.ranking.entry-name", lang().vars("rank", rank, "player", name)),
+                lang().list(key, lang().vars(
+                        "player", name,
+                        "rank", rank,
+                        "value", format(entry.portfolioValue()),
+                        "profit", format(entry.profit()),
+                        "profit_percent", format(entry.profitPercent()),
+                        "profit_color", entry.profit() >= 0 ? "&a" : "&c"
+                )), GuiAction.market("__main__"));
+    }
+
     private ItemStack holdingItem(Holding holding, StockQuote quote) {
         if (quote == null) {
             return item(material("gui.holding-material", Material.PAPER), "&f" + holding.symbol(), lang().list("gui.portfolio.holding-missing-lore", lang().vars(
@@ -260,6 +317,16 @@ public final class StocksGui implements Listener {
                 inventory.setItem(i, filler);
             }
         }
+    }
+
+    private List<Integer> contentSlots(int size) {
+        List<Integer> slots = new ArrayList<>();
+        for (int slot = 0; slot < size; slot++) {
+            if (!isBorderSlot(slot, size) && slot != 4) {
+                slots.add(slot);
+            }
+        }
+        return slots;
     }
 
     private boolean isBorderSlot(int slot, int size) {
@@ -325,13 +392,13 @@ public final class StocksGui implements Listener {
         return amounts;
     }
 
-    private int firstEmpty(Inventory inventory) {
-        for (int i = 0; i < inventory.getSize(); i++) {
-            if (inventory.getItem(i) == null) {
-                return i;
+    private int firstContentEmpty(Inventory inventory) {
+        for (int slot : contentSlots(inventory.getSize())) {
+            if (inventory.getItem(slot) == null) {
+                return slot;
             }
         }
-        return 0;
+        return 13;
     }
 
     private int slot(String path, int fallback) {

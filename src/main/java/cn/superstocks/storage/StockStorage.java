@@ -12,6 +12,8 @@ public interface StockStorage extends AutoCloseable {
 
     List<Holding> holdings(UUID playerId) throws SQLException;
 
+    List<Holding> allHoldings() throws SQLException;
+
     Optional<Holding> holding(UUID playerId, String symbol) throws SQLException;
 
     void buy(UUID playerId, String symbol, double shares, double price) throws SQLException;
