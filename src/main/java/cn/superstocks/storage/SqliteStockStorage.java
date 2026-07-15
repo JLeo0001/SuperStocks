@@ -1,8 +1,14 @@
 package cn.superstocks.storage;
 
+import cn.superstocks.model.Competition;
+import cn.superstocks.model.CompetitionEntry;
 import cn.superstocks.model.Holding;
+import cn.superstocks.model.IpoOffering;
+import cn.superstocks.model.IpoSubscription;
 import cn.superstocks.model.PlayerStats;
 import cn.superstocks.model.PricePoint;
+import cn.superstocks.model.ShortPosition;
+import cn.superstocks.model.StockCertificate;
 import cn.superstocks.model.StockOrder;
 import org.bukkit.plugin.java.JavaPlugin;
 
