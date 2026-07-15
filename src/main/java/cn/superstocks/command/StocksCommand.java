@@ -753,6 +753,8 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
 
     private Integer parseInt(String s) { try { return Integer.parseInt(s); } catch (NumberFormatException e) { return null; } }
     private String lang(String key) { return plugin.language().text(key); }
+
+    private Double parsePositive(String input) {
         try {
             double value = Double.parseDouble(input);
             return value > 0.0D ? value : null;
