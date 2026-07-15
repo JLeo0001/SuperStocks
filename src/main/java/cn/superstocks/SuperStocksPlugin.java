@@ -2,6 +2,7 @@ package cn.superstocks;
 
 import cn.superstocks.command.StocksCommand;
 import cn.superstocks.economy.VaultEconomyHook;
+import cn.superstocks.gui.AdminGui;
 import cn.superstocks.gui.StocksGui;
 import cn.superstocks.lang.LanguageManager;
 import cn.superstocks.placeholder.SuperStocksExpansion;
@@ -15,116 +16,109 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 public final class SuperStocksPlugin extends JavaPlugin {
-    private VaultEconomyHook economy;
-    private StockStorage storage;
-    private LanguageManager language;
-    private StockService stockService;
-    private TradeService tradeService;
-    private StocksGui gui;
-    private SuperStocksExpansion expansion;
+    private VaultEconomyHook economy; private StockStorage storage; private LanguageManager language;
+    private StockService stockService; private TradeService tradeService;
+    private LossPenaltyService lossPenaltyService; private AutomationService automationService;
+    private ShortSellingService shortSellingService; private CompetitionService competitionService;
+    private IpoService ipoService; private CertificateService certificateService;
+    private MarketReportService marketReportService; private AdminGui adminGui;
+    private StocksGui gui; private SuperStocksExpansion expansion;
 
-    @Override
-    public void onEnable() {
-        saveDefaultConfig();
-        if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
-            getLogger().warning("无法创建插件数据目录");
-        }
-
-        language = new LanguageManager(this);
-        language.load();
-
+    @Override public void onEnable() {
+        saveDefaultConfig(); new ConfigMigrator(this).migrate();
+        if (!getDataFolder().exists()) getDataFolder().mkdirs();
+        language = new LanguageManager(this); language.load();
         economy = new VaultEconomyHook(this);
-        if (!economy.setup()) {
-            getLogger().warning("未找到 Vault 经济服务，交易功能将不可用。请安装 Vault 和 EssentialsX Economy 或其他经济插件。");
-        }
-
+        if (!economy.setup()) getLogger().warning("Vault not found, economy disabled.");
         storage = new SqliteStockStorage(this);
-        try {
-            storage.init();
-        } catch (SQLException ex) {
-            getLogger().log(Level.SEVERE, "初始化 SQLite 数据库失败，插件将被禁用", ex);
-            getServer().getPluginManager().disablePlugin(this);
-            return;
+        try { storage.init(); } catch (SQLException e) {
+            getLogger().log(Level.SEVERE, "Database init failed", e);
+            getServer().getPluginManager().disablePlugin(this); return;
         }
-
-        stockService = new StockService(this);
-        tradeService = new TradeService(
-                economy,
-                storage,
-                language,
-                getConfig().getDouble("economy.transaction-tax-percent", 0.5D),
-                getConfig().getDouble("economy.min-shares", 1.0D)
-        );
+        // Database migration and health check
+        DatabaseMigrator dbMigrator = new DatabaseMigrator(storage, getLogger());
+        dbMigrator.migrate();
+        getLogger().info("========== SuperStocks 数据库自检 ==========");
+        for (String line : dbMigrator.healthCheck()) {
+            getLogger().info(line);
+        }
+        getLogger().info("============================================");
+        stockService = new StockService(this, storage, language);
+        tradeService = new TradeService(this, economy, storage, language, stockService);
+        lossPenaltyService = new LossPenaltyService(this, storage, stockService, economy);
+        automationService = new AutomationService(this, storage, stockService, tradeService, economy);
+        shortSellingService = new ShortSellingService(this, storage, stockService, economy, language);
+        competitionService = new CompetitionService(this, storage, stockService, economy, language);
+        ipoService = new IpoService(this, storage, stockService, economy, language);
+        certificateService = new CertificateService(this, storage, stockService, economy, language);
+        marketReportService = new MarketReportService(this, stockService, language);
+        adminGui = new AdminGui(this);
         gui = new StocksGui(this);
-
         StocksCommand command = new StocksCommand(this);
-        PluginCommand stocksCommand = getCommand("stocks");
-        if (stocksCommand != null) {
-            stocksCommand.setExecutor(command);
-            stocksCommand.setTabCompleter(command);
-        }
+        PluginCommand stocks = getCommand("stocks");
+        if (stocks != null) { stocks.setExecutor(command); stocks.setTabCompleter(command); }
         getServer().getPluginManager().registerEvents(gui, this);
-
+        getServer().getPluginManager().registerEvents(certificateService, this);
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            expansion = new SuperStocksExpansion(this);
-            expansion.register();
-            getLogger().info("已注册 PlaceholderAPI 占位符。");
+            expansion = new SuperStocksExpansion(this); expansion.register();
         }
-
-        stockService.start();
-        getServer().getScheduler().runTaskAsynchronously(this, stockService::refreshNow);
-        getLogger().info("SuperStocks 已启用。");
+        new ConfigValidator(this).log();
+        startServices();
+        getLogger().info("SuperStocks enabled.");
     }
 
-    @Override
-    public void onDisable() {
-        if (expansion != null) {
-            expansion.unregister();
-        }
-        if (storage != null) {
-            try {
-                storage.close();
-            } catch (SQLException ex) {
-                getLogger().log(Level.WARNING, "关闭 SQLite 数据库失败", ex);
-            }
-        }
+    private void startServices() {
+        stockService.start(); lossPenaltyService.start(); automationService.start();
+        shortSellingService.start(); ipoService.start(); marketReportService.start();
+        getServer().getScheduler().runTaskAsynchronously(this, stockService::refreshNow);
+    }
+
+    @Override public void onDisable() {
+        if (marketReportService != null) marketReportService.stop();
+        if (ipoService != null) ipoService.stop();
+        if (shortSellingService != null) shortSellingService.stop();
+        if (automationService != null) automationService.stop();
+        if (lossPenaltyService != null) lossPenaltyService.stop();
+        if (stockService != null) stockService.stopTasks();
+        if (expansion != null) expansion.unregister();
+        if (storage != null) try { storage.close(); } catch (SQLException e) { getLogger().log(Level.WARNING, "Close DB failed", e); }
     }
 
     public void reloadPlugin() {
-        reloadConfig();
-        language.load();
+        if (marketReportService != null) marketReportService.stop();
+        if (ipoService != null) ipoService.stop();
+        if (shortSellingService != null) shortSellingService.stop();
+        if (automationService != null) automationService.stop();
+        if (lossPenaltyService != null) lossPenaltyService.stop();
+        if (stockService != null) stockService.stopTasks();
+        reloadConfig(); new ConfigMigrator(this).migrate(); language.load();
+        // Database health on reload
+        DatabaseMigrator dbMigrator = new DatabaseMigrator(storage, getLogger());
+        dbMigrator.migrate();
         stockService.reload();
-        tradeService = new TradeService(
-                economy,
-                storage,
-                language,
-                getConfig().getDouble("economy.transaction-tax-percent", 0.5D),
-                getConfig().getDouble("economy.min-shares", 1.0D)
-        );
-        getServer().getScheduler().runTaskAsynchronously(this, stockService::refreshNow);
+        tradeService = new TradeService(this, economy, storage, language, stockService);
+        lossPenaltyService = new LossPenaltyService(this, storage, stockService, economy);
+        automationService = new AutomationService(this, storage, stockService, tradeService, economy);
+        shortSellingService = new ShortSellingService(this, storage, stockService, economy, language);
+        competitionService = new CompetitionService(this, storage, stockService, economy, language);
+        ipoService = new IpoService(this, storage, stockService, economy, language);
+        certificateService = new CertificateService(this, storage, stockService, economy, language);
+        marketReportService = new MarketReportService(this, stockService, language);
+        new ConfigValidator(this).log();
+        startServices();
     }
 
-    public VaultEconomyHook economy() {
-        return economy;
-    }
-
-    public StockStorage storage() {
-        return storage;
-    }
-
-    public LanguageManager language() {
-        return language;
-    }
-
-    public StockService stockService() {
-        return stockService;
-    }
-
-    public TradeService tradeService() {
-        return tradeService;
-    }
-
-    public StocksGui gui() {
-        return gui;
-    }
+    public VaultEconomyHook economy() { return economy; }
+    public StockStorage storage() { return storage; }
+    public LanguageManager language() { return language; }
+    public StockService stockService() { return stockService; }
+    public TradeService tradeService() { return tradeService; }
+    public AutomationService automation() { return automationService; }
+    public ShortSellingService shortSelling() { return shortSellingService; }
+    public CompetitionService competition() { return competitionService; }
+    public IpoService ipo() { return ipoService; }
+    public CertificateService certificate() { return certificateService; }
+    public MarketReportService marketReport() { return marketReportService; }
+    public AdminGui adminGui() { return adminGui; }
+    public StocksGui gui() { return gui; }
 }

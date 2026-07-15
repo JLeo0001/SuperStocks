@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.IntFunction;
 import java.util.logging.Level;
 
 public final class StocksGui implements Listener {
@@ -45,15 +46,26 @@ public final class StocksGui implements Listener {
     }
 
     public void openMain(Player player) {
-        Inventory inventory = createInventory(size("gui.main-size", 27), lang().text("gui.main.title"));
+        openMain(player, 0);
+    }
+
+    public void openMain(Player player, int requestedPage) {
+        Inventory inventory = createInventory(size("gui.main-size", 45), lang().text("gui.main.title"));
         decorate(inventory);
         List<Integer> marketSlots = plugin.getConfig().getIntegerList("gui.layout.main-market-slots");
-        int index = 0;
-        for (Map.Entry<String, String> entry : plugin.stockService().marketNames().entrySet()) {
-            int slot = index < marketSlots.size() ? marketSlots.get(index) : firstContentEmpty(inventory);
-            inventory.setItem(slot, marketItem(entry.getKey(), entry.getValue()));
-            index++;
+        if (marketSlots.isEmpty()) {
+            marketSlots = contentSlots(inventory.getSize());
         }
+        List<Map.Entry<String, String>> markets = new ArrayList<>(plugin.stockService().marketNames().entrySet());
+        int pageSize = Math.max(1, marketSlots.size());
+        int pages = Math.max(1, (markets.size() + pageSize - 1) / pageSize);
+        int page = Math.max(0, Math.min(requestedPage, pages - 1));
+        int start = page * pageSize;
+        for (int index = 0; index < pageSize && start + index < markets.size(); index++) {
+            Map.Entry<String, String> entry = markets.get(start + index);
+            inventory.setItem(marketSlots.get(index), marketItem(entry.getKey(), entry.getValue()));
+        }
+        addPageControls(inventory, page, pages, GuiAction::mainPage);
         inventory.setItem(slot("gui.layout.main-stats-slot", 13), statsItem());
         inventory.setItem(slot("gui.layout.main-winners-slot", 29), item(material("gui.winners-material", Material.NETHER_STAR),
                 lang().text("gui.main.winners-name"),
@@ -67,21 +79,31 @@ public final class StocksGui implements Listener {
                 lang().text("gui.main.losers-name"),
                 lang().list("gui.main.losers-lore"),
                 GuiAction.ranking("losers")));
+        inventory.setItem(slot("gui.layout.main-watchlist-slot", 40), item(material("gui.watchlist-material", Material.SPYGLASS),
+                lang().text("gui.main.watchlist-name"),
+                lang().list("gui.main.watchlist-lore"),
+                GuiAction.watchlist()));
         player.openInventory(inventory);
     }
 
     public void openMarket(Player player, String market) {
+        openMarket(player, market, 0);
+    }
+
+    public void openMarket(Player player, String market, int requestedPage) {
         String title = lang().text("gui.market.title", lang().vars("market", plugin.stockService().marketName(market)));
         Inventory inventory = createInventory(size("gui.market-size", 54), title);
         decorate(inventory);
         inventory.setItem(slot("gui.layout.market-stats-slot", 4), marketStatsItem(market));
         List<Integer> contentSlots = contentSlots(inventory.getSize());
-        int index = 0;
-        for (String symbol : plugin.stockService().symbolsForMarket(market)) {
-            if (index >= contentSlots.size()) {
-                break;
-            }
-            int contentSlot = contentSlots.get(index++);
+        List<String> symbols = plugin.stockService().symbolsForMarket(market);
+        int pageSize = Math.max(1, contentSlots.size());
+        int pages = Math.max(1, (symbols.size() + pageSize - 1) / pageSize);
+        int page = Math.max(0, Math.min(requestedPage, pages - 1));
+        int start = page * pageSize;
+        for (int index = 0; index < pageSize && start + index < symbols.size(); index++) {
+            String symbol = symbols.get(start + index);
+            int contentSlot = contentSlots.get(index);
             Optional<StockQuote> quote = plugin.stockService().quote(symbol);
             if (quote.isPresent()) {
                 inventory.setItem(contentSlot, quoteItem(quote.get()));
@@ -92,6 +114,7 @@ public final class StocksGui implements Listener {
                         GuiAction.stock(symbol)));
             }
         }
+        addPageControls(inventory, page, pages, next -> GuiAction.marketPage(market, next));
         inventory.setItem(slot("gui.layout.market-back-slot", 49), item(material("gui.back-material", Material.ARROW), lang().text("gui.common.back-name"), List.of(), GuiAction.market("__main__")));
         player.openInventory(inventory);
     }
@@ -146,6 +169,41 @@ public final class StocksGui implements Listener {
             } catch (SQLException ex) {
                 plugin.getLogger().log(Level.WARNING, "读取持仓失败", ex);
                 Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(lang().text("messages.portfolio-load-failed")));
+            }
+        });
+    }
+
+    public void openWatchlist(Player player, int requestedPage) {
+        Inventory inventory = createInventory(size("gui.watchlist-size", 54), lang().text("gui.watchlist.title"));
+        decorate(inventory);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                List<String> symbols = new ArrayList<>(plugin.automation().watchlist(player.getUniqueId()));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    List<Integer> slots = contentSlots(inventory.getSize());
+                    int pageSize = Math.max(1, slots.size());
+                    int pages = Math.max(1, (symbols.size() + pageSize - 1) / pageSize);
+                    int page = Math.max(0, Math.min(requestedPage, pages - 1));
+                    int start = page * pageSize;
+                    for (int index = 0; index < pageSize && start + index < symbols.size(); index++) {
+                        String symbol = symbols.get(start + index);
+                        Optional<StockQuote> quote = plugin.stockService().quote(symbol);
+                        inventory.setItem(slots.get(index), quote.map(this::quoteItem).orElseGet(() -> item(
+                                material("gui.quote-missing-material", Material.GRAY_DYE),
+                                lang().text("gui.market.missing-name", lang().vars("symbol", symbol)),
+                                lang().list("gui.market.missing-lore"), GuiAction.stock(symbol))));
+                    }
+                    if (symbols.isEmpty()) {
+                        inventory.setItem(firstContentEmpty(inventory), plainItem(Material.BARRIER, lang().text("gui.watchlist.empty-name")));
+                    }
+                    addPageControls(inventory, page, pages, GuiAction::watchlist);
+                    inventory.setItem(slot("gui.layout.watchlist-back-slot", 49), item(material("gui.back-material", Material.ARROW),
+                            lang().text("gui.common.back-name"), List.of(), GuiAction.market("__main__")));
+                    player.openInventory(inventory);
+                });
+            } catch (SQLException ex) {
+                plugin.getLogger().log(Level.WARNING, "读取自选股失败", ex);
+                Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(lang().text("messages.watchlist-load-failed")));
             }
         });
     }
@@ -207,11 +265,81 @@ public final class StocksGui implements Listener {
                     openMarket(player, value);
                 }
             }
+            case MAIN_PAGE -> openMain(player, parsePage(value));
+            case MARKET_PAGE -> {
+                String[] parts = value.split("\\|", 2);
+                if (parts.length == 2) {
+                    openMarket(player, parts[0], parsePage(parts[1]));
+                }
+            }
             case STOCK -> openStock(player, value);
             case PORTFOLIO -> openPortfolio(player);
+            case WATCHLIST -> openWatchlist(player, parsePage(value));
             case RANKING -> openRanking(player, value);
-            case BUY -> executeTrade(player, value, amount, true);
-            case SELL -> executeTrade(player, value, amount, false);
+            case BUY -> requestTrade(player, value, amount, true);
+            case SELL -> requestTrade(player, value, amount, false);
+            case CONFIRM_BUY -> executeTrade(player, value, amount, true);
+            case CONFIRM_SELL -> executeTrade(player, value, amount, false);
+        }
+    }
+
+    private void requestTrade(Player player, String symbol, double amount, boolean buy) {
+        Optional<StockQuote> maybeQuote = plugin.stockService().quote(symbol);
+        if (maybeQuote.isEmpty()) {
+            player.sendMessage(lang().text("messages.quote-unavailable"));
+            return;
+        }
+        double gross = maybeQuote.get().price() * amount;
+        boolean confirmationEnabled = plugin.getConfig().getBoolean("gui.trade-confirmation.enabled", true);
+        double threshold = Math.max(0.0D, plugin.getConfig().getDouble("gui.trade-confirmation.minimum-gross", 1000.0D));
+        if (!confirmationEnabled || gross < threshold) {
+            executeTrade(player, symbol, amount, buy);
+            return;
+        }
+        openTradeConfirmation(player, maybeQuote.get(), amount, buy);
+    }
+
+    private void openTradeConfirmation(Player player, StockQuote quote, double shares, boolean buy) {
+        Inventory inventory = createInventory(27, lang().text("gui.confirm.title"));
+        decorate(inventory);
+        Map<String, String> vars = lang().vars(
+                "name", quote.name(),
+                "symbol", quote.symbol(),
+                "shares", TradeService.formatNumber(shares),
+                "price", format(quote.price()),
+                "gross", format(quote.price() * shares)
+        );
+        inventory.setItem(13, item(material("gui.quote-flat-material", Material.PAPER),
+                lang().text("gui.confirm.summary-name", vars), lang().list("gui.confirm.summary-lore", vars), GuiAction.stock(quote.symbol())));
+        inventory.setItem(11, item(Material.LIME_CONCRETE, lang().text("gui.confirm.accept-name"),
+                lang().list("gui.confirm.accept-lore"), buy ? GuiAction.confirmBuy(quote.symbol(), shares) : GuiAction.confirmSell(quote.symbol(), shares)));
+        inventory.setItem(15, item(Material.RED_CONCRETE, lang().text("gui.confirm.cancel-name"),
+                lang().list("gui.confirm.cancel-lore"), GuiAction.stock(quote.symbol())));
+        player.openInventory(inventory);
+    }
+
+    private void addPageControls(Inventory inventory, int page, int pages, IntFunction<GuiAction> actionFactory) {
+        if (pages <= 1) {
+            return;
+        }
+        int previousSlot = validSlot(plugin.getConfig().getInt("gui.layout.previous-page-slot", inventory.getSize() - 7), inventory.getSize(), inventory.getSize() - 7);
+        int nextSlot = validSlot(plugin.getConfig().getInt("gui.layout.next-page-slot", inventory.getSize() - 3), inventory.getSize(), inventory.getSize() - 3);
+        int pageSlot = validSlot(plugin.getConfig().getInt("gui.layout.page-info-slot", inventory.getSize() - 4), inventory.getSize(), inventory.getSize() - 4);
+        Map<String, String> vars = lang().vars("page", page + 1, "pages", pages);
+        inventory.setItem(pageSlot, plainItem(Material.PAPER, lang().text("gui.common.page-name", vars)));
+        if (page > 0) {
+            inventory.setItem(previousSlot, item(Material.ARROW, lang().text("gui.common.previous-page-name"), List.of(), actionFactory.apply(page - 1)));
+        }
+        if (page + 1 < pages) {
+            inventory.setItem(nextSlot, item(Material.ARROW, lang().text("gui.common.next-page-name"), List.of(), actionFactory.apply(page + 1)));
+        }
+    }
+
+    private int parsePage(String value) {
+        try {
+            return Math.max(0, Integer.parseInt(value));
+        } catch (NumberFormatException ignored) {
+            return 0;
         }
     }
 
@@ -261,7 +389,7 @@ public final class StocksGui implements Listener {
         Material material = quote.change() > 0.0D
                 ? material("gui.quote-up-material", Material.LIME_CONCRETE)
                 : quote.change() < 0.0D ? material("gui.quote-down-material", Material.RED_CONCRETE) : material("gui.quote-flat-material", Material.WHITE_CONCRETE);
-        return item(material, "&f" + quote.name(), lang().list("gui.stock.quote-lore", lang().vars(
+        List<String> lore = new ArrayList<>(lang().list("gui.stock.quote-lore", lang().vars(
                 "market", plugin.stockService().marketName(quote.market()),
                 "symbol", quote.symbol(),
                 "price", format(quote.price()),
@@ -269,7 +397,30 @@ public final class StocksGui implements Listener {
                 "change_percent", format(quote.changePercent()),
                 "change_color", quote.change() >= 0 ? "&a" : "&c",
                 "updated_at", TIME_FORMAT.format(quote.updatedAt())
-        )), GuiAction.stock(quote.symbol()));
+        )));
+        List<cn.superstocks.model.PricePoint> history = plugin.stockService().history(
+                quote.symbol(), System.currentTimeMillis() - 86_400_000L, 16);
+        if (history.size() >= 2) {
+            double first = history.get(0).price();
+            double change24h = first <= 0.0D ? 0.0D : (quote.price() - first) / first * 100.0D;
+            lore.addAll(lang().list("gui.stock.history-lore", lang().vars(
+                    "change_24h", format(change24h),
+                    "trend", trend(history)
+            )));
+        }
+        return item(material, "&f" + quote.name(), lore, GuiAction.stock(quote.symbol()));
+    }
+
+    private String trend(List<cn.superstocks.model.PricePoint> points) {
+        String levels = "▁▂▃▄▅▆▇█";
+        double min = points.stream().mapToDouble(cn.superstocks.model.PricePoint::price).min().orElse(0.0D);
+        double max = points.stream().mapToDouble(cn.superstocks.model.PricePoint::price).max().orElse(min);
+        StringBuilder result = new StringBuilder();
+        for (cn.superstocks.model.PricePoint point : points) {
+            int index = max <= min ? 3 : (int) Math.round((point.price() - min) / (max - min) * (levels.length() - 1));
+            result.append(levels.charAt(Math.max(0, Math.min(levels.length() - 1, index))));
+        }
+        return result.toString();
     }
 
     private ItemStack rankingItem(RankingEntry entry, int rank, boolean winners) {
@@ -403,6 +554,10 @@ public final class StocksGui implements Listener {
 
     private int slot(String path, int fallback) {
         return plugin.getConfig().getInt(path, fallback);
+    }
+
+    private int validSlot(int configured, int size, int fallback) {
+        return configured >= 0 && configured < size ? configured : fallback;
     }
 
     private int size(String path, int fallback) {

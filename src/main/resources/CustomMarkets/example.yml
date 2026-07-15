@@ -1,0 +1,70 @@
+# SuperStocks 本地自定义股市示例
+# 文件位置: plugins/SuperStocks/CustomMarkets/example.yml
+# 每个 .yml 文件定义一个本地虚拟市场。你可以复制本文件创建更多市场。
+
+market:
+  # 市场唯一 ID。不要和 config.yml 中 markets 的 cn/hk/us 重复。
+  id: local_tech
+  # GUI 中显示的名称。
+  display-name: "本地科技股"
+  # GUI 市场入口图标，使用 Bukkit Material 名称。
+  icon: AMETHYST_SHARD
+  # 是否启用这个本地市场。
+  enabled: true
+
+simulation:
+  # 本市场价格模拟刷新频率，单位秒。
+  # 建议:
+  #   稳健市场: 600 - 1800
+  #   普通市场: 300 - 600
+  #   高波动市场: 60 - 180
+  tick-seconds: 300
+  # 每次 tick 价格变化的最大百分比（涨跌停限制）。
+  # 建议: 5 - 20
+  tick-limit-percent: 15
+  # 是否启用牛熊市切换。启用后市场会在牛/熊/中性之间周期性切换。
+  regimes:
+    enabled: true
+    # 每个行情阶段持续时间，单位秒。
+    duration-seconds: 3600
+
+stocks:
+  local_chip:
+    # 本地股票代码。建议加前缀，避免和真实股票代码冲突。
+    symbol: "lcCHIP"
+    name: "方块芯片"
+    enabled: true
+    # 初始价格。
+    initial-price: 120.0
+    # 最低/最高价格，用于防止模拟价格失控。
+    min-price: 10.0
+    max-price: 1000.0
+    # 每次 tick 的长期趋势百分比。正数偏上涨，负数偏下跌。
+    # 建议: -0.2 到 0.2。高于 0.5 会明显偏离现实风格。
+    drift-percent-per-tick: 0.03
+    # 每次 tick 的随机波动强度，近似现实市场的标准差。
+    # 建议:
+    #   稳健股票: 0.5 - 1.5
+    #   普通股票: 1.5 - 3.0
+    #   高风险股票: 3.0 - 8.0
+    volatility-percent: 2.0
+
+  local_redstone:
+    symbol: "lcRED"
+    name: "红石能源"
+    enabled: true
+    initial-price: 65.0
+    min-price: 5.0
+    max-price: 600.0
+    drift-percent-per-tick: -0.01
+    volatility-percent: 3.5
+
+  local_farm:
+    symbol: "lcFARM"
+    name: "绿洲农业"
+    enabled: true
+    initial-price: 38.0
+    min-price: 3.0
+    max-price: 300.0
+    drift-percent-per-tick: 0.01
+    volatility-percent: 1.2

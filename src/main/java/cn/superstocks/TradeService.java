@@ -2,138 +2,36 @@ package cn.superstocks;
 
 import cn.superstocks.economy.VaultEconomyHook;
 import cn.superstocks.lang.LanguageManager;
-import cn.superstocks.model.Holding;
-import cn.superstocks.model.RankingEntry;
-import cn.superstocks.model.StockQuote;
+import cn.superstocks.model.*;
+import cn.superstocks.stock.StockService;
 import cn.superstocks.storage.StockStorage;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 
 public final class TradeService {
-    private final VaultEconomyHook economy;
-    private final StockStorage storage;
-    private final LanguageManager language;
-    private final double taxPercent;
-    private final double minShares;
+    private final JavaPlugin plugin; private final VaultEconomyHook economy; private final StockStorage storage; private final LanguageManager language; private final StockService stocks;
+    private final Map<UUID,Long> lastTrade=new ConcurrentHashMap<>(); private final Map<UUID,Deque<Long>> tradeTimes=new ConcurrentHashMap<>(); private final Map<UUID,ReentrantLock> locks=new ConcurrentHashMap<>();
+    public TradeService(JavaPlugin plugin,VaultEconomyHook economy,StockStorage storage,LanguageManager language,StockService stocks){this.plugin=plugin;this.economy=economy;this.storage=storage;this.language=language;this.stocks=stocks;}
 
-    public TradeService(VaultEconomyHook economy, StockStorage storage, LanguageManager language, double taxPercent, double minShares) {
-        this.economy = economy;
-        this.storage = storage;
-        this.language = language;
-        this.taxPercent = Math.max(0.0D, taxPercent);
-        this.minShares = Math.max(1.0D, minShares);
-    }
+    public TradeResult buy(OfflinePlayer p,StockQuote q,double shares)throws SQLException{return buy(p,q,shares,false);}
+    public TradeResult sell(OfflinePlayer p,StockQuote q,double shares)throws SQLException{return sell(p,q,shares,false);}
+    public TradeResult buy(OfflinePlayer p,StockQuote q,double shares,boolean automatic)throws SQLException{ReentrantLock lock=locks.computeIfAbsent(p.getUniqueId(),x->new ReentrantLock());if(!lock.tryLock())return fail("messages.trade-busy");try{TradeResult check=validate(p,q,shares,true,automatic);if(!check.success())return check;double gross=q.price()*shares,tax=fee(gross,shares),total=gross+tax;if(economy.balance(p)+1e-6<total)return fail("messages.not-enough-money", "amount",economy.format(total));if(!economy.withdraw(p,total))return fail("messages.withdraw-failed");try{storage.executeBuy(p.getUniqueId(),q.symbol(),shares,q.price(),tax);markTrade(p.getUniqueId());return ok("messages.buy-success","name",q.name(),"shares",formatNumber(shares),"amount",economy.format(total));}catch(SQLException e){economy.deposit(p,total);throw e;}}finally{lock.unlock();}}
+    public TradeResult sell(OfflinePlayer p,StockQuote q,double shares,boolean automatic)throws SQLException{ReentrantLock lock=locks.computeIfAbsent(p.getUniqueId(),x->new ReentrantLock());if(!lock.tryLock())return fail("messages.trade-busy");try{TradeResult check=validate(p,q,shares,false,automatic);if(!check.success())return check;Optional<Holding> before=storage.holding(p.getUniqueId(),q.symbol());double reserved=automatic?0D:storage.reservedShares(p.getUniqueId(),q.symbol());if(before.isEmpty()||before.get().shares()-reserved+1e-6<shares)return fail("messages.not-enough-shares");long since=storage.holdingSince(p.getUniqueId(),q.symbol());double gross=q.price()*shares,tax=fee(gross,shares),shortTax=shortTermTax(gross,since),total=Math.max(0,gross-tax-shortTax);if(!economy.deposit(p,total))return fail("messages.deposit-failed");double realized=(q.price()-before.get().averageCost())*shares-tax-shortTax;try{if(!storage.executeSell(p.getUniqueId(),q.symbol(),shares,q.price(),realized,tax+shortTax)){economy.withdraw(p,total);return fail("messages.not-enough-shares");}}catch(SQLException e){economy.withdraw(p,total);throw e;}markTrade(p.getUniqueId());return ok("messages.sell-success","name",q.name(),"shares",formatNumber(shares),"amount",economy.format(total));}finally{lock.unlock();}}
 
-    public TradeResult buy(Player player, StockQuote quote, double shares) throws SQLException {
-        if (!economy.available()) {
-            return TradeResult.fail(language.text("messages.economy-unavailable"));
-        }
-        if (shares < minShares) {
-            return TradeResult.fail(language.text("messages.min-shares", language.vars("shares", formatNumber(minShares))));
-        }
-        double gross = quote.price() * shares;
-        double tax = gross * taxPercent / 100.0D;
-        double total = gross + tax;
-        if (economy.balance(player) + 0.000001D < total) {
-            return TradeResult.fail(language.text("messages.not-enough-money", language.vars("amount", economy.format(total))));
-        }
-        if (!economy.withdraw(player, total)) {
-            return TradeResult.fail(language.text("messages.withdraw-failed"));
-        }
-        try {
-            storage.buy(player.getUniqueId(), quote.symbol(), shares, quote.price());
-            return TradeResult.ok(language.text("messages.buy-success", language.vars(
-                    "name", quote.name(),
-                    "shares", formatNumber(shares),
-                    "amount", economy.format(total)
-            )));
-        } catch (SQLException ex) {
-            economy.deposit(player, total);
-            throw ex;
-        }
-    }
+    public TradeResult buyReserved(OfflinePlayer p,StockQuote q,double shares,double reservedCash)throws SQLException{ReentrantLock lock=locks.computeIfAbsent(p.getUniqueId(),x->new ReentrantLock());if(!lock.tryLock())return fail("messages.trade-busy");try{TradeResult check=validate(p,q,shares,true,true);if(!check.success())return check;double gross=q.price()*shares,tax=fee(gross,shares),total=gross+tax;if(total>reservedCash+1e-6)return fail("messages.order-reserve-insufficient");storage.executeBuy(p.getUniqueId(),q.symbol(),shares,q.price(),tax);double refund=Math.max(0D,reservedCash-total);if(refund>0)economy.deposit(p,refund);markTrade(p.getUniqueId());return ok("messages.buy-success","name",q.name(),"shares",formatNumber(shares),"amount",economy.format(total));}finally{lock.unlock();}}
 
-    public TradeResult sell(Player player, StockQuote quote, double shares) throws SQLException {
-        if (!economy.available()) {
-            return TradeResult.fail(language.text("messages.economy-unavailable"));
-        }
-        if (shares < minShares) {
-            return TradeResult.fail(language.text("messages.min-shares", language.vars("shares", formatNumber(minShares))));
-        }
-        boolean sold = storage.sell(player.getUniqueId(), quote.symbol(), shares, quote.price());
-        if (!sold) {
-            return TradeResult.fail(language.text("messages.not-enough-shares"));
-        }
-        double gross = quote.price() * shares;
-        double tax = gross * taxPercent / 100.0D;
-        double total = Math.max(0.0D, gross - tax);
-        if (!economy.deposit(player, total)) {
-            return TradeResult.fail(language.text("messages.deposit-failed"));
-        }
-        return TradeResult.ok(language.text("messages.sell-success", language.vars(
-                "name", quote.name(),
-                "shares", formatNumber(shares),
-                "amount", economy.format(total)
-        )));
-    }
-
-    public List<Holding> holdings(UUID playerId) throws SQLException {
-        return storage.holdings(playerId);
-    }
-
-    public Optional<Holding> holding(UUID playerId, String symbol) throws SQLException {
-        return storage.holding(playerId, symbol);
-    }
-
-    public List<RankingEntry> rankings(Map<String, Double> prices, boolean winners, int limit) throws SQLException {
-        Map<UUID, double[]> totals = new HashMap<>();
-        for (Holding holding : storage.allHoldings()) {
-            double price = prices.getOrDefault(holding.symbol(), 0.0D);
-            if (price <= 0.0D) {
-                continue;
-            }
-            double[] total = totals.computeIfAbsent(holding.playerId(), ignored -> new double[2]);
-            total[0] += holding.marketValue(price);
-            total[1] += holding.shares() * holding.averageCost();
-        }
-        List<RankingEntry> entries = new ArrayList<>();
-        for (Map.Entry<UUID, double[]> entry : totals.entrySet()) {
-            double value = entry.getValue()[0];
-            double cost = entry.getValue()[1];
-            double profit = value - cost;
-            double percent = cost <= 0.0D ? 0.0D : profit / cost * 100.0D;
-            entries.add(new RankingEntry(entry.getKey(), value, profit, percent));
-        }
-        Comparator<RankingEntry> comparator = Comparator.comparingDouble(RankingEntry::profit);
-        entries.sort(winners ? comparator.reversed() : comparator);
-        if (entries.size() > limit) {
-            return new ArrayList<>(entries.subList(0, limit));
-        }
-        return entries;
-    }
-
-    public static String formatNumber(double value) {
-        if (Math.abs(value - Math.rint(value)) < 0.000001D) {
-            return String.valueOf((long) Math.rint(value));
-        }
-        return String.format("%.2f", value);
-    }
-
-    public record TradeResult(boolean success, String message) {
-        public static TradeResult ok(String message) {
-            return new TradeResult(true, message);
-        }
-
-        public static TradeResult fail(String message) {
-            return new TradeResult(false, message);
-        }
-    }
+    private TradeResult validate(OfflinePlayer p,StockQuote q,double shares,boolean buy,boolean automatic)throws SQLException{if(!economy.available())return fail("messages.economy-unavailable");double min=Math.max(1,plugin.getConfig().getDouble("economy.min-shares",1));if(shares<min)return fail("messages.min-shares","shares",formatNumber(min));double max=plugin.getConfig().getDouble("trading.max-shares-per-trade",10000);if(max>0&&shares>max)return fail("messages.trade-limit");StockService.TradeAvailability a=stocks.tradeAvailability(q.symbol(),buy);if(!a.allowed())return fail("messages.trading-unavailable","reason",a.reason());if(!automatic){long now=System.currentTimeMillis(),cool=plugin.getConfig().getLong("trading.cooldown-milliseconds",1000);if(now-lastTrade.getOrDefault(p.getUniqueId(),0L)<cool)return fail("messages.trade-cooldown");Deque<Long> times=tradeTimes.computeIfAbsent(p.getUniqueId(),x->new ArrayDeque<>());while(!times.isEmpty()&&now-times.peekFirst()>60000)times.removeFirst();if(times.size()>=plugin.getConfig().getInt("trading.max-trades-per-minute",20))return fail("messages.trade-rate-limit");}if(buy){double maxPosition=plugin.getConfig().getDouble("trading.max-position-value",0);if(maxPosition>0){double current=storage.holding(p.getUniqueId(),q.symbol()).map(h->h.marketValue(q.price())).orElse(0D);if(current+q.price()*shares>maxPosition)return fail("messages.position-limit");}}return TradeResult.ok("");}
+    private double fee(double gross,double shares){double base=Math.max(0,plugin.getConfig().getDouble("economy.transaction-tax-percent",.5));double large=shares>=plugin.getConfig().getDouble("economy.large-trade-threshold-shares",1000)?plugin.getConfig().getDouble("economy.large-trade-extra-tax-percent",0):0;return gross*(base+large)/100;}
+    private double shortTermTax(double gross,long holdingSince){if(!plugin.getConfig().getBoolean("economy.short-term-tax.enabled",false)||holdingSince<=0)return 0D;long minimumMillis=Math.max(0L,plugin.getConfig().getLong("economy.short-term-tax.minimum-holding-hours",24L))*3600000L;if(System.currentTimeMillis()-holdingSince>=minimumMillis)return 0D;return gross*Math.max(0,plugin.getConfig().getDouble("economy.short-term-tax.percent",1))/100;}
+    private void markTrade(UUID id){long now=System.currentTimeMillis();lastTrade.put(id,now);tradeTimes.computeIfAbsent(id,x->new ArrayDeque<>()).addLast(now);}
+    private TradeResult fail(String key,Object...v){return TradeResult.fail(language.text(key,language.vars(v)));}private TradeResult ok(String key,Object...v){return TradeResult.ok(language.text(key,language.vars(v)));}
+    public List<Holding> holdings(UUID id)throws SQLException{return storage.holdings(id);}public Optional<Holding> holding(UUID id,String symbol)throws SQLException{return storage.holding(id,symbol);}public PlayerStats stats(UUID id)throws SQLException{return storage.playerStats(id);}
+    public List<RankingEntry> rankings(Map<String,Double> prices,boolean winners,int limit)throws SQLException{Map<UUID,double[]> t=new HashMap<>();for(Holding h:storage.allHoldings()){double price=prices.getOrDefault(h.symbol(),0D);if(price<=0)continue;double[] a=t.computeIfAbsent(h.playerId(),x->new double[2]);a[0]+=h.marketValue(price);a[1]+=h.shares()*h.averageCost();}List<RankingEntry> out=new ArrayList<>();t.forEach((id,a)->{double profit=a[0]-a[1];out.add(new RankingEntry(id,a[0],profit,a[1]<=0?0:profit/a[1]*100));});Comparator<RankingEntry> c=Comparator.comparingDouble(RankingEntry::profit);out.sort(winners?c.reversed():c);return out.size()>limit?new ArrayList<>(out.subList(0,limit)):out;}
+    public static String formatNumber(double v){return Math.abs(v-Math.rint(v))<1e-6?String.valueOf((long)Math.rint(v)):String.format("%.2f",v);}
+    public record TradeResult(boolean success,String message){public static TradeResult ok(String m){return new TradeResult(true,m);}public static TradeResult fail(String m){return new TradeResult(false,m);}}
 }

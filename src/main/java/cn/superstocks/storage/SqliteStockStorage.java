@@ -1,19 +1,14 @@
 package cn.superstocks.storage;
 
 import cn.superstocks.model.Holding;
+import cn.superstocks.model.PlayerStats;
+import cn.superstocks.model.PricePoint;
+import cn.superstocks.model.StockOrder;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.sql.*;
+import java.util.*;
 
 public final class SqliteStockStorage implements StockStorage {
     private final String jdbcUrl;
@@ -21,145 +16,142 @@ public final class SqliteStockStorage implements StockStorage {
 
     public SqliteStockStorage(JavaPlugin plugin) {
         File database = new File(plugin.getDataFolder(), plugin.getConfig().getString("database.file", "stocks.db"));
-        this.jdbcUrl = "jdbc:sqlite:" + database.getAbsolutePath();
+        jdbcUrl = "jdbc:sqlite:" + database.getAbsolutePath();
     }
 
-    @Override
-    public void init() throws SQLException {
+    @Override public synchronized void init() throws SQLException {
         connection = DriverManager.getConnection(jdbcUrl);
-        try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS holdings (player_uuid TEXT NOT NULL, symbol TEXT NOT NULL, shares REAL NOT NULL, average_cost REAL NOT NULL, PRIMARY KEY (player_uuid, symbol))");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS trades (id INTEGER PRIMARY KEY AUTOINCREMENT, player_uuid TEXT NOT NULL, symbol TEXT NOT NULL, side TEXT NOT NULL, shares REAL NOT NULL, price REAL NOT NULL, created_at INTEGER NOT NULL)");
+        try (Statement s = connection.createStatement()) {
+            s.execute("PRAGMA journal_mode=WAL"); s.execute("PRAGMA busy_timeout=5000");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS holdings(player_uuid TEXT NOT NULL,symbol TEXT NOT NULL,shares REAL NOT NULL,average_cost REAL NOT NULL,PRIMARY KEY(player_uuid,symbol))");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS trades(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT NOT NULL,symbol TEXT NOT NULL,side TEXT NOT NULL,shares REAL NOT NULL,price REAL NOT NULL,created_at INTEGER NOT NULL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS quote_state(symbol TEXT PRIMARY KEY,name TEXT,market TEXT,price REAL,previous_price REAL,change_value REAL,change_percent REAL,updated_at INTEGER,regime TEXT,regime_until INTEGER,frozen_until INTEGER)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS price_history(id INTEGER PRIMARY KEY AUTOINCREMENT,symbol TEXT,price REAL,recorded_at INTEGER)");
+            s.executeUpdate("CREATE INDEX IF NOT EXISTS idx_price_history_symbol_time ON price_history(symbol,recorded_at)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS orders(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT,symbol TEXT,type TEXT,shares REAL,trigger_price REAL,expires_at INTEGER,created_at INTEGER,status TEXT DEFAULT 'OPEN')");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS watchlist(player_uuid TEXT,symbol TEXT,PRIMARY KEY(player_uuid,symbol))");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS alerts(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT,symbol TEXT,direction TEXT,target_price REAL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS player_stats(player_uuid TEXT PRIMARY KEY,realized_profit REAL DEFAULT 0,total_fees REAL DEFAULT 0,total_dividends REAL DEFAULT 0,highest_total_value REAL DEFAULT 0,trade_count INTEGER DEFAULT 0)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS penalties(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT,tier TEXT,loss REAL,loss_percent REAL,amount REAL,created_at INTEGER)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS audit_log(id INTEGER PRIMARY KEY AUTOINCREMENT,actor TEXT,action TEXT,detail TEXT,created_at INTEGER)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS metadata(meta_key TEXT PRIMARY KEY,meta_value TEXT NOT NULL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS short_positions(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT NOT NULL,symbol TEXT NOT NULL,shares REAL NOT NULL,borrowed_price REAL NOT NULL,margin REAL NOT NULL,opened_at INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'OPEN')");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS competitions(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT NOT NULL,start_capital REAL NOT NULL,started_at INTEGER NOT NULL,ends_at INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'ACTIVE')");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS competition_entries(id INTEGER PRIMARY KEY AUTOINCREMENT,competition_id INTEGER NOT NULL,player_uuid TEXT NOT NULL,cash REAL NOT NULL,joined_at INTEGER NOT NULL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS competition_holdings(id INTEGER PRIMARY KEY AUTOINCREMENT,competition_id INTEGER NOT NULL,player_uuid TEXT NOT NULL,symbol TEXT NOT NULL,shares REAL NOT NULL,average_cost REAL NOT NULL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS ipos(id INTEGER PRIMARY KEY AUTOINCREMENT,symbol TEXT NOT NULL,name TEXT NOT NULL,market TEXT NOT NULL,price REAL NOT NULL,total_shares REAL NOT NULL,max_per_player REAL NOT NULL,opened_at INTEGER NOT NULL,closes_at INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'OPEN')");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS ipo_subscriptions(id INTEGER PRIMARY KEY AUTOINCREMENT,ipo_id INTEGER NOT NULL,player_uuid TEXT NOT NULL,shares REAL NOT NULL,subscribed_at INTEGER NOT NULL)");
+            s.executeUpdate("CREATE TABLE IF NOT EXISTS stock_certificates(id INTEGER PRIMARY KEY AUTOINCREMENT,player_uuid TEXT NOT NULL,symbol TEXT NOT NULL,shares REAL NOT NULL,issue_price REAL NOT NULL,issued_at INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'ACTIVE')");
+            addColumnIfMissing(s, "holdings", "first_bought_at", "INTEGER NOT NULL DEFAULT 0");
+            addColumnIfMissing(s, "orders", "reserved_cash", "REAL NOT NULL DEFAULT 0");
+            addColumnIfMissing(s, "orders", "reserved_shares", "REAL NOT NULL DEFAULT 0");
+            addColumnIfMissing(s, "orders", "reserved_average_cost", "REAL NOT NULL DEFAULT 0");
+            addColumnIfMissing(s, "orders", "reserved_since", "INTEGER NOT NULL DEFAULT 0");
         }
     }
 
-    @Override
-    public List<Holding> holdings(UUID playerId) throws SQLException {
-        List<Holding> holdings = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT symbol, shares, average_cost FROM holdings WHERE player_uuid = ? ORDER BY symbol")) {
-            statement.setString(1, playerId.toString());
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    holdings.add(new Holding(playerId, rs.getString("symbol"), rs.getDouble("shares"), rs.getDouble("average_cost")));
-                }
-            }
-        }
-        return holdings;
-    }
-
-    @Override
-    public List<Holding> allHoldings() throws SQLException {
-        List<Holding> holdings = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement("SELECT player_uuid, symbol, shares, average_cost FROM holdings ORDER BY player_uuid, symbol")) {
-            try (ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    holdings.add(new Holding(UUID.fromString(rs.getString("player_uuid")), rs.getString("symbol"), rs.getDouble("shares"), rs.getDouble("average_cost")));
-                }
-            }
-        }
-        return holdings;
-    }
-
-    @Override
-    public Optional<Holding> holding(UUID playerId, String symbol) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("SELECT shares, average_cost FROM holdings WHERE player_uuid = ? AND symbol = ?")) {
-            statement.setString(1, playerId.toString());
-            statement.setString(2, symbol);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (!rs.next()) {
-                    return Optional.empty();
-                }
-                return Optional.of(new Holding(playerId, symbol, rs.getDouble("shares"), rs.getDouble("average_cost")));
-            }
-        }
-    }
-
-    @Override
-    public void buy(UUID playerId, String symbol, double shares, double price) throws SQLException {
-        connection.setAutoCommit(false);
+    private void addColumnIfMissing(Statement statement, String table, String column, String definition) throws SQLException {
         try {
-            Optional<Holding> current = holding(playerId, symbol);
-            if (current.isPresent()) {
-                Holding holding = current.get();
-                double totalShares = holding.shares() + shares;
-                double average = ((holding.shares() * holding.averageCost()) + (shares * price)) / totalShares;
-                try (PreparedStatement statement = connection.prepareStatement("UPDATE holdings SET shares = ?, average_cost = ? WHERE player_uuid = ? AND symbol = ?")) {
-                    statement.setDouble(1, totalShares);
-                    statement.setDouble(2, average);
-                    statement.setString(3, playerId.toString());
-                    statement.setString(4, symbol);
-                    statement.executeUpdate();
-                }
-            } else {
-                try (PreparedStatement statement = connection.prepareStatement("INSERT INTO holdings(player_uuid, symbol, shares, average_cost) VALUES (?, ?, ?, ?)")) {
-                    statement.setString(1, playerId.toString());
-                    statement.setString(2, symbol);
-                    statement.setDouble(3, shares);
-                    statement.setDouble(4, price);
-                    statement.executeUpdate();
-                }
-            }
-            insertTrade(playerId, symbol, "BUY", shares, price);
-            connection.commit();
+            statement.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + column + " " + definition);
         } catch (SQLException ex) {
-            connection.rollback();
-            throw ex;
-        } finally {
-            connection.setAutoCommit(true);
-        }
-    }
-
-    @Override
-    public boolean sell(UUID playerId, String symbol, double shares, double price) throws SQLException {
-        connection.setAutoCommit(false);
-        try {
-            Optional<Holding> current = holding(playerId, symbol);
-            if (current.isEmpty() || current.get().shares() + 0.000001D < shares) {
-                connection.rollback();
-                return false;
+            if (!ex.getMessage().toLowerCase(Locale.ROOT).contains("duplicate column")) {
+                throw ex;
             }
-            double remaining = current.get().shares() - shares;
-            if (remaining <= 0.000001D) {
-                try (PreparedStatement statement = connection.prepareStatement("DELETE FROM holdings WHERE player_uuid = ? AND symbol = ?")) {
-                    statement.setString(1, playerId.toString());
-                    statement.setString(2, symbol);
-                    statement.executeUpdate();
-                }
-            } else {
-                try (PreparedStatement statement = connection.prepareStatement("UPDATE holdings SET shares = ? WHERE player_uuid = ? AND symbol = ?")) {
-                    statement.setDouble(1, remaining);
-                    statement.setString(2, playerId.toString());
-                    statement.setString(3, symbol);
-                    statement.executeUpdate();
-                }
-            }
-            insertTrade(playerId, symbol, "SELL", shares, price);
-            connection.commit();
-            return true;
-        } catch (SQLException ex) {
-            connection.rollback();
-            throw ex;
-        } finally {
-            connection.setAutoCommit(true);
         }
     }
 
-    private void insertTrade(UUID playerId, String symbol, String side, double shares, double price) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO trades(player_uuid, symbol, side, shares, price, created_at) VALUES (?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, playerId.toString());
-            statement.setString(2, symbol);
-            statement.setString(3, side);
-            statement.setDouble(4, shares);
-            statement.setDouble(5, price);
-            statement.setLong(6, System.currentTimeMillis());
-            statement.executeUpdate();
-        }
-    }
+    @Override public synchronized List<Holding> holdings(UUID id) throws SQLException { return queryHoldings("SELECT player_uuid,symbol,shares,average_cost FROM holdings WHERE player_uuid=? ORDER BY symbol", id.toString()); }
+    @Override public synchronized List<Holding> allHoldings() throws SQLException { return queryHoldings("SELECT player_uuid,symbol,shares,average_cost FROM holdings ORDER BY player_uuid,symbol", null); }
+    private List<Holding> queryHoldings(String sql,String id)throws SQLException{List<Holding> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement(sql)){if(id!=null)p.setString(1,id);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new Holding(UUID.fromString(r.getString(1)),r.getString(2),r.getDouble(3),r.getDouble(4)));}}return out;}
+    @Override public synchronized Optional<Holding> holding(UUID id,String symbol)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT shares,average_cost FROM holdings WHERE player_uuid=? AND symbol=?")){p.setString(1,id.toString());p.setString(2,symbol);try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new Holding(id,symbol,r.getDouble(1),r.getDouble(2))):Optional.empty();}}}
 
-    @Override
-    public void close() throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
-    }
+    @Override public synchronized void buy(UUID id,String symbol,double shares,double price)throws SQLException{tx(()->{Optional<Holding> h=holding(id,symbol);if(h.isPresent()){double total=h.get().shares()+shares;double avg=(h.get().shares()*h.get().averageCost()+shares*price)/total;upsertHolding(id,symbol,total,avg);}else upsertHolding(id,symbol,shares,price);insertTrade(id,symbol,"BUY",shares,price);});}
+    @Override public synchronized boolean sell(UUID id,String symbol,double shares,double price)throws SQLException{Optional<Holding> h=holding(id,symbol);if(h.isEmpty()||h.get().shares()+1e-6<shares)return false;tx(()->{applySell(id,symbol,shares,price,h.get());});return true;}
+    @Override public synchronized void executeBuy(UUID id,String symbol,double shares,double price,double fee)throws SQLException{tx(()->{Optional<Holding> h=holding(id,symbol);if(h.isPresent()){double total=h.get().shares()+shares;double avg=(h.get().shares()*h.get().averageCost()+shares*price)/total;upsertHolding(id,symbol,total,avg);}else upsertHolding(id,symbol,shares,price);insertTrade(id,symbol,"BUY",shares,price);recordTradeAccounting(id,0,fee);});}
+    @Override public synchronized boolean executeSell(UUID id,String symbol,double shares,double price,double realized,double fee)throws SQLException{Optional<Holding> h=holding(id,symbol);if(h.isEmpty()||h.get().shares()+1e-6<shares)return false;tx(()->{applySell(id,symbol,shares,price,h.get());recordTradeAccounting(id,realized,fee);});return true;}
+    private void applySell(UUID id,String symbol,double shares,double price,Holding holding)throws SQLException{double remain=holding.shares()-shares;if(remain<=1e-6){try(PreparedStatement p=connection.prepareStatement("DELETE FROM holdings WHERE player_uuid=? AND symbol=?")){p.setString(1,id.toString());p.setString(2,symbol);p.executeUpdate();}}else upsertHolding(id,symbol,remain,holding.averageCost());insertTrade(id,symbol,"SELL",shares,price);}
+    @Override public synchronized void restoreHolding(UUID id,String symbol,double shares,double average)throws SQLException{if(shares<=1e-6){try(PreparedStatement p=connection.prepareStatement("DELETE FROM holdings WHERE player_uuid=? AND symbol=?")){p.setString(1,id.toString());p.setString(2,symbol);p.executeUpdate();}}else upsertHolding(id,symbol,shares,average);}
+    @Override public synchronized long holdingSince(UUID id,String symbol)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT first_bought_at FROM holdings WHERE player_uuid=? AND symbol=?")){p.setString(1,id.toString());p.setString(2,symbol);try(ResultSet r=p.executeQuery()){return r.next()?r.getLong(1):0L;}}}
+    private void upsertHolding(UUID id,String s,double sh,double avg)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO holdings(player_uuid,symbol,shares,average_cost,first_bought_at) VALUES(?,?,?,?,?) ON CONFLICT(player_uuid,symbol) DO UPDATE SET shares=excluded.shares,average_cost=excluded.average_cost")){p.setString(1,id.toString());p.setString(2,s);p.setDouble(3,sh);p.setDouble(4,avg);p.setLong(5,System.currentTimeMillis());p.executeUpdate();}}
+    private void insertTrade(UUID id,String s,String side,double sh,double price)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO trades(player_uuid,symbol,side,shares,price,created_at) VALUES(?,?,?,?,?,?)")){p.setString(1,id.toString());p.setString(2,s);p.setString(3,side);p.setDouble(4,sh);p.setDouble(5,price);p.setLong(6,System.currentTimeMillis());p.executeUpdate();}}
+
+    @Override public synchronized void recordTradeAccounting(UUID id,double profit,double fee)throws SQLException{ensureStats(id);try(PreparedStatement p=connection.prepareStatement("UPDATE player_stats SET realized_profit=realized_profit+?,total_fees=total_fees+?,trade_count=trade_count+1 WHERE player_uuid=?")){p.setDouble(1,profit);p.setDouble(2,fee);p.setString(3,id.toString());p.executeUpdate();}}
+    @Override public synchronized PlayerStats playerStats(UUID id)throws SQLException{ensureStats(id);try(PreparedStatement p=connection.prepareStatement("SELECT realized_profit,total_fees,total_dividends,highest_total_value,trade_count FROM player_stats WHERE player_uuid=?")){p.setString(1,id.toString());try(ResultSet r=p.executeQuery()){r.next();return new PlayerStats(r.getDouble(1),r.getDouble(2),r.getDouble(3),r.getDouble(4),r.getLong(5));}}}
+    @Override public synchronized void recordDividend(UUID id,double amount)throws SQLException{ensureStats(id);try(PreparedStatement p=connection.prepareStatement("UPDATE player_stats SET total_dividends=total_dividends+? WHERE player_uuid=?")){p.setDouble(1,amount);p.setString(2,id.toString());p.executeUpdate();}}
+    @Override public synchronized void updateHighestValue(UUID id,double value)throws SQLException{ensureStats(id);try(PreparedStatement p=connection.prepareStatement("UPDATE player_stats SET highest_total_value=MAX(highest_total_value,?) WHERE player_uuid=?")){p.setDouble(1,value);p.setString(2,id.toString());p.executeUpdate();}}
+    private void ensureStats(UUID id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT OR IGNORE INTO player_stats(player_uuid) VALUES(?)")){p.setString(1,id.toString());p.executeUpdate();}}
+
+    @Override public synchronized Optional<StockQuoteState> quoteState(String s)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT symbol,name,market,price,previous_price,change_value,change_percent,updated_at,regime,regime_until,frozen_until FROM quote_state WHERE symbol=?")){p.setString(1,s);try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new StockQuoteState(r.getString(1),r.getString(2),r.getString(3),r.getDouble(4),r.getDouble(5),r.getDouble(6),r.getDouble(7),r.getLong(8),r.getString(9),r.getLong(10),r.getLong(11))):Optional.empty();}}}
+    @Override public synchronized void saveQuoteState(StockQuoteState q)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO quote_state VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(symbol) DO UPDATE SET name=excluded.name,market=excluded.market,price=excluded.price,previous_price=excluded.previous_price,change_value=excluded.change_value,change_percent=excluded.change_percent,updated_at=excluded.updated_at,regime=excluded.regime,regime_until=excluded.regime_until,frozen_until=excluded.frozen_until")){p.setString(1,q.symbol());p.setString(2,q.name());p.setString(3,q.market());p.setDouble(4,q.price());p.setDouble(5,q.previousPrice());p.setDouble(6,q.change());p.setDouble(7,q.changePercent());p.setLong(8,q.updatedAt());p.setString(9,q.regime());p.setLong(10,q.regimeUntil());p.setLong(11,q.frozenUntil());p.executeUpdate();}}
+    @Override public synchronized void recordPrice(String s,double price,long time)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO price_history(symbol,price,recorded_at) VALUES(?,?,?)")){p.setString(1,s);p.setDouble(2,price);p.setLong(3,time);p.executeUpdate();}}
+    @Override public synchronized List<PricePoint> priceHistory(String s,long since,int limit)throws SQLException{List<PricePoint> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT symbol,price,recorded_at FROM price_history WHERE symbol=? AND recorded_at>=? ORDER BY recorded_at DESC LIMIT ?")){p.setString(1,s);p.setLong(2,since);p.setInt(3,limit);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new PricePoint(r.getString(1),r.getDouble(2),r.getLong(3)));}}Collections.reverse(out);return out;}
+    @Override public synchronized void deletePriceHistoryBefore(long cutoff)throws SQLException{try(PreparedStatement p=connection.prepareStatement("DELETE FROM price_history WHERE recorded_at<?")){p.setLong(1,cutoff);p.executeUpdate();}}
+
+    @Override public synchronized long createOrder(UUID id,String s,StockOrder.Type t,double sh,double price,long exp,double cash,double reservedShares,double average,long reservedSince)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO orders(player_uuid,symbol,type,shares,trigger_price,expires_at,created_at,status,reserved_cash,reserved_shares,reserved_average_cost,reserved_since) VALUES(?,?,?,?,?,?,?,'OPEN',?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,id.toString());p.setString(2,s);p.setString(3,t.name());p.setDouble(4,sh);p.setDouble(5,price);p.setLong(6,exp);p.setLong(7,System.currentTimeMillis());p.setDouble(8,cash);p.setDouble(9,reservedShares);p.setDouble(10,average);p.setLong(11,reservedSince);p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getLong(1):-1;}}}
+    @Override public synchronized List<StockOrder> openOrders()throws SQLException{return orders("SELECT id,player_uuid,symbol,type,shares,trigger_price,expires_at,created_at,reserved_cash,reserved_shares,reserved_average_cost,reserved_since FROM orders WHERE status='OPEN'",null);}
+    @Override public synchronized List<StockOrder> playerOrders(UUID id)throws SQLException{return orders("SELECT id,player_uuid,symbol,type,shares,trigger_price,expires_at,created_at,reserved_cash,reserved_shares,reserved_average_cost,reserved_since FROM orders WHERE status='OPEN' AND player_uuid=?",id.toString());}
+    @Override public synchronized Optional<StockOrder> order(long id,UUID owner)throws SQLException{List<StockOrder> result=orders("SELECT id,player_uuid,symbol,type,shares,trigger_price,expires_at,created_at,reserved_cash,reserved_shares,reserved_average_cost,reserved_since FROM orders WHERE status='OPEN' AND player_uuid=? AND id="+id,owner.toString());return result.stream().findFirst();}
+    @Override public synchronized double reservedShares(UUID id,String symbol)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT COALESCE(SUM(reserved_shares),0) FROM orders WHERE player_uuid=? AND symbol=? AND status='OPEN'")){p.setString(1,id.toString());p.setString(2,symbol);try(ResultSet r=p.executeQuery()){return r.next()?r.getDouble(1):0D;}}}
+    private List<StockOrder> orders(String sql,String id)throws SQLException{List<StockOrder> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement(sql)){if(id!=null)p.setString(1,id);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new StockOrder(r.getLong(1),UUID.fromString(r.getString(2)),r.getString(3),StockOrder.Type.valueOf(r.getString(4)),r.getDouble(5),r.getDouble(6),r.getLong(7),r.getLong(8),r.getDouble(9),r.getDouble(10),r.getDouble(11),r.getLong(12)));}}return out;}
+    @Override public synchronized boolean closeOrder(long id,UUID owner,String status)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE orders SET status=? WHERE id=? AND player_uuid=? AND status='OPEN'")){p.setString(1,status);p.setLong(2,id);p.setString(3,owner.toString());return p.executeUpdate()>0;}}
+    @Override public synchronized boolean claimOrder(long id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE orders SET status='PROCESSING' WHERE id=? AND status='OPEN'")){p.setLong(1,id);return p.executeUpdate()>0;}}
+    @Override public synchronized void completeOrder(long id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE orders SET status='COMPLETED' WHERE id=? AND status='PROCESSING'")){p.setLong(1,id);p.executeUpdate();}}
+    @Override public synchronized void reopenOrder(long id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE orders SET status='OPEN' WHERE id=? AND status='PROCESSING'")){p.setLong(1,id);p.executeUpdate();}}
+
+    @Override public synchronized Set<String> watchlist(UUID id)throws SQLException{Set<String> out=new LinkedHashSet<>();try(PreparedStatement p=connection.prepareStatement("SELECT symbol FROM watchlist WHERE player_uuid=? ORDER BY symbol")){p.setString(1,id.toString());try(ResultSet r=p.executeQuery()){while(r.next())out.add(r.getString(1));}}return out;}
+    @Override public synchronized void addWatch(UUID id,String s)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT OR IGNORE INTO watchlist VALUES(?,?)")){p.setString(1,id.toString());p.setString(2,s);p.executeUpdate();}}
+    @Override public synchronized void removeWatch(UUID id,String s)throws SQLException{try(PreparedStatement p=connection.prepareStatement("DELETE FROM watchlist WHERE player_uuid=? AND symbol=?")){p.setString(1,id.toString());p.setString(2,s);p.executeUpdate();}}
+    @Override public synchronized long createAlert(UUID id,String s,String d,double target)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO alerts(player_uuid,symbol,direction,target_price) VALUES(?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,id.toString());p.setString(2,s);p.setString(3,d);p.setDouble(4,target);p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getLong(1):-1;}}}
+    @Override public synchronized List<PriceAlert> alerts()throws SQLException{List<PriceAlert> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,player_uuid,symbol,direction,target_price FROM alerts");ResultSet r=p.executeQuery()){while(r.next())out.add(new PriceAlert(r.getLong(1),UUID.fromString(r.getString(2)),r.getString(3),r.getString(4),r.getDouble(5)));}return out;}
+    @Override public synchronized void deleteAlert(long id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("DELETE FROM alerts WHERE id=?")){p.setLong(1,id);p.executeUpdate();}}
+
+    @Override public synchronized long penaltyCooldown(UUID id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT MAX(created_at) FROM penalties WHERE player_uuid=?")){p.setString(1,id.toString());try(ResultSet r=p.executeQuery()){return r.next()?r.getLong(1):0;}}}
+    @Override public synchronized void savePenalty(UUID id,String tier,double loss,double pct,double amount,long time)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO penalties(player_uuid,tier,loss,loss_percent,amount,created_at) VALUES(?,?,?,?,?,?)")){p.setString(1,id.toString());p.setString(2,tier);p.setDouble(3,loss);p.setDouble(4,pct);p.setDouble(5,amount);p.setLong(6,time);p.executeUpdate();}}
+    @Override public synchronized List<PenaltyRecord> penaltyHistory(UUID id,int limit)throws SQLException{List<PenaltyRecord> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT tier,loss,loss_percent,amount,created_at FROM penalties WHERE player_uuid=? ORDER BY created_at DESC LIMIT ?")){p.setString(1,id.toString());p.setInt(2,limit);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new PenaltyRecord(r.getString(1),r.getDouble(2),r.getDouble(3),r.getDouble(4),r.getLong(5)));}}return out;}
+    @Override public synchronized void audit(String actor,String action,String detail)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO audit_log(actor,action,detail,created_at) VALUES(?,?,?,?)")){p.setString(1,actor);p.setString(2,action);p.setString(3,detail);p.setLong(4,System.currentTimeMillis());p.executeUpdate();}}
+    @Override public synchronized Optional<String> metadata(String key)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT meta_value FROM metadata WHERE meta_key=?")){p.setString(1,key);try(ResultSet r=p.executeQuery()){return r.next()?Optional.ofNullable(r.getString(1)):Optional.empty();}}}
+    @Override public synchronized void saveMetadata(String key,String value)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO metadata(meta_key,meta_value) VALUES(?,?) ON CONFLICT(meta_key) DO UPDATE SET meta_value=excluded.meta_value")){p.setString(1,key);p.setString(2,value);p.executeUpdate();}}
+    @Override public synchronized List<AuditRecord> auditLog(String actor,String action,int limit,long before)throws SQLException{List<AuditRecord> out=new ArrayList<>();StringBuilder sql=new StringBuilder("SELECT actor,action,detail,created_at FROM audit_log WHERE 1=1");if(actor!=null&&!actor.isBlank())sql.append(" AND actor=?");if(action!=null&&!action.isBlank())sql.append(" AND action=?");if(before>0)sql.append(" AND created_at<?");sql.append(" ORDER BY created_at DESC LIMIT ?");try(PreparedStatement p=connection.prepareStatement(sql.toString())){int i=1;if(actor!=null&&!actor.isBlank())p.setString(i++,actor);if(action!=null&&!action.isBlank())p.setString(i++,action);if(before>0)p.setLong(i++,before);p.setInt(i,limit);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new AuditRecord(r.getString(1),r.getString(2),r.getString(3),r.getLong(4)));}}return out;}
+
+    // Short positions
+    @Override public synchronized long openShort(UUID id,String symbol,double shares,double price,double margin)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO short_positions(player_uuid,symbol,shares,borrowed_price,margin,opened_at) VALUES(?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,id.toString());p.setString(2,symbol);p.setDouble(3,shares);p.setDouble(4,price);p.setDouble(5,margin);p.setLong(6,System.currentTimeMillis());p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getLong(1):-1;}}}
+    @Override public synchronized List<ShortPosition> openShorts(UUID id)throws SQLException{return shorts("SELECT id,player_uuid,symbol,shares,borrowed_price,margin,opened_at,status FROM short_positions WHERE player_uuid=? AND status='OPEN'",id.toString());}
+    @Override public synchronized List<ShortPosition> allOpenShorts()throws SQLException{return shorts("SELECT id,player_uuid,symbol,shares,borrowed_price,margin,opened_at,status FROM short_positions WHERE status='OPEN'",null);}
+    @Override public synchronized Optional<ShortPosition> shortPosition(long id,UUID playerId)throws SQLException{List<ShortPosition> list=shorts("SELECT id,player_uuid,symbol,shares,borrowed_price,margin,opened_at,status FROM short_positions WHERE id="+id+" AND player_uuid=? AND status='OPEN'",playerId.toString());return list.stream().findFirst();}
+    @Override public synchronized boolean closeShort(long id,UUID playerId)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE short_positions SET status='CLOSED' WHERE id=? AND player_uuid=? AND status='OPEN'")){p.setLong(1,id);p.setString(2,playerId.toString());return p.executeUpdate()>0;}}
+    @Override public synchronized double totalShortMargin(UUID id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT COALESCE(SUM(margin),0) FROM short_positions WHERE player_uuid=? AND status='OPEN'")){p.setString(1,id.toString());try(ResultSet r=p.executeQuery()){return r.next()?r.getDouble(1):0D;}}}
+    @Override public synchronized double reservedShortShares(UUID id,String symbol)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT COALESCE(SUM(shares),0) FROM short_positions WHERE player_uuid=? AND symbol=? AND status='OPEN'")){p.setString(1,id.toString());p.setString(2,symbol);try(ResultSet r=p.executeQuery()){return r.next()?r.getDouble(1):0D;}}}
+    private List<ShortPosition> shorts(String sql,String id)throws SQLException{List<ShortPosition> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement(sql)){if(id!=null)p.setString(1,id);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new ShortPosition(r.getLong(1),UUID.fromString(r.getString(2)),r.getString(3),r.getDouble(4),r.getDouble(5),r.getDouble(6),r.getLong(7),r.getString(8)));}}return out;}
+
+    // Competitions
+    @Override public synchronized int createCompetition(String name,double startCapital,long endsAt)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO competitions(name,start_capital,started_at,ends_at) VALUES(?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,name);p.setDouble(2,startCapital);p.setLong(3,System.currentTimeMillis());p.setLong(4,endsAt);p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getInt(1):-1;}}}
+    @Override public synchronized List<Competition> competitions()throws SQLException{List<Competition> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,name,start_capital,started_at,ends_at,status FROM competitions ORDER BY id DESC");ResultSet r=p.executeQuery()){while(r.next())out.add(new Competition(r.getInt(1),r.getString(2),r.getDouble(3),r.getLong(4),r.getLong(5),r.getString(6)));}return out;}
+    @Override public synchronized Optional<Competition> competition(int id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT id,name,start_capital,started_at,ends_at,status FROM competitions WHERE id=?")){p.setInt(1,id);try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new Competition(r.getInt(1),r.getString(2),r.getDouble(3),r.getLong(4),r.getLong(5),r.getString(6))):Optional.empty();}}}
+    @Override public synchronized boolean joinCompetition(int compId,UUID playerId,double fee)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO competition_entries(competition_id,player_uuid,cash,joined_at) VALUES(?,?,?,?)")){p.setInt(1,compId);p.setString(2,playerId.toString());p.setDouble(3,fee);p.setLong(4,System.currentTimeMillis());return p.executeUpdate()>0;}}
+    @Override public synchronized Optional<CompetitionEntry> competitionEntry(int compId,UUID playerId)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT id,competition_id,player_uuid,cash,joined_at FROM competition_entries WHERE competition_id=? AND player_uuid=?")){p.setInt(1,compId);p.setString(2,playerId.toString());try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new CompetitionEntry(r.getInt(1),r.getInt(2),UUID.fromString(r.getString(3)),r.getDouble(4),r.getLong(5))):Optional.empty();}}}
+    @Override public synchronized List<CompetitionEntry> competitionEntries(int compId)throws SQLException{List<CompetitionEntry> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,competition_id,player_uuid,cash,joined_at FROM competition_entries WHERE competition_id=?")){p.setInt(1,compId);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new CompetitionEntry(r.getInt(1),r.getInt(2),UUID.fromString(r.getString(3)),r.getDouble(4),r.getLong(5)));}}return out;}
+    @Override public synchronized boolean competitionBuy(int compId,UUID playerId,String symbol,double shares,double price,double cost)throws SQLException{tx(()->{try(PreparedStatement p=connection.prepareStatement("UPDATE competition_entries SET cash=cash-? WHERE competition_id=? AND player_uuid=? AND cash>=?")){p.setDouble(1,cost);p.setInt(2,compId);p.setString(3,playerId.toString());p.setDouble(4,cost);if(p.executeUpdate()<=0)throw new SQLException("Insufficient competition cash");}try(PreparedStatement p=connection.prepareStatement("SELECT id,shares,average_cost FROM competition_holdings WHERE competition_id=? AND player_uuid=? AND symbol=?")){p.setInt(1,compId);p.setString(2,playerId.toString());p.setString(3,symbol);try(ResultSet r=p.executeQuery()){if(r.next()){double old=r.getDouble(2),avg=r.getDouble(3),total=old+shares,newAvg=(old*avg+shares*price)/total;try(PreparedStatement u=connection.prepareStatement("UPDATE competition_holdings SET shares=?,average_cost=? WHERE id=?")){u.setDouble(1,total);u.setDouble(2,newAvg);u.setLong(3,r.getLong(1));u.executeUpdate();}}else{try(PreparedStatement ins=connection.prepareStatement("INSERT INTO competition_holdings(competition_id,player_uuid,symbol,shares,average_cost) VALUES(?,?,?,?,?)")){ins.setInt(1,compId);ins.setString(2,playerId.toString());ins.setString(3,symbol);ins.setDouble(4,shares);ins.setDouble(5,price);ins.executeUpdate();}}}}});return true;}
+    @Override public synchronized boolean competitionSell(int compId,UUID playerId,String symbol,double shares,double price,double revenue)throws SQLException{tx(()->{try(PreparedStatement p=connection.prepareStatement("SELECT id,shares FROM competition_holdings WHERE competition_id=? AND player_uuid=? AND symbol=? AND shares>=?")){p.setInt(1,compId);p.setString(2,playerId.toString());p.setString(3,symbol);p.setDouble(4,shares);try(ResultSet r=p.executeQuery()){if(!r.next())throw new SQLException("Insufficient competition shares");double remain=r.getDouble(2)-shares;if(remain<=1e-6){try(PreparedStatement d=connection.prepareStatement("DELETE FROM competition_holdings WHERE id=?")){d.setLong(1,r.getLong(1));d.executeUpdate();}}else{try(PreparedStatement u=connection.prepareStatement("UPDATE competition_holdings SET shares=? WHERE id=?")){u.setDouble(1,remain);u.setLong(2,r.getLong(1));u.executeUpdate();}}}try(PreparedStatement u=connection.prepareStatement("UPDATE competition_entries SET cash=cash+? WHERE competition_id=? AND player_uuid=?")){u.setDouble(1,revenue);u.setInt(2,compId);u.setString(3,playerId.toString());u.executeUpdate();}});return true;}
+    @Override public synchronized List<Holding> competitionHoldings(int compId,UUID playerId)throws SQLException{List<Holding> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT player_uuid,symbol,shares,average_cost FROM competition_holdings WHERE competition_id=? AND player_uuid=? ORDER BY symbol")){p.setInt(1,compId);p.setString(2,playerId.toString());try(ResultSet r=p.executeQuery()){while(r.next())out.add(new Holding(UUID.fromString(r.getString(1)),r.getString(2),r.getDouble(3),r.getDouble(4)));}}return out;}
+    @Override public synchronized List<Holding> allCompetitionHoldings(int compId)throws SQLException{List<Holding> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT player_uuid,symbol,shares,average_cost FROM competition_holdings WHERE competition_id=? ORDER BY player_uuid,symbol")){p.setInt(1,compId);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new Holding(UUID.fromString(r.getString(1)),r.getString(2),r.getDouble(3),r.getDouble(4)));}}return out;}
+    @Override public synchronized void endCompetition(int id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE competitions SET status='ENDED' WHERE id=?")){p.setInt(1,id);p.executeUpdate();}}
+
+    // IPOs
+    @Override public synchronized int createIpo(String symbol,String name,String market,double price,double totalShares,double maxPerPlayer,long closesAt)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO ipos(symbol,name,market,price,total_shares,max_per_player,opened_at,closes_at) VALUES(?,?,?,?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,symbol);p.setString(2,name);p.setString(3,market);p.setDouble(4,price);p.setDouble(5,totalShares);p.setDouble(6,maxPerPlayer);p.setLong(7,System.currentTimeMillis());p.setLong(8,closesAt);p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getInt(1):-1;}}}
+    @Override public synchronized List<IpoOffering> ipos()throws SQLException{List<IpoOffering> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,symbol,name,market,price,total_shares,max_per_player,opened_at,closes_at,status FROM ipos ORDER BY id DESC");ResultSet r=p.executeQuery()){while(r.next())out.add(new IpoOffering(r.getInt(1),r.getString(2),r.getString(3),r.getString(4),r.getDouble(5),r.getDouble(6),r.getDouble(7),r.getLong(8),r.getLong(9),r.getString(10)));}return out;}
+    @Override public synchronized Optional<IpoOffering> ipo(int id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT id,symbol,name,market,price,total_shares,max_per_player,opened_at,closes_at,status FROM ipos WHERE id=?")){p.setInt(1,id);try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new IpoOffering(r.getInt(1),r.getString(2),r.getString(3),r.getString(4),r.getDouble(5),r.getDouble(6),r.getDouble(7),r.getLong(8),r.getLong(9),r.getString(10))):Optional.empty();}}}
+    @Override public synchronized boolean subscribeIpo(int ipoId,UUID playerId,double shares)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO ipo_subscriptions(ipo_id,player_uuid,shares,subscribed_at) VALUES(?,?,?,?)")){p.setInt(1,ipoId);p.setString(2,playerId.toString());p.setDouble(3,shares);p.setLong(4,System.currentTimeMillis());return p.executeUpdate()>0;}}
+    @Override public synchronized List<IpoSubscription> ipoSubscriptions(int ipoId)throws SQLException{List<IpoSubscription> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,ipo_id,player_uuid,shares,subscribed_at FROM ipo_subscriptions WHERE ipo_id=?")){p.setInt(1,ipoId);try(ResultSet r=p.executeQuery()){while(r.next())out.add(new IpoSubscription(r.getInt(1),r.getInt(2),UUID.fromString(r.getString(3)),r.getDouble(4),r.getLong(5)));}}return out;}
+    @Override public synchronized void allocateIpo(int id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE ipos SET status='ALLOCATED' WHERE id=?")){p.setInt(1,id);p.executeUpdate();}}
+    @Override public synchronized void cancelIpo(int id)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE ipos SET status='CANCELLED' WHERE id=?")){p.setInt(1,id);p.executeUpdate();}}
+
+    // Stock certificates
+    @Override public synchronized long issueCertificate(UUID playerId,String symbol,double shares,double price)throws SQLException{try(PreparedStatement p=connection.prepareStatement("INSERT INTO stock_certificates(player_uuid,symbol,shares,issue_price,issued_at) VALUES(?,?,?,?,?)",Statement.RETURN_GENERATED_KEYS)){p.setString(1,playerId.toString());p.setString(2,symbol);p.setDouble(3,shares);p.setDouble(4,price);p.setLong(5,System.currentTimeMillis());p.executeUpdate();try(ResultSet r=p.getGeneratedKeys()){return r.next()?r.getLong(1):-1;}}}
+    @Override public synchronized List<StockCertificate> certificates(UUID playerId)throws SQLException{List<StockCertificate> out=new ArrayList<>();try(PreparedStatement p=connection.prepareStatement("SELECT id,player_uuid,symbol,shares,issue_price,issued_at,status FROM stock_certificates WHERE player_uuid=? AND status='ACTIVE' ORDER BY id DESC")){p.setString(1,playerId.toString());try(ResultSet r=p.executeQuery()){while(r.next())out.add(new StockCertificate(r.getLong(1),UUID.fromString(r.getString(2)),r.getString(3),r.getDouble(4),r.getDouble(5),r.getLong(6),r.getString(7)));}}return out;}
+    @Override public synchronized Optional<StockCertificate> certificate(long id,UUID playerId)throws SQLException{try(PreparedStatement p=connection.prepareStatement("SELECT id,player_uuid,symbol,shares,issue_price,issued_at,status FROM stock_certificates WHERE id=? AND player_uuid=? AND status='ACTIVE'")){p.setLong(1,id);p.setString(2,playerId.toString());try(ResultSet r=p.executeQuery()){return r.next()?Optional.of(new StockCertificate(r.getLong(1),UUID.fromString(r.getString(2)),r.getString(3),r.getDouble(4),r.getDouble(5),r.getLong(6),r.getString(7))):Optional.empty();}}}
+    @Override public synchronized boolean redeemCertificate(long id,UUID playerId)throws SQLException{try(PreparedStatement p=connection.prepareStatement("UPDATE stock_certificates SET status='REDEEMED' WHERE id=? AND player_uuid=? AND status='ACTIVE'")){p.setLong(1,id);p.setString(2,playerId.toString());return p.executeUpdate()>0;}}
+
+    private void tx(SqlAction action)throws SQLException{connection.setAutoCommit(false);try{action.run();connection.commit();}catch(SQLException e){connection.rollback();throw e;}finally{connection.setAutoCommit(true);}}
+    @FunctionalInterface private interface SqlAction{void run()throws SQLException;}
+    @Override public synchronized void close()throws SQLException{if(connection!=null&&!connection.isClosed())connection.close();}
 }

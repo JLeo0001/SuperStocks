@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Map;
 public final class LanguageManager {
     private final JavaPlugin plugin;
     private FileConfiguration language;
+    private FileConfiguration fallbackLanguage;
     private String currentLanguage;
 
     public LanguageManager(JavaPlugin plugin) {
@@ -38,6 +41,21 @@ public final class LanguageManager {
             }
         }
         language = YamlConfiguration.loadConfiguration(target);
+        File fallbackFile = new File(folder, "en_US.yml");
+        if (!fallbackFile.exists() && plugin.getResource("Language/en_US.yml") != null) {
+            plugin.saveResource("Language/en_US.yml", false);
+        }
+        fallbackLanguage = plugin.getTextResource("Language/en_US.yml") == null
+                ? YamlConfiguration.loadConfiguration(fallbackFile)
+                : YamlConfiguration.loadConfiguration(plugin.getTextResource("Language/en_US.yml"));
+        if (plugin.getResource("Language/en_US.yml") != null) {
+            try (InputStreamReader reader = new InputStreamReader(
+                    plugin.getResource("Language/en_US.yml"), StandardCharsets.UTF_8)) {
+                language.setDefaults(YamlConfiguration.loadConfiguration(reader));
+            } catch (Exception ex) {
+                plugin.getLogger().warning("无法加载默认语言回退: " + ex.getMessage());
+            }
+        }
     }
 
     public String text(String path) {
@@ -45,8 +63,11 @@ public final class LanguageManager {
     }
 
     public String text(String path, Map<String, String> placeholders) {
-        String value = language.getString(path, path);
-        return color(replace(value, placeholders));
+        String value = language.getString(path);
+        if (value == null && fallbackLanguage != null) {
+            value = fallbackLanguage.getString(path);
+        }
+        return color(replace(value == null ? path : value, placeholders));
     }
 
     public List<String> list(String path) {
@@ -55,6 +76,9 @@ public final class LanguageManager {
 
     public List<String> list(String path, Map<String, String> placeholders) {
         List<String> values = language.getStringList(path);
+        if (values.isEmpty() && fallbackLanguage != null) {
+            values = fallbackLanguage.getStringList(path);
+        }
         List<String> result = new ArrayList<>();
         for (String value : values) {
             result.add(color(replace(value, placeholders)));

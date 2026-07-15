@@ -17,3 +17,5 @@ permissions:
     default: true
   superstocks.admin:
     default: op
+  superstocks.penalty.exempt:
+    default: op

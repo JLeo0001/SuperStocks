@@ -1,48 +1,44 @@
 # SuperStocks 主配置文件
-# 修改后可使用 /stocks reload 重载大部分配置。
+# 修改后使用 /stocks reload 即可热重载，无需重启服务器。
+# 开箱即用：安装插件后直接启动即可交易，高风险功能均已默认关闭。
 
-# 当前语言文件名，对应 plugins/SuperStocks/Language/<language>.yml
-# 默认: zh_CN
-# 可选语言，按字母顺序排列:
-#   ar_SA - العربية
-#   de_DE - Deutsch
-#   en_US - English
-#   es_ES - Español
-#   fr_FR - Français
-#   ja_JP - 日本語
-#   ko_KR - 한국어
-#   pt_BR - Português do Brasil
-#   ru_RU - Русский
-#   zh_CN - 简体中文
-#   zh_HK - 繁體中文（香港）
-#   zh_MO - 繁體中文（澳門）
-#   zh_TW - 繁體中文（台灣）
+# 语言。文件位于 plugins/SuperStocks/Language/<语言>.yml
+# 内置 13 种语言: zh_CN / zh_HK / zh_MO / zh_TW / en_US
+#   ja_JP / ko_KR / ar_SA / de_DE / es_ES / fr_FR / pt_BR / ru_RU
 language: zh_CN
 
+# 配置版本号，升级插件时自动补齐新配置项，切勿手动降低。
+config-version: 2
+
+# ============================================================
+# 行情源 —— 现实股票数据从哪获取
+# ============================================================
 stock-provider:
-  # 当前启用的数据源，只能选择一个。
-  # 可选: tencent, eastmoney, ths, xueqiu, sina
-  # 说明: 默认腾讯财经已验证可用。其他数据源预留独立配置项，适合接入兼容代理或后续扩展解析器。
+  # 当前启用的数据源。内置腾讯财经解析器，其余为预留项。
   active: tencent
 
-  # 行情自动刷新间隔，单位秒。不要设置过低，避免外部接口限流。
+  # 自动刷新间隔（秒）。建议 300-600，过短可能被接口限流。
   refresh-seconds: 300
 
-  # HTTP 请求超时时间，单位秒。
+  # HTTP 请求超时（秒），网络差可调大到 15。
   timeout-seconds: 8
 
-  # 同步成功时是否在控制台输出数量统计。
+  # 同步成功时是否在控制台打印数量。
   log-success: true
 
   sources:
+    # 内置解析器仅支持腾讯财经。其余为预留数据源。
     tencent:
       display-name: "腾讯财经"
       endpoint: "https://qt.gtimg.cn/q={symbols}"
       encoding: "GBK"
       symbol-separator: ","
+      # 单次请求最多携带多少只股票。
       max-symbols-per-request: 80
       user-agent: "SuperStocks/1.0"
 
+    # 以下为预留数据源，内置解析器暂时无法直接使用。
+    # 可用于接入自建代理或后续扩展的解析器。
     eastmoney:
       display-name: "东方财富"
       endpoint: "https://example.com/eastmoney?q={symbols}"
@@ -75,11 +71,15 @@ stock-provider:
       max-symbols-per-request: 80
       user-agent: "SuperStocks/1.0"
 
-# 市场和股票代码配置。
-# 腾讯财经代码示例: A股 sh600519 / sz000001，港股 hk00700，美股 usAAPL。
+# ============================================================
+# 现实股票市场 —— 每市场包含多只股票
+# 代码格式: sh600519（上A）/ sz000001（深A）/ hk00700（港股）/ usAAPL（美股）
+# 建议每市场保留 10-20 只，过多会拖慢同步速度。
+# ============================================================
 markets:
   cn:
     display-name: "A股"
+    # GUI 入口图标，对应 Bukkit Material 名称。
     icon: EMERALD
     symbols:
       - "sh600519"
@@ -153,29 +153,319 @@ markets:
       - "usJPM"
       - "usV"
 
-# 经济与交易配置。
-economy:
-  # 每次买入/卖出的税率百分比。
-  transaction-tax-percent: 0.5
-  # 最低交易股数。
-  min-shares: 1
+# ============================================================
+# 游戏内波动增强 —— 让价格变化在 MC 经济中更明显
+# 默认关闭，开启后不影响外部真实数据。
+# ============================================================
+gameplay-volatility:
+  price-multiplier:
+    # 游戏内价格 = 真实价格 × 倍数。适合货币量大的服务器。
+    enabled: false
+    multiplier: 1.0
 
-# GUI 界面配置。
+  random-adjustment:
+    # 每只股票附加一个随机偏移（%），让日内波动更明显。
+    enabled: false
+    min-percent: -3.0
+    max-percent: 3.0
+    # 随机偏移的刷新间隔（秒）。
+    refresh-seconds: 300
+
+  safety:
+    # 游戏内价格下限，防止波动到 0 以下。
+    min-price: 0.01
+    # 游戏内价格上限，防止配置错误导致价格爆炸。
+    max-price: 1000000000.0
+
+# ============================================================
+# 本地自定义股市 —— 不依赖外部接口的完全虚拟市场
+# 配置文件: plugins/SuperStocks/CustomMarkets/*.yml
+# 首次启动会自动生成示例文件 example.yml。
+# ============================================================
+custom-markets:
+  # 总开关。不需要本地股市可设为 false。
+  enabled: true
+  # 所有本地市场的统一 tick 间隔（秒）。
+  global-tick-seconds: 300
+
+# ============================================================
+# 亏损代价 —— 投资组合浮亏时自动惩罚玩家
+# ⚠️ 默认关闭。开启后会在玩家亏损时扣款或执行命令。
+#    普通生存服不建议开启，高风险投资服可按需启用。
+# ============================================================
+loss-penalty:
+  # 总开关。
+  enabled: false
+  # 检查玩家亏损的间隔（秒）。
+  check-interval-seconds: 600
+  # 同一玩家两次惩罚的最小间隔（秒），防止连续收割。
+  player-cooldown-seconds: 3600
+  # 持仓成本低于此值不触发，避免小额试投也挨罚。
+  minimum-portfolio-cost: 1000.0
+  # 实际亏损金额低于此值不触发。
+  minimum-loss-amount: 100.0
+  target:
+    # 仅在线玩家受罚，离线玩家跳过。
+    online-only: true
+
+  # 亏损档位：插件会按亏损比例（亏损 ÷ 成本 × 100%）匹配最高档位。
+  # 扣款 = 固定金额 + 亏损额×百分比 + 持仓市值×百分比，最终不超过 max-amount。
+  tiers:
+    light:
+      # 亏损 5% ~ 10% 时触发本档
+      enabled: true
+      min-loss-percent: 5.0
+      max-loss-percent: 10.0
+      # 固定基础扣款
+      fixed-amount: 0.0
+      # 按亏损金额的百分比加扣
+      percent-of-loss: 0.5
+      # 按当前持仓市值的百分比加扣
+      percent-of-portfolio-value: 0.0
+      # 本档单次扣款上限
+      max-amount: 1000.0
+
+    normal:
+      # 亏损 10% ~ 20% 时触发本档
+      enabled: true
+      min-loss-percent: 10.0
+      max-loss-percent: 20.0
+      fixed-amount: 50.0
+      percent-of-loss: 1.5
+      percent-of-portfolio-value: 0.1
+      max-amount: 5000.0
+
+    severe:
+      # 亏损 ≥ 20%（max-loss-percent = -1 表示无上限）
+      enabled: true
+      min-loss-percent: 20.0
+      max-loss-percent: -1.0
+      fixed-amount: 100.0
+      percent-of-loss: 3.0
+      percent-of-portfolio-value: 0.3
+      max-amount: 20000.0
+
+  actions:
+    vault-withdraw:
+      # 是否从 Vault 余额直接扣款。
+      enabled: false
+      # 扣款最多扣到 0，不会让余额变负。
+      never-negative-balance: true
+
+    commands:
+      # 是否执行控制台命令（可给负面药水效果等）。
+      enabled: false
+      # 可用变量: {player} {uuid} {tier} {loss} {loss_percent} {portfolio_value} {cost} {vault_penalty}
+      list: []
+
+    notify:
+      # 是否向在线玩家发送提示消息。
+      enabled: true
+      message: "&c你的投资组合亏损 {loss} ({loss_percent}%)，触发 {tier} 档亏损代价，本次扣款 {vault_penalty}。"
+
+# ============================================================
+# 行情异常保护 —— 拒绝异常数据，防止经济被意外摧毁
+# 公开服务器强烈建议全部保持开启。
+# ============================================================
+quote-safety:
+  # 行情过期后禁止交易（比如外部接口挂了很久）。
+  reject-stale-quotes: true
+  # 超过多少秒视为过期。建议设为刷新间隔的 2-3 倍。
+  max-quote-age-seconds: 900
+  # 拒绝单次价格跳变幅度过大的行情。
+  reject-abnormal-change: true
+  # 单次同步允许的最大价格变化（%）。
+  max-change-percent-per-sync: 25.0
+  circuit-breaker:
+    # 游戏内价格短时间波动过大时冻结该股票。
+    enabled: true
+    # 触发熔断的涨跌幅阈值（%）。
+    stock-max-change-percent: 15.0
+    # 熔断后冻结多久（秒）。
+    freeze-seconds: 600
+
+# ============================================================
+# 交易时段限制 —— 按真实股市开盘时间控制交易
+# 默认关闭（24/7 可交易）。开启后休市期间禁止买入。
+# closed-action: DENY（禁止买卖）/ SELL_ONLY（休市只允许卖出）
+# ============================================================
+market-hours:
+  cn:
+    # 设为 true 后，该市场仅在 open-close 时段可交易。
+    enabled: false
+    timezone: "Asia/Shanghai"
+    open: "09:30"
+    close: "15:00"
+    # 是否允许周末交易。
+    weekends: false
+    # DENY = 休市禁止买卖 / SELL_ONLY = 只允许卖出
+    closed-action: "DENY"
+  hk:
+    enabled: false
+    timezone: "Asia/Hong_Kong"
+    open: "09:30"
+    close: "16:00"
+    weekends: false
+    closed-action: "DENY"
+  us:
+    enabled: false
+    timezone: "America/New_York"
+    open: "09:30"
+    close: "16:00"
+    weekends: false
+    closed-action: "DENY"
+
+# ============================================================
+# 交易风控 —— 防止玩家高频刷单扰乱经济
+# ============================================================
+trading:
+  # 管理员紧急暂停开关。使用 /stocks pause|resume 切换。
+  paused: false
+  # 同一玩家两次手动交易的最小间隔（毫秒）。
+  cooldown-milliseconds: 1000
+  # 同一玩家每分钟最多手动交易次数。
+  max-trades-per-minute: 20
+  # 单笔交易最多买卖多少股。0 = 不限。
+  max-shares-per-trade: 10000
+  # 单只股票最大持仓市值。0 = 不限。大服建议设 1000000 防垄断。
+  max-position-value: 0.0
+
+# ============================================================
+# 交易费用 —— 影响玩家 Vault 余额的实际扣款
+# 默认税率 0.5% 很低，玩家基本不会抱怨。
+# ============================================================
+economy:
+  # 每笔买入/卖出的基础税率（%）。
+  transaction-tax-percent: 0.5
+  # 每次交易最少买入/卖出多少股。
+  min-shares: 1
+  # 单笔交易股数达到此值视为大额交易。
+  large-trade-threshold-shares: 1000
+  # 大额交易额外加收的税率（%）。
+  large-trade-extra-tax-percent: 0.2
+  # 短线惩罚税：买入后太快卖出额外扣钱，鼓励长期持有。
+  short-term-tax:
+    enabled: false
+    # 持有多久才算"短线"（小时）。
+    minimum-holding-hours: 24
+    # 短线卖出额外税率（%）。
+    percent: 1.0
+
+# ============================================================
+# 自动订单 —— 限价单 / 止损单 / 止盈单
+# 玩家用 /stocks order 创建，插件按周期自动检查触发。
+# ============================================================
+orders:
+  enabled: true
+  # 每名玩家最多同时持有多少开放订单。
+  max-open-per-player: 10
+
+# 自动订单和提醒的检查间隔（秒）。不建议低于 10。
+automation:
+  check-seconds: 30
+
+# 价格提醒 —— 玩家用 /stocks alert 设置目标价，到达时通知。
+alerts:
+  enabled: true
+
+# ============================================================
+# 股息 —— 定期按持仓市值向所有持有者发钱
+# ⚠️ 默认关闭。开启后经济系统会持续注入货币。
+# ============================================================
+dividends:
+  enabled: false
+  # 发放间隔（小时）。168 = 一周。
+  interval-hours: 168
+  # 按持仓市值多大比例发放（%）。
+  yield-percent: 0.5
+  # 至少持有多少小时才有资格领取，防止发放前突击买入。
+  minimum-holding-hours: 24
+
+# ============================================================
+# 价格历史 —— 记录每只股票的历史价格
+# 用于 /stocks history 命令和 GUI 走势图。
+# ============================================================
+price-history:
+  enabled: true
+  # 历史数据保留天数，超期自动清理。
+  retention-days: 30
+
+# ============================================================
+# 本地市场随机事件 —— 模拟"突发新闻"造成价格跳变
+# ⚠️ 默认关闭。仅影响本地自定义股市，不影响现实行情。
+# ============================================================
+market-events:
+  enabled: false
+  # 每只股票每次 tick 触发事件的概率（%）。
+  chance-percent-per-tick: 2.0
+  # 事件对价格的影响范围（%），负数=利空跳跌，正数=利好跳涨。
+  min-impact-percent: -5.0
+  max-impact-percent: 5.0
+  # 冲击幅度超过此值向全服广播消息。0 = 不广播。
+  announce-threshold-percent: 3.0
+
+# ============================================================
+# 做空 —— 借股票高价卖出，等跌了再低价买回归还
+# 默认开启。如果不需要可设为 enabled: false。
+# ============================================================
+short-selling:
+  enabled: true
+  # 单笔做空最大股数。
+  max-shares-per-position: 10000
+  # 做空强平检测间隔（秒）。
+  check-seconds: 120
+  # 做空每日利息（%），0 = 免息。
+  interest-percent-per-day: 0.0
+  margin:
+    # 开仓时需要冻结的保证金 = 做空市值 × 该比例（%）
+    required-percent: 50
+    # 亏损超过保证金该比例（%）时自动强制平仓
+    liquidation-percent: 50
+
+# ============================================================
+# 投资大赛 —— 支付报名费获得虚拟资金，赛季结束按收益排名
+# 奖励金额务必根据你服务器的经济规模调整。
+# ============================================================
+competition:
+  enabled: true
+  # 奖励格式: "排名:Vault金额"，从第 1 名开始。
+  # 小型服务器建议 5000/2000/1000，大型服可适当提高。
+  rewards:
+    - "1: 5000"
+    - "2: 2000"
+    - "3: 1000"
+
+# ============================================================
+# 市场报告 —— 定时向全服广播市场摘要
+# 默认关闭以免打扰。需要时开启并设置间隔。
+# ============================================================
+market-report:
+  enabled: false
+  # 报告发布间隔（小时）。24 = 每天一次。
+  interval-hours: 24
+
+# ============================================================
+# GUI 界面 —— 所有箱子界面的尺寸、材质、槽位
+# 尺寸必须是 9 的倍数（9/18/27/36/45/54）。
+# ============================================================
 gui:
-  # 大厅改为 45 格，让所有按钮都能对称放在内部区域。
+  # 各界面尺寸。
   main-size: 45
   market-size: 54
   stock-size: 27
   portfolio-size: 54
+  watchlist-size: 54
   ranking-size: 54
 
-  # 是否用玻璃板填充边框。
+  # 是否用玻璃板填充边框空位。
   fill-empty-slots: true
   filler-material: GRAY_STAINED_GLASS_PANE
 
+  # 各按钮的材质。使用 Bukkit Material 名称（1.21+）。
   stats-material: KNOWLEDGE_BOOK
   back-material: ARROW
   portfolio-material: CHEST
+  watchlist-material: SPYGLASS
   winners-material: NETHER_STAR
   losers-material: WITHER_SKELETON_SKULL
   quote-up-material: LIME_CONCRETE
@@ -186,29 +476,51 @@ gui:
   buy-material: LIME_DYE
   sell-material: RED_DYE
 
-  # 交易详情页显示的快捷数量，最多显示前三个。
+  # 股票详情页的快捷交易数量按钮（取前三个值）。
   trade-amounts:
     - 1
     - 10
     - 100
 
+  # 二次确认页：交易金额超过该值弹出确认界面。
+  trade-confirmation:
+    enabled: true
+    # 设为 0 则所有 GUI 交易都需要二次确认。
+    minimum-gross: 1000.0
+
   # 排行榜显示前多少名。
   ranking-limit: 10
 
-  # GUI 槽位。注意不要把按钮放在边框槽位。
+  # 各界面按钮的固定槽位。注意不要放到边框槽位上。
   layout:
+    # 主页
     main-stats-slot: 13
-    main-market-slots: [20, 22, 24]
+    main-market-slots: [19, 20, 22, 24, 25]
     main-winners-slot: 29
     main-portfolio-slot: 31
     main-losers-slot: 33
+    main-watchlist-slot: 30
+    # 市场页
     market-stats-slot: 4
     market-back-slot: 49
+    # 持仓页
     portfolio-back-slot: 49
+    # 排行榜页
     ranking-back-slot: 49
+    # 自选股页
+    watchlist-back-slot: 49
+    # 股票详情页
     stock-quote-slot: 4
     stock-back-slot: 22
+    # 翻页按钮（底栏）
+    previous-page-slot: 47
+    page-info-slot: 50
+    next-page-slot: 51
 
-# 数据库配置。
+# ============================================================
+# 数据库
+# ============================================================
+# SQLite 数据库文件，位于 plugins/SuperStocks/ 下。
+# 包含所有玩家持仓、交易记录、订单等数据，请定期备份。
 database:
   file: "stocks.db"
