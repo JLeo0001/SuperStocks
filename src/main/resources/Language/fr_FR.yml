@@ -284,6 +284,15 @@ gui:
   total-trades: "&fTotal Trades"
   last-sync: "&fLast Sync"
   vault: "&fVault Status"
+  certificate:
+    name: "&6Stock Certificate &f#{id}"
+    lore:
+      - "&7Stock: &f{symbol}"
+      - "&7Shares: &f{shares}"
+      - "&7Issue price: &f{price}"
+      - ""
+      - "&eRight-click air &7to redeem"
+      - "&7Can be traded between players"
   common:
     back-name: "&fRetour"
     back-main-name: "&fRetour au menu principal"

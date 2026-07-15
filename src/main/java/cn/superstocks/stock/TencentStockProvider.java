@@ -31,7 +31,13 @@ public final class TencentStockProvider implements StockProvider {
     public TencentStockProvider(ConfigurationSection sourceConfig, int timeoutSeconds) {
         this.timeout = Duration.ofSeconds(timeoutSeconds);
         this.endpoint = sourceConfig.getString("endpoint", "https://qt.gtimg.cn/q={symbols}");
-        this.encoding = Charset.forName(sourceConfig.getString("encoding", "GBK"));
+        Charset parsedCharset;
+        try {
+            parsedCharset = Charset.forName(sourceConfig.getString("encoding", "GBK"));
+        } catch (IllegalArgumentException ex) {
+            parsedCharset = Charset.forName("GBK");
+        }
+        this.encoding = parsedCharset;
         this.separator = sourceConfig.getString("symbol-separator", ",");
         this.maxSymbolsPerRequest = Math.max(1, sourceConfig.getInt("max-symbols-per-request", 80));
         this.userAgent = sourceConfig.getString("user-agent", "SuperStocks/1.0");

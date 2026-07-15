@@ -175,8 +175,10 @@ public final class AutomationService {
                 continue;
             }
             OfflinePlayer player = Bukkit.getOfflinePlayer(holding.playerId());
-            Bukkit.getScheduler().runTask(plugin, () -> economy.deposit(player, amount));
-            storage.recordDividend(holding.playerId(), amount);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                economy.deposit(player, amount);
+                try { storage.recordDividend(holding.playerId(), amount); } catch (SQLException ignored) {}
+            });
         }
     }
 

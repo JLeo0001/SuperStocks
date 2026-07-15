@@ -26,7 +26,7 @@ public final class AdminGui {
 
     public AdminGui(SuperStocksPlugin plugin) { this.plugin = plugin; }
 
-    public void open(Player player, int page) {
+    public void open(Player player) {
         if (!player.hasPermission("superstocks.admin")) { player.sendMessage(lang().text("commands.no-permission")); return; }
         Inventory inv = Bukkit.createInventory(new StocksInventoryHolder(), 54, lang().text("gui.admin.title"));
         decorate(inv);
@@ -42,8 +42,8 @@ public final class AdminGui {
         player.openInventory(inv);
     }
 
-    private int countHoldings() { try { return plugin.storage().allHoldings().size(); } catch (Exception e) { return 0; } }
-    private int countActivePlayers() { try { Set<UUID> set = new HashSet<>(); for (Holding h : plugin.storage().allHoldings()) set.add(h.playerId()); return set.size(); } catch (Exception e) { return 0; } }
+    private int countHoldings() { try { return plugin.storage().allHoldings().size(); } catch (Exception ignored) { return 0; } }
+    private int countActivePlayers() { try { Set<UUID> set = new HashSet<>(); for (Holding h : plugin.storage().allHoldings()) set.add(h.playerId()); return set.size(); } catch (Exception ignored) { return 0; } }
 
     private ItemStack statItem(Material mat, String key, String label, Object value) {
         String name = lang().text(key);

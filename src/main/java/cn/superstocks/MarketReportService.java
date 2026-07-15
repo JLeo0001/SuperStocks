@@ -62,20 +62,40 @@ public final class MarketReportService {
     }
 
     private void refreshBossBars() {
+        List<UUID> toRemove = new ArrayList<>();
+        Map<UUID, BossBarUpdate> updates = new HashMap<>();
         pinnedBars.forEach((uuid, bar) -> {
             Player player = Bukkit.getPlayer(uuid);
-            if (player == null || !player.isOnline()) { bar.removeAll(); pinnedBars.remove(uuid); pinnedSymbols.remove(uuid); return; }
+            if (player == null || !player.isOnline()) {
+                toRemove.add(uuid);
+                return;
+            }
             String symbol = pinnedSymbols.get(uuid);
             if (symbol == null) return;
             stocks.quote(symbol).ifPresent(q -> {
                 String arrow = q.change() >= 0 ? "&a▲" : "&c▼";
-                bar.setColor(q.change() >= 0 ? BarColor.GREEN : BarColor.RED);
-                bar.setTitle(LanguageManager.color("&f" + q.name() + " &7| &f" + format(q.price()) + " " + arrow + " &f" + format(Math.abs(q.changePercent())) + "%"));
+                String title = LanguageManager.color("&f" + q.name() + " &7| &f" + format(q.price()) + " " + arrow + " &f" + format(Math.abs(q.changePercent())) + "%");
+                BarColor color = q.change() >= 0 ? BarColor.GREEN : BarColor.RED;
                 double progress = Math.max(0.05, Math.min(1.0, (q.changePercent() + 10) / 20));
-                bar.setProgress(progress);
+                updates.put(uuid, new BossBarUpdate(bar, title, color, progress));
+            });
+        });
+        // BossBar API must be called on main thread
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            for (UUID uuid : toRemove) {
+                BossBar bar = pinnedBars.remove(uuid);
+                if (bar != null) bar.removeAll();
+                pinnedSymbols.remove(uuid);
+            }
+            updates.values().forEach(u -> {
+                u.bar.setTitle(u.title);
+                u.bar.setColor(u.color);
+                u.bar.setProgress(u.progress);
             });
         });
     }
+
+    private record BossBarUpdate(BossBar bar, String title, BarColor color, double progress) {}
 
     private void publishReport() {
         Map<String, Double> prices = stocks.priceSnapshot();

@@ -95,6 +95,8 @@ public final class ShortSellingService {
             if (!economy.withdraw(player, interest)) return fail("messages.withdraw-failed");
         }
         if (!economy.withdraw(player, margin)) return fail("messages.withdraw-failed");
+        // 记入卖出所得（做空本质：先卖出借入的股票获得现金，未来再买回归还）
+        economy.deposit(player, value);
         long id = storage.openShort(player.getUniqueId(), symbol, shares, q.price(), margin);
         storage.audit(player.getName(), "SHORT_OPEN", symbol + " x" + shares + " @" + q.price());
         return ok("messages.short-opened", "id", id, "symbol", symbol, "shares", TradeService.formatNumber(shares),

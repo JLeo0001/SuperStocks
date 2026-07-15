@@ -287,6 +287,15 @@ gui:
     cancel-name: "&cCancel"
     cancel-lore:
       - "&7Return to the stock page."
+  certificate:
+    name: "&6Stock Certificate &f#{id}"
+    lore:
+      - "&7Stock: &f{symbol}"
+      - "&7Shares: &f{shares}"
+      - "&7Issue price: &f{price}"
+      - ""
+      - "&eRight-click air &7to redeem"
+      - "&7Can be traded between players"
   common:
     back-name: "&fBack"
     back-main-name: "&fBack to Main"

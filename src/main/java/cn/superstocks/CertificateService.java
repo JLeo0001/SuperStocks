@@ -41,15 +41,12 @@ public final class CertificateService implements Listener {
         long id = storage.issueCertificate(player.getUniqueId(), symbol, shares, price);
         ItemStack item = new ItemStack(Material.PAPER);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(LanguageManager.color("&6股票凭证 &f#" + id));
-        meta.setLore(List.of(
-                LanguageManager.color("&7股票: &f" + symbol),
-                LanguageManager.color("&7数量: &f" + TradeService.formatNumber(shares)),
-                LanguageManager.color("&7发行价: &f" + (price > 0 ? String.format("%.2f", price) : "-")),
-                LanguageManager.color(""),
-                LanguageManager.color("&e右键空气 &7兑换为持仓"),
-                LanguageManager.color("&7可在玩家间交易")
-        ));
+        meta.setDisplayName(language.text("gui.certificate.name", language.vars("id", id)));
+        meta.setLore(language.list("gui.certificate.lore", language.vars(
+                "symbol", symbol,
+                "shares", TradeService.formatNumber(shares),
+                "price", price > 0 ? String.format("%.2f", price) : "-"
+        )));
         meta.getPersistentDataContainer().set(certIdKey, PersistentDataType.LONG, id);
         item.setItemMeta(meta);
         return item;
@@ -57,6 +54,9 @@ public final class CertificateService implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        // Only respond to right-click (air or block), as stated in the item lore
+        if (event.getAction() != org.bukkit.event.block.Action.RIGHT_CLICK_AIR
+                && event.getAction() != org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) return;
         ItemStack item = event.getItem();
         if (item == null || !item.hasItemMeta()) return;
         PersistentDataContainer data = item.getItemMeta().getPersistentDataContainer();

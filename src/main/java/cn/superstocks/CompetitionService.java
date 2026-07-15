@@ -69,7 +69,7 @@ public final class CompetitionService {
         Optional<StockQuote> quote = stocks.quote(symbol);
         if (quote.isEmpty()) return fail("messages.quote-unavailable");
         double revenue = quote.get().price() * shares;
-        storage.competitionSell(compId, player.getUniqueId(), symbol, shares, revenue);
+        storage.competitionSell(compId, player.getUniqueId(), symbol, shares, quote.get().price(), revenue);
         return ok("messages.competition-sold", "symbol", symbol, "shares", TradeService.formatNumber(shares), "revenue", format(revenue));
     }
 

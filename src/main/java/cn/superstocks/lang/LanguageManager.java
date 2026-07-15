@@ -45,9 +45,19 @@ public final class LanguageManager {
         if (!fallbackFile.exists() && plugin.getResource("Language/en_US.yml") != null) {
             plugin.saveResource("Language/en_US.yml", false);
         }
-        fallbackLanguage = plugin.getTextResource("Language/en_US.yml") == null
-                ? YamlConfiguration.loadConfiguration(fallbackFile)
-                : YamlConfiguration.loadConfiguration(plugin.getTextResource("Language/en_US.yml"));
+        if (fallbackFile.exists()) {
+            fallbackLanguage = YamlConfiguration.loadConfiguration(fallbackFile);
+        } else if (plugin.getResource("Language/en_US.yml") != null) {
+            try (InputStreamReader reader = new InputStreamReader(
+                    plugin.getResource("Language/en_US.yml"), StandardCharsets.UTF_8)) {
+                fallbackLanguage = YamlConfiguration.loadConfiguration(reader);
+            } catch (Exception ex) {
+                fallbackLanguage = new YamlConfiguration();
+                plugin.getLogger().warning("无法加载 en_US 回退语言: " + ex.getMessage());
+            }
+        } else {
+            fallbackLanguage = new YamlConfiguration();
+        }
         if (plugin.getResource("Language/en_US.yml") != null) {
             try (InputStreamReader reader = new InputStreamReader(
                     plugin.getResource("Language/en_US.yml"), StandardCharsets.UTF_8)) {
