@@ -41,7 +41,7 @@ public final class SuperStocksExpansion extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (player == null || player.getUniqueId() == null) {
-            return "";
+            return null;
         }
         try {
             return switch (params.toLowerCase()) {
@@ -53,7 +53,7 @@ public final class SuperStocksExpansion extends PlaceholderExpansion {
                 default -> stockShares(player, params);
             };
         } catch (SQLException ex) {
-            plugin.getLogger().warning("PlaceholderAPI 查询失败: " + ex.getMessage());
+            plugin.getLogger().warning("PlaceholderAPI query failed: " + ex.getMessage());
             return "0";
         }
     }
@@ -61,7 +61,7 @@ public final class SuperStocksExpansion extends PlaceholderExpansion {
     private String stockShares(OfflinePlayer player, String params) throws SQLException {
         String lower = params.toLowerCase();
         if (!lower.startsWith("shares_")) {
-            return "";
+            return null;
         }
         String symbol = params.substring("shares_".length());
         return plugin.tradeService().holding(player.getUniqueId(), symbol)
