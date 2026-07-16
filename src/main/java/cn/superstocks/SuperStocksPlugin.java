@@ -62,7 +62,7 @@ public final class SuperStocksPlugin extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
             expansion = new SuperStocksExpansion(this); expansion.register();
         }
-        new ConfigValidator(this).log();
+        new ConfigValidator(this, language).log();
         startServices();
         getLogger().info("SuperStocks enabled.");
     }
@@ -104,7 +104,7 @@ public final class SuperStocksPlugin extends JavaPlugin {
         ipoService = new IpoService(this, storage, stockService, economy, language);
         certificateService = new CertificateService(this, storage, stockService, economy, language);
         marketReportService = new MarketReportService(this, stockService, language);
-        new ConfigValidator(this).log();
+        new ConfigValidator(this, language).log();
         startServices();
     }
 

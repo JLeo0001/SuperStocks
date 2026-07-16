@@ -76,8 +76,13 @@ public final class MarketReportService {
             String symbol = pinnedSymbols.get(uuid);
             if (symbol == null) return;
             stocks.quote(symbol).ifPresent(q -> {
-                String arrow = q.change() >= 0 ? "&a▲" : "&c▼";
-                String title = LanguageManager.color("&f" + q.name() + " &7| &f" + format(q.price()) + " " + arrow + " &f" + format(Math.abs(q.changePercent())) + "%");
+                String arrow = q.change() >= 0 ? language.text("bossbar.arrow-up") : language.text("bossbar.arrow-down");
+                String title = language.text("bossbar.pin-format", language.vars(
+                        "name", q.name(),
+                        "price", format(q.price()),
+                        "arrow", arrow,
+                        "change_percent", format(Math.abs(q.changePercent()))
+                ));
                 BarColor color = q.change() >= 0 ? BarColor.GREEN : BarColor.RED;
                 double progress = Math.max(0.05, Math.min(1.0, (q.changePercent() + 10) / 20));
                 updates.put(uuid, new BossBarUpdate(bar, title, color, progress));

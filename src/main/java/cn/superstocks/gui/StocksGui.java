@@ -364,7 +364,7 @@ public final class StocksGui implements Listener {
     }
 
     private ItemStack marketItem(String market, String name) {
-        return item(materialName(plugin.stockService().marketIcon(market), Material.EMERALD), "&a" + name,
+        return item(materialName(plugin.stockService().marketIcon(market), Material.EMERALD), lang().text("gui.format.market-name", lang().vars("name", name)),
                 lang().list("gui.main.market-lore", lang().vars(
                         "market", name,
                         "configured", plugin.stockService().configuredCount(market),
@@ -408,7 +408,7 @@ public final class StocksGui implements Listener {
                     "trend", trend(history)
             )));
         }
-        return item(material, "&f" + quote.name(), lore, GuiAction.stock(quote.symbol()));
+        return item(material, lang().text("gui.format.stock-name", lang().vars("name", quote.name())), lore, GuiAction.stock(quote.symbol()));
     }
 
     private String trend(List<cn.superstocks.model.PricePoint> points) {
@@ -441,13 +441,13 @@ public final class StocksGui implements Listener {
 
     private ItemStack holdingItem(Holding holding, StockQuote quote) {
         if (quote == null) {
-            return item(material("gui.holding-material", Material.PAPER), "&f" + holding.symbol(), lang().list("gui.portfolio.holding-missing-lore", lang().vars(
+            return item(material("gui.holding-material", Material.PAPER), lang().text("gui.format.stock-symbol", lang().vars("symbol", holding.symbol())), lang().list("gui.portfolio.holding-missing-lore", lang().vars(
                     "symbol", holding.symbol(),
                     "shares", TradeService.formatNumber(holding.shares()),
                     "average_cost", format(holding.averageCost())
             )), GuiAction.portfolio());
         }
-        return item(material("gui.holding-material", Material.PAPER), "&f" + quote.name(), lang().list("gui.portfolio.holding-lore", lang().vars(
+        return item(material("gui.holding-material", Material.PAPER), lang().text("gui.format.stock-name", lang().vars("name", quote.name())), lang().list("gui.portfolio.holding-lore", lang().vars(
                 "symbol", holding.symbol(),
                 "shares", TradeService.formatNumber(holding.shares()),
                 "average_cost", format(holding.averageCost()),

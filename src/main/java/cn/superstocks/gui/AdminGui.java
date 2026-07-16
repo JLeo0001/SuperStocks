@@ -47,7 +47,7 @@ public final class AdminGui {
 
     private ItemStack statItem(Material mat, String key, String label, Object value) {
         String name = lang().text(key);
-        List<String> lore = List.of(LanguageManager.color("&7" + label + ": &f" + value));
+        List<String> lore = List.of(lang().text("gui.admin.stat-format", lang().vars("label", label, "value", String.valueOf(value))));
         return item(mat, name, lore, GuiAction.market("__main__"));
     }
 

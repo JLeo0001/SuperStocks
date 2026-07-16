@@ -611,7 +611,7 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
         String sub = args[1].toLowerCase();
         switch (sub) {
             case "list" -> {
-                try { for (var c : plugin.competition().list()) sender.sendMessage(LanguageManager.color("&e#" + c.id() + " &f" + c.name() + " &7" + c.status())); }
+                try { for (var c : plugin.competition().list()) sender.sendMessage(lang("messages.competition-list-line", plugin.language().vars("id", c.id(), "name", c.name(), "status", c.status()))); }
                 catch (SQLException ex) { sender.sendMessage(lang("messages.trade-failed")); }
             }
             case "create" -> {
@@ -653,7 +653,7 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
         Player player = sender instanceof Player p ? p : null;
         switch (args[1].toLowerCase()) {
             case "list" -> {
-                try { for (var ipo : plugin.ipo().list()) sender.sendMessage(LanguageManager.color("&e#" + ipo.id() + " &f" + ipo.symbol() + " " + ipo.name() + " &7@" + format(ipo.price()) + " &7" + ipo.status())); }
+                try { for (var ipo : plugin.ipo().list()) sender.sendMessage(lang("messages.ipo-list-line", plugin.language().vars("id", ipo.id(), "symbol", ipo.symbol(), "name", ipo.name(), "price", format(ipo.price()), "status", ipo.status()))); }
                 catch (SQLException ex) { sender.sendMessage(lang("messages.trade-failed")); }
             }
             case "create" -> {
@@ -704,7 +704,7 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
             return;
         }
         if (args.length >= 2 && args[1].equalsIgnoreCase("list")) {
-            try { for (var c : plugin.certificate().list(player)) sender.sendMessage(LanguageManager.color("&e#" + c.id() + " &f" + c.symbol() + " x" + TradeService.formatNumber(c.shares()))); }
+            try { for (var c : plugin.certificate().list(player)) sender.sendMessage(lang("messages.cert-list-line", plugin.language().vars("id", c.id(), "symbol", c.symbol(), "shares", TradeService.formatNumber(c.shares())))); }
             catch (SQLException ex) { sender.sendMessage(lang("messages.trade-failed")); }
             return;
         }
@@ -745,7 +745,7 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
         String actor = args.length >= 3 ? args[2] : null;
         String action = args.length >= 4 ? args[3] : null;
         int limit = 20;
-        try { for (var r : plugin.storage().auditLog(actor, action, limit, 0)) sender.sendMessage(LanguageManager.color("&7" + TF().format(Instant.ofEpochMilli(r.createdAt())) + " &f" + r.actor() + " &e" + r.action() + " &7" + r.detail())); }
+        try { for (var r : plugin.storage().auditLog(actor, action, limit, 0)) sender.sendMessage(lang("messages.audit-log-line", plugin.language().vars("time", TF().format(Instant.ofEpochMilli(r.createdAt())), "actor", r.actor(), "action", r.action(), "detail", r.detail()))); }
         catch (SQLException ex) { sender.sendMessage(lang("messages.trade-failed")); }
     }
 
@@ -753,6 +753,7 @@ public final class StocksCommand implements CommandExecutor, TabCompleter {
 
     private Integer parseInt(String s) { try { return Integer.parseInt(s); } catch (NumberFormatException e) { return null; } }
     private String lang(String key) { return plugin.language().text(key); }
+    private String lang(String key, Map<String, String> vars) { return plugin.language().text(key, vars); }
 
     private Double parsePositive(String input) {
         try {
