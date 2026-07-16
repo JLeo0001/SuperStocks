@@ -1,369 +1,364 @@
-prefix: "&8[&aSuperStocks&8] "
-
+prefix: '&8[&aSuperStocks&8]'
 commands:
-  no-permission: "&c이 명령어를 사용할 권한이 없습니다."
-  player-only: "&c플레이어만 주식 시장 GUI를 열 수 있습니다."
-  reloaded: "&aSuperStocks가 다시 로드되었습니다."
-  sync-started: "&a시세 동기화 작업을 실행했습니다."
-  unknown-subcommand: "&c알 수 없는 하위 명령어입니다. /stocks help 를 사용하세요."
-  buy-usage: "&e사용법: /stocks buy <종목코드> <수량>"
-  sell-usage: "&e사용법: /stocks sell <종목코드> <수량>"
-  quote-usage: "&e사용법: /stocks quote <종목코드>"
-  invalid-amount: "&c수량은 0보다 큰 숫자여야 합니다."
-  quote-not-found: "&c이 종목의 캐시된 시세를 찾을 수 없습니다."
-  history-usage: "&e/stocks history <symbol>"
-  history-empty: "&7가격 기록 unavailable."
-  history-header: "&6===== 가격 기록: {symbol} ====="
-  history-line: "&7{time} &8| &f{price}"
-  stats-header: "&6===== Statistics ====="
-  stats-line: "&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}"
-  watch-added: "&a{symbol} added to 관심 종목."
-  watch-removed: "&a{symbol} removed from 관심 종목."
-  watch-header: "&6===== 관심 종목 ====="
-  watch-line: "&e{symbol}"
-  alert-usage: "&e/stocks alert <symbol> <above|below> <price>"
-  alert-created: "&aAlert #{id}: {symbol} / {price}."
-  order-usage: "&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]"
-  order-header: "&6===== 미체결 주문 ====="
-  order-line: "&f#{id} &e{type} {symbol} &7| 수량: &f{shares} &7| 발동가: &f{price}"
-  order-created: "&aOrder #{id} created."
-  order-limit: "&cOrder creation failed. Check funds, holdings, limits and quote status."
-  order-cancelled: "&aOrder #{id} cancelled."
-  order-not-found: "&cOpen order #{id} not found."
-  penalty-usage: "&e/stocks penalty history <player>"
-  penalty-header: "&6===== 손실 페널티: {player} ====="
-  penalty-line: "&7{time} &8| &e{tier} &7| 손실: &f{loss} ({loss_percent}%) &7| 차감: &f{amount}"
-  status-header: "&6===== SuperStocks 상태 ====="
-  status-line: "&7소스: &f{provider} &7| 시세: &f{loaded}/{configured} &7| 마지막 동기화: &f{last_sync} &7| 중지: &f{paused} &7| Vault: &f{vault}"
-  paused: "&cStock trading paused."
-  resumed: "&aStock trading resumed."
-  admin-usage: "&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]"
-  admin-portfolio-header: "&6===== 포트폴리오: {player} ====="
-  admin-given: "&aAdded {symbol} x {shares} to {player}."
-  admin-removed: "&aRemoved {symbol} x {shares} from {player}."
-  admin-cleared: "&a{player}의 모든 보유량을 초기화했습니다."
-  short-usage: "&e사용법: /stocks short <종목> <수량>"
-  pin-usage: "&e사용법: /stocks pin <종목>"
-  ipo-usage: "&e사용법: /stocks ipo <list|subscribe> [ID] [수량]"
-  index-line: "&7{market}: &f{index} &7({count} stocks)"
-  index-header: "&6===== 시장 지수 ====="
-  cover-usage: "&e사용법: /stocks cover <ID> [수량]"
-  competition-usage: "&e사용법: /stocks competition <list|join|buy|sell> <ID> [종목] [수량]"
-  cert-usage: "&e사용법: /stocks certificate <issue|list> [종목] [수량]"
-  portfolio-header: "&6===== 내 포트폴리오 ====="
-  portfolio-empty: "&7현재 보유 중인 종목이 없습니다."
-  portfolio-line: "&e{symbol} &7| 수량: &f{shares} &7| 평균단가: &f{average_cost} &7| 현재가: &f{price} &7| 평가금액: &f{value} &7| 손익: &f{profit}"
-  rank-winners-header: "&e===== 투자 고수 랭킹 ====="
-  rank-losers-header: "&c===== 손실 랭킹 ====="
-  rank-empty: "&7랭킹에 표시할 데이터가 없습니다."
-  rank-line: "&f#{rank} &e{player} &7| 평가금액: &f{value} &7| 손익: &f{profit} &7| 수익률: &f{profit_percent}%"
+  no-permission: '&c이 명령어를 사용할 권한이 없습니다.'
+  player-only: '&c플레이어만 주식 시장 GUI를 열 수 있습니다.'
+  reloaded: '&aSuperStocks가 다시 로드되었습니다.'
+  sync-started: '&a시세 동기화 작업을 실행했습니다.'
+  unknown-subcommand: '&c알 수 없는 하위 명령어입니다. /stocks help 를 사용하세요.'
+  buy-usage: '&e사용법: /stocks buy <종목코드> <수량>'
+  sell-usage: '&e사용법: /stocks sell <종목코드> <수량>'
+  quote-usage: '&e사용법: /stocks quote <종목코드>'
+  invalid-amount: '&c수량은 0보다 큰 숫자여야 합니다.'
+  quote-not-found: '&c이 종목의 캐시된 시세를 찾을 수 없습니다.'
+  history-usage: '&e/stocks history <symbol>'
+  history-empty: '&7가격 기록 unavailable.'
+  history-header: '&6===== 가격 기록: {symbol} ====='
+  history-line: '&7{time} &8| &f{price}'
+  stats-header: '&6===== Statistics ====='
+  stats-line: '&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}'
+  watch-added: '&a{symbol} added to 관심 종목.'
+  watch-removed: '&a{symbol} removed from 관심 종목.'
+  watch-header: '&6===== 관심 종목 ====='
+  watch-line: '&e{symbol}'
+  alert-usage: '&e/stocks alert <symbol> <above|below> <price>'
+  alert-created: '&aAlert #{id}: {symbol} / {price}.'
+  order-usage: '&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]'
+  order-header: '&6===== 미체결 주문 ====='
+  order-line: '&f#{id} &e{type} {symbol} &7| 수량: &f{shares} &7| 발동가: &f{price}'
+  order-created: '&aOrder #{id} created.'
+  order-limit: '&cOrder creation failed. Check funds, holdings, limits and quote status.'
+  order-cancelled: '&aOrder #{id} cancelled.'
+  order-not-found: '&cOpen order #{id} not found.'
+  penalty-usage: '&e/stocks penalty history <player>'
+  penalty-header: '&6===== 손실 페널티: {player} ====='
+  penalty-line: '&7{time} &8| &e{tier} &7| 손실: &f{loss} ({loss_percent}%) &7| 차감: &f{amount}'
+  status-header: '&6===== SuperStocks 상태 ====='
+  status-line: '&7소스: &f{provider} &7| 시세: &f{loaded}/{configured} &7| 마지막 동기화: &f{last_sync} &7| 중지: &f{paused} &7| Vault: &f{vault}'
+  paused: '&cStock trading paused.'
+  resumed: '&aStock trading resumed.'
+  admin-usage: '&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]'
+  admin-portfolio-header: '&6===== 포트폴리오: {player} ====='
+  admin-given: '&aAdded {symbol} x {shares} to {player}.'
+  admin-removed: '&aRemoved {symbol} x {shares} from {player}.'
+  admin-cleared: '&a{player}의 모든 보유량을 초기화했습니다.'
+  short-usage: '&e사용법: /stocks short <종목> <수량>'
+  cover-usage: '&e사용법: /stocks cover <ID> [수량]'
+  competition-usage: '&e사용법: /stocks competition <list|join|buy|sell> <ID> [종목] [수량]'
+  ipo-usage: '&e사용법: /stocks ipo <list|subscribe> [ID] [수량]'
+  cert-usage: '&e사용법: /stocks certificate <issue|list> [종목] [수량]'
+  pin-usage: '&e사용법: /stocks pin <종목>'
+  index-header: '&6===== 시장 지수 ====='
+  index-line: '&7{market}: &f{index} &7({count} stocks)'
+  portfolio-header: '&6===== 내 포트폴리오 ====='
+  portfolio-empty: '&7현재 보유 중인 종목이 없습니다.'
+  portfolio-line: '&e{symbol} &7| 수량: &f{shares} &7| 평균단가: &f{average_cost} &7| 현재가: &f{price} &7| 평가금액: &f{value} &7| 손익: &f{profit}'
+  rank-winners-header: '&e===== 투자 고수 랭킹 ====='
+  rank-losers-header: '&c===== 손실 랭킹 ====='
+  rank-empty: '&7랭킹에 표시할 데이터가 없습니다.'
+  rank-line: '&f#{rank} &e{player} &7| 평가금액: &f{value} &7| 손익: &f{profit} &7| 수익률: &f{profit_percent}%'
   quote-info:
-    - "&6===== 주식 시세 ====="
-    - "&7종목명: &f{name}"
-    - "&7종목코드: &f{symbol}"
-    - "&7시장: &f{market}"
-    - "&7현재가: &f{price}"
-    - "&7등락: &f{change} ({change_percent}%)"
-    - "&7업데이트: &f{updated_at}"
+  - '&6===== Stock Quote ====='
+  - '&7Name: &f{name}'
+  - '&7Symbol: &f{symbol}'
+  - '&7Market: &f{market}'
+  - '&7Price: &f{price}'
+  - '&7Change: &f{change} ({change_percent}%)'
+  - '&7Updated: &f{updated_at}'
   help:
-    - "&6===== SuperStocks 도움말 ====="
-    - "&e/stocks &7- 주식 GUI 열기"
-    - "&e/stocks help &7- 모든 명령어 보기"
-    - "&e/stocks open &7- 주식 GUI 열기"
-    - "&e/stocks quote <종목코드> &7- 주식 시세 조회"
-    - "&e/stocks buy <종목코드> <수량> &7- 주식 매수"
-    - "&e/stocks sell <종목코드> <수량> &7- 주식 매도"
-    - "&e/stocks portfolio &7- 보유 종목을 텍스트로 보기"
-    - "&e/stocks rank winners &7- 투자 고수 랭킹 보기"
-    - "&e/stocks rank losers &7- 손실 랭킹 보기"
-    - "&e/stocks sync &7- 관리자: 시세 수동 동기화"
-    - "&e/stocks reload &7- 관리자: 플러그인 다시 로드"
+  - '&6===== SuperStocks Help ====='
+  - '&e/stocks &7- Open the stock GUI'
+  - '&e/stocks help &7- Show all commands'
+  - '&e/stocks open &7- Open the stock GUI'
+  - '&e/stocks quote <symbol> &7- Show a quote'
+  - '&e/stocks buy <symbol> <shares> &7- Buy shares'
+  - '&e/stocks sell <symbol> <shares> &7- Sell shares'
+  - '&e/stocks portfolio &7- Show text portfolio'
+  - '&e/stocks rank winners &7- Show top investors'
+  - '&e/stocks rank losers &7- Show bottom board'
   help-advanced:
-    - "&e/stocks history <symbol> &7- 가격 기록"
-    - "&e/stocks stats &7- Investment statistics"
-    - "&e/stocks watch <add|remove|list> [symbol] &7- 관심 종목"
-    - "&e/stocks alert <symbol> <above|below> <price> &7- Price alert"
-    - "&e/stocks order <type|list|cancel> ... &7- Automated orders"
-    - "&e/stocks status &7- Admin: status"
-    - "&e/stocks pause|resume &7- Admin: pause/resume trading"
-    - "&e/stocks admin ... &7- Admin: manage holdings"
-    - "&e/stocks penalty history <player> &7- Admin: penalty records"
-    - "&e/stocks sync &7- Admin: sync quotes"
-    - "&e/stocks reload &7- Admin: reload plugin"
-
+  - '&e/stocks history <symbol> &7- Show 24-hour price history'
+  - '&e/stocks stats &7- Show investment statistics'
+  - '&e/stocks watch <add|remove|list> [symbol] &7- Manage watchlist'
+  - '&e/stocks alert <symbol> <above|below> <price> &7- Create a price alert'
+  - '&e/stocks order <type|list|cancel> ... &7- Manage automated orders'
+  - '&e/stocks status &7- Admin: show system status'
+  - '&e/stocks pause|resume &7- Admin: pause or resume trading'
+  - '&e/stocks admin ... &7- Admin: manage player holdings'
+  - '&e/stocks penalty history <player> &7- Admin: view penalty records'
+  - '&e/stocks sync &7- Admin: sync quotes'
+  - '&e/stocks reload &7- Admin: reload plugin'
+  - '&e/stocks short <symbol> <shares> &7- Open a short position'
+  - '&e/stocks cover <id> [shares] &7- Close a short position'
+  - '&e/stocks competition <list|join|buy|sell> &7- Investment competitions'
+  - '&e/stocks ipo <list|subscribe> &7- IPO subscriptions'
+  - '&e/stocks certificate <issue|list> &7- Stock certificates'
+  - '&e/stocks index &7- View market indices'
+  - '&e/stocks pin <symbol> &7- Pin stock to BossBar'
+  - '&e/stocks unpin &7- Remove BossBar pin'
+  - '&e/stocks report &7- View market report'
+  - '&e/stocks admin audit [player] [action] &7- View audit log'
+  - '&e/stocks admin panel &7- Open admin GUI'
 messages:
-  quote-unavailable: "&c이 종목은 아직 시세 데이터가 없어 거래할 수 없습니다."
-  portfolio-load-failed: "&c포트폴리오를 불러오지 못했습니다. 관리자에게 문의하세요."
-  ranking-load-failed: "&c랭킹을 불러오지 못했습니다. 관리자에게 문의하세요."
-  watchlist-load-failed: "&cFailed to load 관심 종목."
-  trade-failed: "&c거래에 실패했습니다. 관리자에게 문의하세요."
-  economy-unavailable: "경제 시스템이 준비되지 않았습니다"
-  min-shares: "최소 거래 수량은 {shares}주입니다"
-  not-enough-money: "잔액이 부족합니다. 필요 금액: {amount}"
-  withdraw-failed: "출금에 실패했습니다"
-  buy-success: "매수 완료: {name} x {shares}, 비용 {amount}"
-  not-enough-shares: "보유 수량이 부족합니다"
-  deposit-failed: "매도는 기록되었지만 입금에 실패했습니다. 관리자에게 문의하세요"
-  sell-success: "매도 완료: {name} x {shares}, 수령액 {amount}"
-  watchlist-load-failed: "&cFailed to load 관심 종목."
-  trade-busy: "&cAnother trade is still being processed."
-  trade-limit: "&c이 거래는 1회 최대 주수를 초과합니다."
-  trading-unavailable: "&cTrading unavailable: {reason}"
-  trade-cooldown: "&cYou are trading too quickly."
-  trade-rate-limit: "&cToo many trades in one minute."
-  position-limit: "&c이 포지션은 가치 한도를 초과합니다."
-  order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
-  order-executed: "&a주문 #{id} 체결: {symbol} @ {price}."
-  alert-triggered: "&e가격 알림: {symbol}이(가) {price}에 도달했습니다."
-  report-header: "  report-header: "&6===== SuperStocks 시장 보고서 ====="6===== SuperStocks Market Report ====="
-  report-avg: "  report-header: "&6===== SuperStocks 시장 보고서 ====="7{market} avg:   report-header: "&6===== SuperStocks 시장 보고서 ====="f{avg}"
-  report-top: "  report-header: "&6===== SuperStocks 시장 보고서 ====="7Top:   report-header: "&6===== SuperStocks 시장 보고서 ====="a{name}   report-header: "&6===== SuperStocks 시장 보고서 ====="f+{change}%"
-  report-bottom: "  report-header: "&6===== SuperStocks 시장 보고서 ====="7Bottom:   report-header: "&6===== SuperStocks 시장 보고서 ====="c{name}   report-header: "&6===== SuperStocks 시장 보고서 ====="f{change}%"
-  pin-removed: "&aBossBar 핀 제거됨."
-  pin-set: "&a{symbol}을(를) BossBar에 고정."
-  pin-set: "&a{symbol}을(를) BossBar에 고정."
-  pin-set: "&a{symbol}을(를) BossBar에 고정."
-  certificate-redeemed: "&a주권 교환: {symbol} x{shares}이(가) 포트폴리오로 복원."
-  certificate-invalid: "&c이 주권은 더 이상 유효하지 않습니다."
-  certificate-issued: "&a주권 발행:   competition-list-line: "&e#{id} &f{name} &7{status}"
-  ipo-list-line: "&e#{id} &f{symbol} {name} &7@{price} &7{status}"
-  cert-list-line: "&e#{id} &f{symbol} x{shares}"
-  audit-log-line: "&7{time} &f{actor} &e{action} &7{detail}"
-{symbol} x{shares}. 우클릭으로 교환."
-  ipo-symbol-exists: "&c이 종목 코드는 이미 존재합니다."
-  ipo-cancelled: "&cIPO {symbol} 취소. 전액 환불됨."
-  ipo-completed: "&6IPO for {symbol} ({name}) completed! Shares allocated."
-  ipo-allocated: "&aIPO {symbol}: {shares}주 배정. 환불: {refund}"
-  ipo-subscribed: "&a{symbol} IPO {shares}주 청약 완료."
-  ipo-oversubscribed: "&cIPO가 완전히 초과 청약되었습니다."
-  ipo-limit: "&c이 IPO의 최대 청약 한도에 도달했습니다."
-  ipo-closed: "&cIPO 청약 기간이 종료되었습니다."
-  ipo-not-found: "&cIPO를 찾을 수 없습니다."
-  ipo-created: "&aIPO #{id} 생성: {symbol} {name} @ {price}."
-  competition-admin-ended: "&a대회 \"{name}\" 종료, 보상 지급 완료."
-  competition-reward: "&6축하합니다! \"{name}\"에서 #{rank}위, {amount} 획득!"
-  competition-ended: "&6===== 대회 \"{name}\" 종료! 순위: /stocks competition list ====="
-  competition-sold: "&a대회 매도: {symbol} x{shares}, 수익 {revenue}."
-  competition-bought: "&a대회 매수: {symbol} x{shares}, 비용 {cost}."
-  competition-not-joined: "&c이 대회에 참가하지 않았습니다."
-  competition-already-joined: "&c이미 이 대회에 참가했습니다."
-  competition-not-found: "&c대회를 찾을 수 없거나 종료되었습니다."
-  competition-joined: "&a\"{name}\"에 참가했습니다! 초기 자금 {capital}."
-  competition-created: "&a대회 #{id} \"{name}\" 생성, 초기 자금 {capital}."
-  short-liquidated: "&c공매도 {symbol} x{shares} 강제 청산 @ {price}. 증거금: {margin}"
-  short-not-found: "&c공매도 포지션을 찾을 수 없습니다."
-  short-covered: "&a공매도 청산: {symbol} x{shares}. 손익: {pnl}"
-  short-opened: "&a공매도 #{id} 체결: {symbol} x{shares} @ {price}. 증거금: {margin}"
-  market-event-positive: "&6📈 &e시장 뉴스: &f{name} &7({symbol}) &a상승 &f{impact}% &7(호재)"
-  market-event-negative: "&6📉 &e시장 뉴스: &f{name} &7({symbol}) &c하락 &f{impact}% &7(악재)"
-
+  quote-unavailable: '&c이 종목은 아직 시세 데이터가 없어 거래할 수 없습니다.'
+  portfolio-load-failed: '&c포트폴리오를 불러오지 못했습니다. 관리자에게 문의하세요.'
+  ranking-load-failed: '&c랭킹을 불러오지 못했습니다. 관리자에게 문의하세요.'
+  watchlist-load-failed: '&cFailed to load 관심 종목.'
+  trade-failed: '&c거래에 실패했습니다. 관리자에게 문의하세요.'
+  economy-unavailable: 경제 시스템이 준비되지 않았습니다
+  min-shares: 최소 거래 수량은 {shares}주입니다
+  not-enough-money: '잔액이 부족합니다. 필요 금액: {amount}'
+  withdraw-failed: 출금에 실패했습니다
+  buy-success: '매수 완료: {name} x {shares}, 비용 {amount}'
+  not-enough-shares: 보유 수량이 부족합니다
+  deposit-failed: 매도는 기록되었지만 입금에 실패했습니다. 관리자에게 문의하세요
+  sell-success: '매도 완료: {name} x {shares}, 수령액 {amount}'
+  trade-busy: '&cAnother trade is still being processed.'
+  trade-limit: '&c이 거래는 1회 최대 주수를 초과합니다.'
+  trading-unavailable: '&cTrading unavailable: {reason}'
+  trade-cooldown: '&cYou are trading too quickly.'
+  trade-rate-limit: '&cToo many trades in one minute.'
+  position-limit: '&c이 포지션은 가치 한도를 초과합니다.'
+  order-reserve-insufficient: '&cReserved funds are not enough to execute this order.'
+  order-executed: '&a주문 #{id} 체결: {symbol} @ {price}.'
+  alert-triggered: '&e가격 알림: {symbol}이(가) {price}에 도달했습니다.'
+  market-event-positive: '&6📈 &eMarket News: &f{name} &7({symbol}) &asurged &f{impact}% &7on positive news!'
+  market-event-negative: '&6📉 &eMarket News: &f{name} &7({symbol}) &cdropped &f{impact}% &7on negative news!'
+  short-opened: '&aShort position #{id} opened: {symbol} x{shares} @ {price}. Margin: {margin}'
+  short-covered: '&aShort covered: {symbol} x{shares}. P&L: {pnl}'
+  short-not-found: '&cShort position not found.'
+  short-liquidated: '&cYour short position on {symbol} x{shares} was force-liquidated at {price}. Margin lost: {margin}'
+  competition-created: '&aCompetition #{id} "{name}" created with {capital} starting capital.'
+  competition-joined: '&aYou joined "{name}" with {capital} starting capital!'
+  competition-not-found: '&cCompetition not found or ended.'
+  competition-already-joined: '&cYou are already in this competition.'
+  competition-not-joined: '&cYou haven''t joined this competition.'
+  competition-bought: '&aBought {symbol} x{shares} for {cost} (competition).'
+  competition-sold: '&aSold {symbol} x{shares} for {revenue} (competition).'
+  competition-ended: '&6===== Competition "{name}" has ended! Check rankings with /stocks competition list ====='
+  competition-reward: '&6Congratulations! You placed #{rank} in "{name}" and won {amount}!'
+  competition-admin-ended: '&aCompetition "{name}" ended and rewards distributed.'
+  ipo-created: '&aIPO #{id} created: {symbol} {name} @ {price}.'
+  ipo-not-found: '&cIPO not found.'
+  ipo-closed: '&cIPO subscription period has ended.'
+  ipo-limit: '&cYou have reached the maximum subscription for this IPO.'
+  ipo-oversubscribed: '&cIPO is fully subscribed.'
+  ipo-subscribed: '&aSubscribed {shares} shares of {symbol} IPO.'
+  ipo-allocated: '&aIPO {symbol}: allocated {shares} shares. Refund: {refund}'
+  ipo-completed: '&6IPO for {symbol} ({name}) completed! Shares allocated to subscribers.'
+  ipo-cancelled: '&cIPO for {symbol} cancelled. All funds refunded.'
+  ipo-symbol-exists: '&cA stock with this symbol already exists.'
+  certificate-issued: '&a주권 발행:   competition-list-line:'
+  certificate-invalid: '&c이 주권은 더 이상 유효하지 않습니다.'
+  certificate-redeemed: '&a주권 교환: {symbol} x{shares}이(가) 포트폴리오로 복원.'
+  pin-set: '&a{symbol}을(를) BossBar에 고정.'
+  pin-removed: '&aBossBar 핀 제거됨.'
+  report-header: '&6===== SuperStocks 시장 보고서 ====='
+  report-avg: '&6===== SuperStocks 시장 보고서 ====='
+  report-top: '&6===== SuperStocks 시장 보고서 ====='
+  report-bottom: '&6===== SuperStocks 시장 보고서 ====='
+  competition-list-line: '&e#{id} &f{name} &7{status}'
+  ipo-list-line: '&e#{id} &f{symbol} {name} &7@{price} &7{status}'
+  cert-list-line: '&e#{id} &f{symbol} x{shares}'
+  audit-log-line: '&7{time} &f{actor} &e{action} &7{detail}'
 gui:
   main:
-    title: "&2&lSuperStocks &8| &f거래 홀"
+    title: '&2&lSuperStocks &8| &f거래 홀'
     market-lore:
-      - "&f{market}&7 시장 열기"
-      - "&7설정된 종목: &f{configured}"
-      - "&7불러온 시세: &a{loaded}"
-      - ""
-      - "&e클릭하여 보기"
-    portfolio-name: "&6내 포트폴리오"
+    - '&7Open the &f{market}&7 market'
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - ''
+    - '&eClick to view'
+    portfolio-name: '&6내 포트폴리오'
     portfolio-lore:
-      - "&7종목, 평균단가, 평가금액, 손익 보기"
-      - "&7캐시된 시세: &f{loaded_total}&7/&f{configured_total}"
-      - ""
-      - "&e클릭하여 열기"
-    winners-name: "&e투자 고수 랭킹"
+    - '&7View stocks, cost, value, and P/L'
+    - '&7Cached quotes: &f{loaded_total}&7/&f{configured_total}'
+    - ''
+    - '&eClick to open'
+    winners-name: '&e투자 고수 랭킹'
     winners-lore:
-      - "&7현재 미실현 손익 기준 랭킹"
-      - "&7수익이 높을수록 상위"
-      - ""
-      - "&e클릭하여 보기"
-    losers-name: "&c손실 랭킹"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Higher profit ranks higher'
+    - ''
+    - '&eClick to view'
+    losers-name: '&c손실 랭킹'
     losers-lore:
-      - "&7현재 미실현 손익 기준 랭킹"
-      - "&7손실이 클수록 상위"
-      - ""
-      - "&e클릭하여 보기"
-    watchlist-name: "&b관심 종목"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Larger losses rank higher'
+    - ''
+    - '&eClick to view'
+    watchlist-name: '&b관심 종목'
     watchlist-lore:
-      - "&7관심 종목"
-      - "&7/stocks watch add <symbol>"
-      - ""
-      - "&eClick to open"
-    stats-name: "&b시세 통계"
+    - '&7View the stocks you follow'
+    - '&7Use /stocks watch add <symbol> to add one'
+    - ''
+    - '&eClick to open'
+    stats-name: '&b시세 통계'
     stats-lore:
-      - "&7데이터 소스: &f{provider}"
-      - "&7설정 종목 수: &f{configured_total}"
-      - "&7불러온 종목 수: &a{loaded_total}"
-      - "&7갱신 간격: &f{refresh_seconds}s"
-      - ""
-      - "&7마지막 동기화: &f{last_sync}"
+    - '&7Source: &f{provider}'
+    - '&7Configured stocks: &f{configured_total}'
+    - '&7Loaded stocks: &a{loaded_total}'
+    - '&7Refresh interval: &f{refresh_seconds}s'
+    - ''
+    - '&7Last sync: &f{last_sync}'
   market:
-    title: "&2시장 &8- &f{market}"
-    missing-name: "&7{symbol}"
+    title: '&2시장 &8- &f{market}'
+    missing-name: '&7{symbol}'
     missing-lore:
-      - "&c캐시된 시세가 없습니다"
-      - "&7다음 동기화를 기다리는 중"
-    stats-name: "&b{market} 통계"
+    - '&cNo cached quote data'
+    - '&7Waiting for the next sync'
+    stats-name: '&b{market} 통계'
     stats-lore:
-      - "&7설정된 종목: &f{configured}"
-      - "&7불러온 시세: &a{loaded}"
-      - "&7데이터 소스: &f{provider}"
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - '&7Source: &f{provider}'
   stock:
-    title: "&2종목 &8- &f{name}"
+    title: '&2종목 &8- &f{name}'
     quote-lore:
-      - "&8{market}"
-      - "&7종목코드: &f{symbol}"
-      - "&7현재가: &f{price}"
-      - "&7등락: {change_color}{change} ({change_percent}%)"
-      - "&7업데이트: &f{updated_at}"
-      - ""
-      - "&e클릭하여 거래"
+    - '&8{market}'
+    - '&7Symbol: &f{symbol}'
+    - '&7Price: &f{price}'
+    - '&7Change: {change_color}{change} ({change_percent}%)'
+    - '&7Updated: &f{updated_at}'
+    - ''
+    - '&eClick to trade'
     history-lore:
-      - "&7Last 24h: &f{change_24h}%"
-      - "&7Trend: &f{trend}"
-    buy-name: "&a{shares}주 매수"
+    - '&7Last 24h: &f{change_24h}%'
+    - '&7Trend: &f{trend}'
+    buy-name: '&a{shares}주 매수'
     buy-lore:
-      - "&7현재 캐시 시세로 체결"
-      - "&7예상 비용: &f{amount}"
-    sell-name: "&c{shares}주 매도"
+    - '&7Trades at the cached quote'
+    - '&7Estimated cost: &f{amount}'
+    sell-name: '&c{shares}주 매도'
     sell-lore:
-      - "&7현재 캐시 시세로 체결"
-      - "&7예상 수령액: &f{amount}"
+    - '&7Trades at the cached quote'
+    - '&7Estimated proceeds: &f{amount}'
   portfolio:
-    title: "&6내 포트폴리오"
+    title: '&6내 포트폴리오'
     holding-lore:
-      - "&7종목코드: &f{symbol}"
-      - "&7수량: &f{shares}"
-      - "&7평균단가: &f{average_cost}"
-      - "&7현재가: &f{price}"
-      - "&7평가금액: &f{market_value}"
-      - "&7손익: {profit_color}{profit}"
-      - ""
-      - "&e클릭하여 거래"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&7Price: &f{price}'
+    - '&7Market value: &f{market_value}'
+    - '&7P/L: {profit_color}{profit}'
+    - ''
+    - '&eClick to trade'
     holding-missing-lore:
-      - "&7종목코드: &f{symbol}"
-      - "&7수량: &f{shares}"
-      - "&7평균단가: &f{average_cost}"
-      - "&c캐시된 시세가 없습니다"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&cNo cached quote data'
   ranking:
-    winners-title: "&e투자 고수 랭킹"
-    losers-title: "&c손실 랭킹"
-    entry-name: "&f#{rank} &e{player}"
+    winners-title: '&e투자 고수 랭킹'
+    losers-title: '&c손실 랭킹'
+    entry-name: '&f#{rank} &e{player}'
     winner-lore:
-      - "&7플레이어: &f{player}"
-      - "&7포트폴리오 평가금액: &f{value}"
-      - "&7미실현 손익: {profit_color}{profit}"
-      - "&7수익률: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
     loser-lore:
-      - "&7플레이어: &f{player}"
-      - "&7포트폴리오 평가금액: &f{value}"
-      - "&7미실현 손익: {profit_color}{profit}"
-      - "&7수익률: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
   watchlist:
-    title: "&b관심 종목"
-    empty-name: "&7관심 종목 없음"
+    title: '&b관심 종목'
+    empty-name: '&7관심 종목 없음'
   admin:
-    title: "&6SuperStocks 관리 패널"
-    total-holdings: "&f총 보유량"
-    total-players: "&f활성 플레이어"
-    total-trades: "&f총 거래량"
-    last-sync: "&f마지막 동기화"
-    paused: "&f거래 중지됨"
-    vault: "&fVault 상태"
-    close-name: "&c닫기"  confirm:
-    stat-format: "&7{label}: &f{value}"
+    title: '&6SuperStocks 관리 패널'
+    total-holdings: '&f총 보유량'
+    total-players: '&f활성 플레이어'
+    total-trades: '&f총 거래량'
+    last-sync: '&f마지막 동기화'
+    paused: '&f거래 중지됨'
+    vault: '&fVault 상태'
+    close-name: '&c닫기'
+    stat-format: '&7{label}: &f{value}'
   format:
-    market-name: "&a{name}"
-    stock-name: "&f{name}"
-    stock-symbol: "&f{symbol}"
-    title: "&6거래 확인"
-    summary-name: "&f{name} &8({symbol})"
+    market-name: '&a{name}'
+    stock-name: '&f{name}'
+    stock-symbol: '&f{symbol}'
+  confirm:
+    title: '&6Confirm Trade'
+    summary-name: '&f{name} &8({symbol})'
     summary-lore:
-      - "&7Shares: &f{shares}"
-      - "&7Unit price: &f{price}"
-      - "&7Estimated gross: &f{gross}"
-    accept-name: "&a거래 확인"
+    - '&7Shares: &f{shares}'
+    - '&7Unit price: &f{price}'
+    - '&7Estimated gross: &f{gross}'
+    accept-name: '&aConfirm Trade'
     accept-lore:
-      - "&7Click to execute this trade."
-    cancel-name: "&c취소"
+    - '&7Click to execute this trade.'
+    cancel-name: '&cCancel'
     cancel-lore:
-      - "&7Return to the stock page."
-  total-holdings: "&fTotal Holdings"
-  total-players: "&fActive Players"
-  total-trades: "&fTotal Trades"
-  last-sync: "&fLast Sync"
-  vault: "&fVault Status"
+    - '&7Return to the stock page.'
   certificate:
-    name: "&6Stock Certificate &f#{id}"
+    name: '&6Stock Certificate &f#{id}'
     lore:
-      - "&7Stock: &f{symbol}"
-      - "&7Shares: &f{shares}"
-      - "&7Issue price: &f{price}"
-      - ""
-      - "&eRight-click air &7to redeem"
-      - "&7Can be traded between players"
-  common:
-    back-name: "&f뒤로"
-    back-main-name: "&f메인으로 돌아가기"
-    close-name: "&c닫기"
-    previous-page-name: "&f이전 페이지"
-    next-page-name: "&f다음 페이지"
-    page-name: "&e페이지 {page}/{pages}"
-    filler-name: " "
-
+    - '&7Stock: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Issue price: &f{price}'
+    - ''
+    - '&eRight-click air &7to redeem'
+    - '&7Can be traded between players'
 bossbar:
-  pin-format: "&f{name} &7| &f{price} {arrow} &f{change_percent}%"
-  arrow-up: "&a▲"
-  arrow-down: "&c▼"
-
+  pin-format: '&f{name} &7| &f{price} {arrow} &f{change_percent}%'
+  arrow-up: '&a▲'
+  arrow-down: '&c▼'
 validators:
   errors:
-    language-not-found: "언어 파일을 찾을 수 없음: {language}"
-    duplicate-market: "중복된 시장 ID: {market}"
-    market-empty-symbol: "시장 {market}에 빈 종목 코드가 있습니다"
-    duplicate-symbol: "중복된 종목 코드: {symbol}"
-    custom-market-id-empty: "{file} 시장 ID가 비어 있습니다"
-    duplicate-market-id: "중복된 시장 ID: {id} ({file})"
-    custom-market-invalid-material: "{file} 잘못된 Material: {icon}"
-    custom-market-no-stocks: "{file}에 stocks 섹션이 없습니다"
-    custom-market-empty-symbol: "{file}에 빈 종목 코드가 있습니다: {key}"
-    duplicate-symbol-file: "중복된 종목 코드: {symbol} ({file})"
-    custom-market-invalid-price: "{file} 잘못된 가격 범위: {symbol}"
-    custom-market-negative-volatility: "{file} 변동성은 0보다 작을 수 없습니다: {symbol}"
-    invalid-material: "잘못된 Material: gui.{key}={value}"
-    volatility-min-exceeds-max: "랜덤 변동성 최소값이 최대값을 초과합니다"
-    invalid-safety-price: "게임 내 가격 안전 범위가 잘못되었습니다"
-    invalid-penalty-tier: "잘못된 페널티 단계 범위: {key}"
-    penalty-tier-overlap: "페널티 단계 중복: {previous} / {current}"
-    provider-missing-symbols: "제공자 엔드포인트에 {symbols}이(가) 필요합니다: {active}"
-    provider-wrong-scheme: "제공자 엔드포인트는 HTTP/HTTPS를 사용해야 합니다: {active}"
-    provider-invalid-uri: "제공자 엔드포인트가 잘못되었습니다: {active}"
-    invalid-market-hours: "시장 거래 시간 설정이 잘못되었습니다: {market}"
-    invalid-closed-action: "closed-action은 DENY 또는 SELL_ONLY여야 합니다: {market}"
-    invalid-gui-size: "잘못된 GUI 크기: gui.{key}={size}"
+    language-not-found: '언어 파일을 찾을 수 없음: {language}'
+    duplicate-market: '중복된 시장 ID: {market}'
+    market-empty-symbol: 시장 {market}에 빈 종목 코드가 있습니다
+    duplicate-symbol: '중복된 종목 코드: {symbol}'
+    custom-market-id-empty: '{file} 시장 ID가 비어 있습니다'
+    duplicate-market-id: '중복된 시장 ID: {id} ({file})'
+    custom-market-invalid-material: '{file} 잘못된 Material: {icon}'
+    custom-market-no-stocks: '{file}에 stocks 섹션이 없습니다'
+    custom-market-empty-symbol: '{file}에 빈 종목 코드가 있습니다: {key}'
+    duplicate-symbol-file: '중복된 종목 코드: {symbol} ({file})'
+    custom-market-invalid-price: '{file} 잘못된 가격 범위: {symbol}'
+    custom-market-negative-volatility: '{file} 변동성은 0보다 작을 수 없습니다: {symbol}'
+    invalid-material: '잘못된 Material: gui.{key}={value}'
+    volatility-min-exceeds-max: 랜덤 변동성 최소값이 최대값을 초과합니다
+    invalid-safety-price: 게임 내 가격 안전 범위가 잘못되었습니다
+    invalid-penalty-tier: '잘못된 페널티 단계 범위: {key}'
+    penalty-tier-overlap: '페널티 단계 중복: {previous} / {current}'
+    provider-missing-symbols: '제공자 엔드포인트에 {symbols}이(가) 필요합니다: {active}'
+    provider-wrong-scheme: '제공자 엔드포인트는 HTTP/HTTPS를 사용해야 합니다: {active}'
+    provider-invalid-uri: '제공자 엔드포인트가 잘못되었습니다: {active}'
+    invalid-market-hours: '시장 거래 시간 설정이 잘못되었습니다: {market}'
+    invalid-closed-action: 'closed-action은 DENY 또는 SELL_ONLY여야 합니다: {market}'
+    invalid-gui-size: '잘못된 GUI 크기: gui.{key}={size}'
   log:
-    banner: "========== SuperStocks 설정 확인 =========="
-    language-line: "  언어: {language}"
-    provider-line: "  제공자: {provider} (갱신 간격 {seconds}초)"
-    market-line: "  시장 {market}: {count} 종목"
-    custom-market-line: "  로컬 시장: {count} 파일"
-    feature-status: "  기능 상태:"
-    feature-on: "    ✓ {feature}"
-    feature-off: "    ✗ {feature} (비활성)"
-    high-risk-on: "활성 ⚠"
-    high-risk-off: "모두 비활성 ✓"
-    high-risk: "  고위험 기능: {state}"
-    all-passed: "  설정 확인: 통과 ✓"
-    errors-header: "  설정 문제 ({count}):"
-    error-line: "    ✗ {error}"
-    footer: "==========================================="
+    banner: ========== SuperStocks 설정 확인 ==========
+    language-line: '언어: {language}'
+    provider-line: '제공자: {provider} (갱신 간격 {seconds}초)'
+    market-line: '시장 {market}: {count} 종목'
+    custom-market-line: '로컬 시장: {count} 파일'
+    feature-status: '기능 상태:'
+    feature-on: ✓ {feature}
+    feature-off: ✗ {feature} (비활성)
+    high-risk-on: 활성 ⚠
+    high-risk-off: 모두 비활성 ✓
+    high-risk: '고위험 기능: {state}'
+    all-passed: '설정 확인: 통과 ✓'
+    errors-header: '설정 문제 ({count}):'
+    error-line: ✗ {error}
+    footer: ===========================================
   features:
-    quote-protection: "시세 보호"
-    circuit-breaker: "서킷 브레이커"
-    short-selling: "공매도"
-    competition: "투자 대회"
-    auto-orders: "자동 주문"
-    price-alerts: "가격 알림"
-    price-history: "가격 기록"
-    custom-markets: "로컬 시장"
+    quote-protection: 시세 보호
+    circuit-breaker: 서킷 브레이커
+    short-selling: 공매도
+    competition: 투자 대회
+    auto-orders: 자동 주문
+    price-alerts: 가격 알림
+    price-history: 가격 기록
+    custom-markets: 로컬 시장
+    back-main-name: '&fBack to Main'
+    close-name: '&cClose'
+    previous-page-name: '&fPrevious Page'
+    next-page-name: '&fNext Page'
+    page-name: '&ePage {page}/{pages}'
+    filler-name: ' '

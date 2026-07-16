@@ -105,7 +105,6 @@ messages:
   not-enough-shares: "持倉不足"
   deposit-failed: "賣出已記錄，但入帳失敗，請聯絡管理員"
   sell-success: "成功賣出：{name} x {shares}，收入 {amount}"
-  watchlist-load-failed: "&cFailed to load 自選股."
   trade-busy: "&cAnother trade is still being processed."
   trade-limit: "&c該交易超過單筆最大股數限制。"
   trading-unavailable: "&cTrading unavailable: {reason}"
@@ -115,13 +114,11 @@ messages:
   order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
   order-executed: "&a訂單 #{id} 已成交：{symbol} / {price}。"
   alert-triggered: "&e價格提醒：{symbol} 已達到 {price}。"
-  report-header: "  report-header: "&6===== SuperStocks 市場報告 ====="6===== SuperStocks 市场报告 ====="
-  report-avg: "  report-header: "&6===== SuperStocks 市場報告 ====="7{market} 均价:   report-header: "&6===== SuperStocks 市場報告 ====="f{avg}"
-  report-top: "  report-header: "&6===== SuperStocks 市場報告 ====="7涨幅最大:   report-header: "&6===== SuperStocks 市場報告 ====="a{name}   report-header: "&6===== SuperStocks 市場報告 ====="f+{change}%"
-  report-bottom: "  report-header: "&6===== SuperStocks 市場報告 ====="7跌幅最大:   report-header: "&6===== SuperStocks 市場報告 ====="c{name}   report-header: "&6===== SuperStocks 市場報告 ====="f{change}%"
+  report-header: "&6===== SuperStocks 市場報告 ====="
+  report-avg: "&6===== SuperStocks 市場報告 ====="
+  report-top: "&6===== SuperStocks 市場報告 ====="
+  report-bottom: "&6===== SuperStocks 市場報告 ====="
   pin-removed: "&a已取消 BossBar 固定。"
-  pin-set: "&a已固定 {symbol} 到 BossBar。"
-  pin-set: "&a已固定 {symbol} 到 BossBar。"
   pin-set: "&a已固定 {symbol} 到 BossBar。"
   certificate-redeemed: "&a憑證已兌換：{symbol} x{shares} 已回到持倉。"
   certificate-invalid: "&c該憑證已失效。"
@@ -199,18 +196,14 @@ gui:
       - ""
       - "&7最後同步: &f{last_sync}"
   market:
-    title: "&2市場 &8- &f{market}"
     missing-name: "&7{symbol}"
     missing-lore:
       - "&c暫無快取報價"
       - "&7等待下一次同步"
-    stats-name: "&b{market} 統計"
-    stats-lore:
       - "&7已設定股份: &f{configured}"
       - "&7已讀取報價: &a{loaded}"
       - "&7數據來源: &f{provider}"
   stock:
-    title: "&2股份 &8- &f{name}"
     quote-lore:
       - "&8{market}"
       - "&7代號: &f{symbol}"
@@ -231,7 +224,6 @@ gui:
       - "&7按目前快取報價成交"
       - "&7預計收入: &f{amount}"
   portfolio:
-    title: "&6我的投資組合"
     holding-lore:
       - "&7代號: &f{symbol}"
       - "&7數量: &f{shares}"
@@ -261,23 +253,21 @@ gui:
       - "&7浮動盈虧: {profit_color}{profit}"
       - "&7回報率: {profit_color}{profit_percent}%"
   watchlist:
-    title: "&b自選股"
     empty-name: "&7暫無自選股"
   admin:
-    title: "&6SuperStocks 管理面板"
     total-holdings: "&f總持倉數"
     total-players: "&f活躍玩家"
     total-trades: "&f總交易數"
     last-sync: "&f最後同步"
     paused: "&f交易暫停"
     vault: "&fVault 狀態"
-    close-name: "&c關閉"  confirm:
+    close-name: "&c關閉"
+    confirm: 
     stat-format: "&7{label}: &f{value}"
   format:
     market-name: "&a{name}"
     stock-name: "&f{name}"
     stock-symbol: "&f{symbol}"
-    title: "&6確認交易"
     summary-name: "&f{name} &8({symbol})"
     summary-lore:
       - "&7Shares: &f{shares}"
@@ -306,7 +296,6 @@ gui:
   common:
     back-name: "&f返回"
     back-main-name: "&f返回主頁"
-    close-name: "&c關閉"
     previous-page-name: "&f上一頁"
     next-page-name: "&f下一頁"
     page-name: "&e第 {page}/{pages}"

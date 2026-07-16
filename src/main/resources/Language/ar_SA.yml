@@ -1,364 +1,364 @@
-prefix: "&8[&aSuperStocks&8] "
-
+prefix: '&8[&aSuperStocks&8]'
 commands:
-  no-permission: "&cليست لديك صلاحية لاستخدام هذا الأمر."
-  player-only: "&cيمكن للاعبين فقط فتح واجهة سوق الأسهم."
-  reloaded: "&aتمت إعادة تحميل SuperStocks."
-  sync-started: "&aتم تنفيذ مهمة مزامنة الأسعار."
-  unknown-subcommand: "&cأمر فرعي غير معروف. استخدم /stocks help."
-  buy-usage: "&eالاستخدام: /stocks buy <الرمز> <الأسهم>"
-  sell-usage: "&eالاستخدام: /stocks sell <الرمز> <الأسهم>"
-  quote-usage: "&eالاستخدام: /stocks quote <الرمز>"
-  invalid-amount: "&cيجب أن تكون الكمية أكبر من 0."
-  quote-not-found: "&cلم يتم العثور على سعر مخزن لهذا السهم."
-  history-usage: "&e/stocks history <symbol>"
-  history-empty: "&7سجل الأسعار unavailable."
-  history-header: "&6===== سجل الأسعار: {symbol} ====="
-  history-line: "&7{time} &8| &f{price}"
-  stats-header: "&6===== Statistics ====="
-  stats-line: "&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}"
-  watch-added: "&a{symbol} added to قائمة المراقبة."
-  watch-removed: "&a{symbol} removed from قائمة المراقبة."
-  watch-header: "&6===== قائمة المراقبة ====="
-  watch-line: "&e{symbol}"
-  alert-usage: "&e/stocks alert <symbol> <above|below> <price>"
-  alert-created: "&aAlert #{id}: {symbol} / {price}."
-  order-usage: "&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]"
-  order-header: "&6===== أوامر مفتوحة ====="
-  order-line: "&f#{id} &e{type} {symbol} &7| الكمية: &f{shares} &7| سعر التشغيل: &f{price}"
-  order-created: "&aOrder #{id} created."
-  order-limit: "&cOrder creation failed. Check funds, holdings, limits and quote status."
-  order-cancelled: "&aOrder #{id} cancelled."
-  order-not-found: "&cOpen order #{id} not found."
-  penalty-usage: "&e/stocks penalty history <player>"
-  penalty-header: "&6===== عقوبات الخسارة: {player} ====="
-  penalty-line: "&7{time} &8| &e{tier} &7| الخسارة: &f{loss} ({loss_percent}%) &7| الخصم: &f{amount}"
-  status-header: "&6===== حالة SuperStocks ====="
-  status-line: "&7المصدر: &f{provider} &7| الأسعار: &f{loaded}/{configured} &7| آخر مزامنة: &f{last_sync} &7| متوقف: &f{paused} &7| Vault: &f{vault}"
-  paused: "&cStock trading paused."
-  resumed: "&aStock trading resumed."
-  admin-usage: "&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]"
-  admin-portfolio-header: "&6===== محفظة: {player} ====="
-  admin-given: "&aAdded {symbol} x {shares} to {player}."
-  admin-removed: "&aRemoved {symbol} x {shares} from {player}."
-  admin-cleared: "&aتم مسح جميع مراكز {player}."
-  short-usage: "&eالاستخدام: /stocks short <رمز> <كمية>"
-  pin-usage: "&eالاستخدام: /stocks pin <رمز>"
-  ipo-usage: "&eالاستخدام: /stocks ipo <list|subscribe> [ID] [كمية]"
-  index-line: "&7{market}: &f{index} &7({count} stocks)"
-  index-header: "&6===== مؤشرات السوق ====="
-  cover-usage: "&eالاستخدام: /stocks cover <ID> [كمية]"
-  competition-usage: "&eالاستخدام: /stocks competition <list|join|buy|sell> <ID> [رمز] [كمية]"
-  cert-usage: "&eالاستخدام: /stocks certificate <issue|list> [رمز] [كمية]"
-  portfolio-header: "&6===== محفظتي ====="
-  portfolio-empty: "&7لا تملك أي مراكز حاليا."
-  portfolio-line: "&e{symbol} &7| الأسهم: &f{shares} &7| التكلفة: &f{average_cost} &7| السعر: &f{price} &7| القيمة: &f{value} &7| الربح/الخسارة: &f{profit}"
-  rank-winners-header: "&e===== أفضل المستثمرين ====="
-  rank-losers-header: "&c===== قائمة الخاسرين ====="
-  rank-empty: "&7لا توجد بيانات تصنيف."
-  rank-line: "&f#{rank} &e{player} &7| القيمة: &f{value} &7| الربح/الخسارة: &f{profit} &7| العائد: &f{profit_percent}%"
+  no-permission: '&cليست لديك صلاحية لاستخدام هذا الأمر.'
+  player-only: '&cيمكن للاعبين فقط فتح واجهة سوق الأسهم.'
+  reloaded: '&aتمت إعادة تحميل SuperStocks.'
+  sync-started: '&aتم تنفيذ مهمة مزامنة الأسعار.'
+  unknown-subcommand: '&cأمر فرعي غير معروف. استخدم /stocks help.'
+  buy-usage: '&eالاستخدام: /stocks buy <الرمز> <الأسهم>'
+  sell-usage: '&eالاستخدام: /stocks sell <الرمز> <الأسهم>'
+  quote-usage: '&eالاستخدام: /stocks quote <الرمز>'
+  invalid-amount: '&cيجب أن تكون الكمية أكبر من 0.'
+  quote-not-found: '&cلم يتم العثور على سعر مخزن لهذا السهم.'
+  history-usage: '&e/stocks history <symbol>'
+  history-empty: '&7سجل الأسعار unavailable.'
+  history-header: '&6===== سجل الأسعار: {symbol} ====='
+  history-line: '&7{time} &8| &f{price}'
+  stats-header: '&6===== Statistics ====='
+  stats-line: '&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}'
+  watch-added: '&a{symbol} added to قائمة المراقبة.'
+  watch-removed: '&a{symbol} removed from قائمة المراقبة.'
+  watch-header: '&6===== قائمة المراقبة ====='
+  watch-line: '&e{symbol}'
+  alert-usage: '&e/stocks alert <symbol> <above|below> <price>'
+  alert-created: '&aAlert #{id}: {symbol} / {price}.'
+  order-usage: '&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]'
+  order-header: '&6===== أوامر مفتوحة ====='
+  order-line: '&f#{id} &e{type} {symbol} &7| الكمية: &f{shares} &7| سعر التشغيل: &f{price}'
+  order-created: '&aOrder #{id} created.'
+  order-limit: '&cOrder creation failed. Check funds, holdings, limits and quote status.'
+  order-cancelled: '&aOrder #{id} cancelled.'
+  order-not-found: '&cOpen order #{id} not found.'
+  penalty-usage: '&e/stocks penalty history <player>'
+  penalty-header: '&6===== عقوبات الخسارة: {player} ====='
+  penalty-line: '&7{time} &8| &e{tier} &7| الخسارة: &f{loss} ({loss_percent}%) &7| الخصم: &f{amount}'
+  status-header: '&6===== حالة SuperStocks ====='
+  status-line: '&7المصدر: &f{provider} &7| الأسعار: &f{loaded}/{configured} &7| آخر مزامنة: &f{last_sync} &7| متوقف: &f{paused} &7| Vault: &f{vault}'
+  paused: '&cStock trading paused.'
+  resumed: '&aStock trading resumed.'
+  admin-usage: '&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]'
+  admin-portfolio-header: '&6===== محفظة: {player} ====='
+  admin-given: '&aAdded {symbol} x {shares} to {player}.'
+  admin-removed: '&aRemoved {symbol} x {shares} from {player}.'
+  admin-cleared: '&aتم مسح جميع مراكز {player}.'
+  short-usage: '&eالاستخدام: /stocks short <رمز> <كمية>'
+  cover-usage: '&eالاستخدام: /stocks cover <ID> [كمية]'
+  competition-usage: '&eالاستخدام: /stocks competition <list|join|buy|sell> <ID> [رمز] [كمية]'
+  ipo-usage: '&eالاستخدام: /stocks ipo <list|subscribe> [ID] [كمية]'
+  cert-usage: '&eالاستخدام: /stocks certificate <issue|list> [رمز] [كمية]'
+  pin-usage: '&eالاستخدام: /stocks pin <رمز>'
+  index-header: '&6===== مؤشرات السوق ====='
+  index-line: '&7{market}: &f{index} &7({count} stocks)'
+  portfolio-header: '&6===== محفظتي ====='
+  portfolio-empty: '&7لا تملك أي مراكز حاليا.'
+  portfolio-line: '&e{symbol} &7| الأسهم: &f{shares} &7| التكلفة: &f{average_cost} &7| السعر: &f{price} &7| القيمة: &f{value} &7| الربح/الخسارة: &f{profit}'
+  rank-winners-header: '&e===== أفضل المستثمرين ====='
+  rank-losers-header: '&c===== قائمة الخاسرين ====='
+  rank-empty: '&7لا توجد بيانات تصنيف.'
+  rank-line: '&f#{rank} &e{player} &7| القيمة: &f{value} &7| الربح/الخسارة: &f{profit} &7| العائد: &f{profit_percent}%'
   quote-info:
-    - "&6===== سعر السهم ====="
-    - "&7الاسم: &f{name}"
-    - "&7الرمز: &f{symbol}"
-    - "&7السوق: &f{market}"
-    - "&7السعر: &f{price}"
-    - "&7التغير: &f{change} ({change_percent}%)"
-    - "&7آخر تحديث: &f{updated_at}"
+  - '&6===== Stock Quote ====='
+  - '&7Name: &f{name}'
+  - '&7Symbol: &f{symbol}'
+  - '&7Market: &f{market}'
+  - '&7Price: &f{price}'
+  - '&7Change: &f{change} ({change_percent}%)'
+  - '&7Updated: &f{updated_at}'
   help:
-    - "&6===== مساعدة SuperStocks ====="
-    - "&e/stocks &7- فتح واجهة الأسهم"
-    - "&e/stocks help &7- عرض الأوامر"
-    - "&e/stocks quote <الرمز> &7- عرض السعر"
-    - "&e/stocks buy <الرمز> <الأسهم> &7- شراء أسهم"
-    - "&e/stocks sell <الرمز> <الأسهم> &7- بيع أسهم"
-    - "&e/stocks portfolio &7- عرض المحفظة"
-    - "&e/stocks rank winners &7- أفضل المستثمرين"
-    - "&e/stocks rank losers &7- قائمة الخاسرين"
-    - "&e/stocks sync &7- مسؤول: مزامنة الأسعار"
-    - "&e/stocks reload &7- مسؤول: إعادة تحميل"
+  - '&6===== SuperStocks Help ====='
+  - '&e/stocks &7- Open the stock GUI'
+  - '&e/stocks help &7- Show all commands'
+  - '&e/stocks open &7- Open the stock GUI'
+  - '&e/stocks quote <symbol> &7- Show a quote'
+  - '&e/stocks buy <symbol> <shares> &7- Buy shares'
+  - '&e/stocks sell <symbol> <shares> &7- Sell shares'
+  - '&e/stocks portfolio &7- Show text portfolio'
+  - '&e/stocks rank winners &7- Show top investors'
+  - '&e/stocks rank losers &7- Show bottom board'
   help-advanced:
-    - "&e/stocks history <symbol> &7- سجل الأسعار"
-    - "&e/stocks stats &7- Investment statistics"
-    - "&e/stocks watch <add|remove|list> [symbol] &7- قائمة المراقبة"
-    - "&e/stocks alert <symbol> <above|below> <price> &7- Price alert"
-    - "&e/stocks order <type|list|cancel> ... &7- Automated orders"
-    - "&e/stocks status &7- Admin: status"
-    - "&e/stocks pause|resume &7- Admin: pause/resume trading"
-    - "&e/stocks admin ... &7- Admin: manage holdings"
-    - "&e/stocks penalty history <player> &7- Admin: penalty records"
-    - "&e/stocks sync &7- Admin: sync quotes"
-    - "&e/stocks reload &7- Admin: reload plugin"
-
+  - '&e/stocks history <symbol> &7- Show 24-hour price history'
+  - '&e/stocks stats &7- Show investment statistics'
+  - '&e/stocks watch <add|remove|list> [symbol] &7- Manage watchlist'
+  - '&e/stocks alert <symbol> <above|below> <price> &7- Create a price alert'
+  - '&e/stocks order <type|list|cancel> ... &7- Manage automated orders'
+  - '&e/stocks status &7- Admin: show system status'
+  - '&e/stocks pause|resume &7- Admin: pause or resume trading'
+  - '&e/stocks admin ... &7- Admin: manage player holdings'
+  - '&e/stocks penalty history <player> &7- Admin: view penalty records'
+  - '&e/stocks sync &7- Admin: sync quotes'
+  - '&e/stocks reload &7- Admin: reload plugin'
+  - '&e/stocks short <symbol> <shares> &7- Open a short position'
+  - '&e/stocks cover <id> [shares] &7- Close a short position'
+  - '&e/stocks competition <list|join|buy|sell> &7- Investment competitions'
+  - '&e/stocks ipo <list|subscribe> &7- IPO subscriptions'
+  - '&e/stocks certificate <issue|list> &7- Stock certificates'
+  - '&e/stocks index &7- View market indices'
+  - '&e/stocks pin <symbol> &7- Pin stock to BossBar'
+  - '&e/stocks unpin &7- Remove BossBar pin'
+  - '&e/stocks report &7- View market report'
+  - '&e/stocks admin audit [player] [action] &7- View audit log'
+  - '&e/stocks admin panel &7- Open admin GUI'
 messages:
-  quote-unavailable: "&cلا توجد بيانات سعر لهذا السهم بعد، ولا يمكن تداوله الآن."
-  portfolio-load-failed: "&cتعذر تحميل محفظتك. يرجى التواصل مع مسؤول."
-  ranking-load-failed: "&cتعذر تحميل التصنيف. يرجى التواصل مع مسؤول."
-  watchlist-load-failed: "&cFailed to load قائمة المراقبة."
-  trade-failed: "&cفشلت الصفقة. يرجى التواصل مع مسؤول."
-  economy-unavailable: "نظام الاقتصاد غير جاهز"
-  min-shares: "الحد الأدنى للتداول هو {shares} سهم"
-  not-enough-money: "الرصيد غير كاف. المطلوب: {amount}"
-  withdraw-failed: "فشل الدفع"
-  buy-success: "تم الشراء: {name} x {shares}، التكلفة {amount}"
-  not-enough-shares: "لا تملك أسهما كافية"
-  deposit-failed: "تم تسجيل البيع، لكن فشل الدفع. يرجى التواصل مع مسؤول"
-  sell-success: "تم البيع: {name} x {shares}، المستلم {amount}"
-  watchlist-load-failed: "&cFailed to load قائمة المراقبة."
-  trade-busy: "&cAnother trade is still being processed."
-  trade-limit: "&cهذه الصفقة تتجاوز الحد الأقصى للأسهم في الصفقة الواحدة."
-  trading-unavailable: "&cTrading unavailable: {reason}"
-  trade-cooldown: "&cYou are trading too quickly."
-  trade-rate-limit: "&cToo many trades in one minute."
-  position-limit: "&cهذا المركز سيتجاوز حد القيمة."
-  order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
-  order-executed: "&aتم تنفيذ الأمر #{id}: {symbol} بسعر {price}."
-  alert-triggered: "&eتنبيه: وصل {symbol} إلى {price}."
-  report-header: "  report-header: "&6===== تقرير سوق SuperStocks ====="6===== SuperStocks Market Report ====="
-  report-avg: "  report-header: "&6===== تقرير سوق SuperStocks ====="7{market} avg:   report-header: "&6===== تقرير سوق SuperStocks ====="f{avg}"
-  report-top: "  report-header: "&6===== تقرير سوق SuperStocks ====="7Top:   report-header: "&6===== تقرير سوق SuperStocks ====="a{name}   report-header: "&6===== تقرير سوق SuperStocks ====="f+{change}%"
-  report-bottom: "  report-header: "&6===== تقرير سوق SuperStocks ====="7Bottom:   report-header: "&6===== تقرير سوق SuperStocks ====="c{name}   report-header: "&6===== تقرير سوق SuperStocks ====="f{change}%"
-  pin-removed: "&aتمت إزالة تثبيت BossBar."
-  pin-set: "&aتم تثبيت {symbol} على BossBar."
-  pin-set: "&aتم تثبيت {symbol} على BossBar."
-  pin-set: "&aتم تثبيت {symbol} على BossBar."
-  certificate-redeemed: "&aتم استرداد الشهادة: {symbol} x{shares} في محفظتك."
-  certificate-invalid: "&cهذه الشهادة لم تعد صالحة."
-  certifi  competition-list-line: "&e#{id} &f{name} &7{status}"
-  ipo-list-line: "&e#{id} &f{symbol} {name} &7@{price} &7{status}"
-  cert-list-line: "&e#{id} &f{symbol} x{shares}"
-  audit-log-line: "&7{time} &f{actor} &e{action} &7{detail}"
-cate-issued: "&aتم إصدار شهادة: {symbol} x{shares}. انقر يمينا للاسترداد."
-  ipo-symbol-exists: "&cيوجد سهم بهذا الرمز بالفعل."
-  ipo-cancelled: "&cتم إلغاء IPO {symbol}. تم استرداد جميع المبالغ."
-  ipo-completed: "&6IPO for {symbol} ({name}) completed! Shares allocated."
-  ipo-allocated: "&aIPO {symbol}: تم تخصيص {shares} سهم. استرداد: {refund}"
-  ipo-subscribed: "&aتم الاكتتاب بـ {shares} سهم من {symbol} IPO."
-  ipo-oversubscribed: "&cتمت تغطية IPO بالكامل."
-  ipo-limit: "&cوصلت إلى الحد الأقصى للاكتتاب في هذا IPO."
-  ipo-closed: "&cانتهت فترة الاكتتاب في IPO."
-  ipo-not-found: "&cIPO غير موجود."
-  ipo-created: "&aتم إنشاء IPO #{id}: {symbol} {name} @ {price}."
-  competition-admin-ended: "&aانتهت المسابقة \"{name}\" وتم توزيع الجوائز."
-  competition-reward: "&6مبروك! المركز #{rank} في \"{name}\" – ربحت {amount}!"
-  competition-ended: "&6===== انتهت المسابقة \"{name}\"! الترتيب: /stocks competition list ====="
-  competition-sold: "&aبيع المسابقة: {symbol} x{shares} بـ {revenue}."
-  competition-bought: "&aشراء المسابقة: {symbol} x{shares} بـ {cost}."
-  competition-not-joined: "&cلم تنضم إلى هذه المسابقة."
-  competition-already-joined: "&cأنت بالفعل في هذه المسابقة."
-  competition-not-found: "&cالمسابقة غير موجودة أو انتهت."
-  competition-joined: "&aانضممت إلى \"{name}\" برأس مال {capital}!"
-  competition-created: "&aتم إنشاء المسابقة #{id} \"{name}\" برأس مال {capital}."
-  short-liquidated: "&cتم تصفية البيع المكشوف {symbol} x{shares} جبرا بسعر {price}. الهامش: {margin}"
-  short-not-found: "&cلم يتم العثور على مركز بيع مكشوف."
-  short-covered: "&aتمت تغطية البيع المكشوف: {symbol} x{shares}. الربح/الخسارة: {pnl}"
-  short-opened: "&aتم فتح بيع مكشوف #{id}: {symbol} x{shares} @ {price}. الهامش: {margin}"
-  market-event-positive: "&6📈 &eأخبار السوق: &f{name} &7({symbol}) &aارتفع &f{impact}% &7بسبب أخبار إيجابية!"
-  market-event-negative: "&6📉 &eأخبار السوق: &f{name} &7({symbol}) &cانخفض &f{impact}% &7بسبب أخبار سلبية!"
-
+  quote-unavailable: '&cلا توجد بيانات سعر لهذا السهم بعد، ولا يمكن تداوله الآن.'
+  portfolio-load-failed: '&cتعذر تحميل محفظتك. يرجى التواصل مع مسؤول.'
+  ranking-load-failed: '&cتعذر تحميل التصنيف. يرجى التواصل مع مسؤول.'
+  watchlist-load-failed: '&cFailed to load قائمة المراقبة.'
+  trade-failed: '&cفشلت الصفقة. يرجى التواصل مع مسؤول.'
+  economy-unavailable: نظام الاقتصاد غير جاهز
+  min-shares: الحد الأدنى للتداول هو {shares} سهم
+  not-enough-money: 'الرصيد غير كاف. المطلوب: {amount}'
+  withdraw-failed: فشل الدفع
+  buy-success: 'تم الشراء: {name} x {shares}، التكلفة {amount}'
+  not-enough-shares: لا تملك أسهما كافية
+  deposit-failed: تم تسجيل البيع، لكن فشل الدفع. يرجى التواصل مع مسؤول
+  sell-success: 'تم البيع: {name} x {shares}، المستلم {amount}'
+  trade-busy: '&cAnother trade is still being processed.'
+  trade-limit: '&cهذه الصفقة تتجاوز الحد الأقصى للأسهم في الصفقة الواحدة.'
+  trading-unavailable: '&cTrading unavailable: {reason}'
+  trade-cooldown: '&cYou are trading too quickly.'
+  trade-rate-limit: '&cToo many trades in one minute.'
+  position-limit: '&cهذا المركز سيتجاوز حد القيمة.'
+  order-reserve-insufficient: '&cReserved funds are not enough to execute this order.'
+  order-executed: '&aتم تنفيذ الأمر #{id}: {symbol} بسعر {price}.'
+  alert-triggered: '&eتنبيه: وصل {symbol} إلى {price}.'
+  market-event-positive: '&6📈 &eMarket News: &f{name} &7({symbol}) &asurged &f{impact}% &7on positive news!'
+  market-event-negative: '&6📉 &eMarket News: &f{name} &7({symbol}) &cdropped &f{impact}% &7on negative news!'
+  short-opened: '&aShort position #{id} opened: {symbol} x{shares} @ {price}. Margin: {margin}'
+  short-covered: '&aShort covered: {symbol} x{shares}. P&L: {pnl}'
+  short-not-found: '&cShort position not found.'
+  short-liquidated: '&cYour short position on {symbol} x{shares} was force-liquidated at {price}. Margin lost: {margin}'
+  competition-created: '&aCompetition #{id} "{name}" created with {capital} starting capital.'
+  competition-joined: '&aYou joined "{name}" with {capital} starting capital!'
+  competition-not-found: '&cCompetition not found or ended.'
+  competition-already-joined: '&cYou are already in this competition.'
+  competition-not-joined: '&cYou haven''t joined this competition.'
+  competition-bought: '&aBought {symbol} x{shares} for {cost} (competition).'
+  competition-sold: '&aSold {symbol} x{shares} for {revenue} (competition).'
+  competition-ended: '&6===== Competition "{name}" has ended! Check rankings with /stocks competition list ====='
+  competition-reward: '&6Congratulations! You placed #{rank} in "{name}" and won {amount}!'
+  competition-admin-ended: '&aCompetition "{name}" ended and rewards distributed.'
+  ipo-created: '&aIPO #{id} created: {symbol} {name} @ {price}.'
+  ipo-not-found: '&cIPO not found.'
+  ipo-closed: '&cIPO subscription period has ended.'
+  ipo-limit: '&cYou have reached the maximum subscription for this IPO.'
+  ipo-oversubscribed: '&cIPO is fully subscribed.'
+  ipo-subscribed: '&aSubscribed {shares} shares of {symbol} IPO.'
+  ipo-allocated: '&aIPO {symbol}: allocated {shares} shares. Refund: {refund}'
+  ipo-completed: '&6IPO for {symbol} ({name}) completed! Shares allocated to subscribers.'
+  ipo-cancelled: '&cIPO for {symbol} cancelled. All funds refunded.'
+  ipo-symbol-exists: '&cA stock with this symbol already exists.'
+  certificate-issued: '&aStock certificate issued: {symbol} x{shares}. Right-click to redeem.'
+  certificate-invalid: '&cهذه الشهادة لم تعد صالحة.'
+  certificate-redeemed: '&aتم استرداد الشهادة: {symbol} x{shares} في محفظتك.'
+  pin-set: '&aتم تثبيت {symbol} على BossBar.'
+  pin-removed: '&aتمت إزالة تثبيت BossBar.'
+  report-header: '&6===== تقرير سوق SuperStocks ====='
+  report-avg: '&6===== تقرير سوق SuperStocks ====='
+  report-top: '&6===== تقرير سوق SuperStocks ====='
+  report-bottom: '&6===== تقرير سوق SuperStocks ====='
+  competition-list-line: '&e#{id} &f{name} &7{status}'
+  ipo-list-line: '&e#{id} &f{symbol} {name} &7@{price} &7{status}'
+  cert-list-line: '&e#{id} &f{symbol} x{shares}'
+  audit-log-line: '&7{time} &f{actor} &e{action} &7{detail}'
 gui:
   main:
-    title: "&2&lSuperStocks &8| &fقاعة التداول"
+    title: '&2&lSuperStocks &8| &fقاعة التداول'
     market-lore:
-      - "&7فتح سوق &f{market}"
-      - "&7الأسهم المهيأة: &f{configured}"
-      - "&7الأسعار المحملة: &a{loaded}"
-      - ""
-      - "&eانقر للعرض"
-    portfolio-name: "&6محفظتي"
+    - '&7Open the &f{market}&7 market'
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - ''
+    - '&eClick to view'
+    portfolio-name: '&6محفظتي'
     portfolio-lore:
-      - "&7عرض الأسهم والتكلفة والقيمة والربح/الخسارة"
-      - "&7الأسعار المخزنة: &f{loaded_total}&7/&f{configured_total}"
-      - ""
-      - "&eانقر للفتح"
-    winners-name: "&eأفضل المستثمرين"
+    - '&7View stocks, cost, value, and P/L'
+    - '&7Cached quotes: &f{loaded_total}&7/&f{configured_total}'
+    - ''
+    - '&eClick to open'
+    winners-name: '&eأفضل المستثمرين'
     winners-lore:
-      - "&7مرتبة حسب الربح/الخسارة غير المحققة حاليا"
-      - "&7الربح الأعلى يظهر أولا"
-      - ""
-      - "&eانقر للعرض"
-    losers-name: "&cقائمة الخاسرين"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Higher profit ranks higher'
+    - ''
+    - '&eClick to view'
+    losers-name: '&cقائمة الخاسرين'
     losers-lore:
-      - "&7مرتبة حسب الربح/الخسارة غير المحققة حاليا"
-      - "&7الخسائر الأكبر تظهر أولا"
-      - ""
-      - "&eانقر للعرض"
-    watchlist-name: "&bقائمة المراقبة"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Larger losses rank higher'
+    - ''
+    - '&eClick to view'
+    watchlist-name: '&bقائمة المراقبة'
     watchlist-lore:
-      - "&7قائمة المراقبة"
-      - "&7/stocks watch add <symbol>"
-      - ""
-      - "&eClick to open"
-    stats-name: "&bإحصاءات الأسعار"
+    - '&7View the stocks you follow'
+    - '&7Use /stocks watch add <symbol> to add one'
+    - ''
+    - '&eClick to open'
+    stats-name: '&bإحصاءات الأسعار'
     stats-lore:
-      - "&7المصدر: &f{provider}"
-      - "&7الأسهم المهيأة: &f{configured_total}"
-      - "&7الأسهم المحملة: &a{loaded_total}"
-      - "&7فاصل التحديث: &f{refresh_seconds}s"
-      - ""
-      - "&7آخر مزامنة: &f{last_sync}"
+    - '&7Source: &f{provider}'
+    - '&7Configured stocks: &f{configured_total}'
+    - '&7Loaded stocks: &a{loaded_total}'
+    - '&7Refresh interval: &f{refresh_seconds}s'
+    - ''
+    - '&7Last sync: &f{last_sync}'
   market:
-    title: "&2السوق &8- &f{market}"
-    missing-name: "&7{symbol}"
+    title: '&2السوق &8- &f{market}'
+    missing-name: '&7{symbol}'
     missing-lore:
-      - "&cلا توجد أسعار مخزنة"
-      - "&7بانتظار المزامنة التالية"
-    stats-name: "&bإحصاءات {market}"
+    - '&cNo cached quote data'
+    - '&7Waiting for the next sync'
+    stats-name: '&bإحصاءات {market}'
     stats-lore:
-      - "&7الأسهم المهيأة: &f{configured}"
-      - "&7الأسعار المحملة: &a{loaded}"
-      - "&7المصدر: &f{provider}"
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - '&7Source: &f{provider}'
   stock:
-    title: "&2السهم &8- &f{name}"
+    title: '&2السهم &8- &f{name}'
     quote-lore:
-      - "&8{market}"
-      - "&7الرمز: &f{symbol}"
-      - "&7السعر: &f{price}"
-      - "&7التغير: {change_color}{change} ({change_percent}%)"
-      - "&7آخر تحديث: &f{updated_at}"
-      - ""
-      - "&eانقر للتداول"
+    - '&8{market}'
+    - '&7Symbol: &f{symbol}'
+    - '&7Price: &f{price}'
+    - '&7Change: {change_color}{change} ({change_percent}%)'
+    - '&7Updated: &f{updated_at}'
+    - ''
+    - '&eClick to trade'
     history-lore:
-      - "&7Last 24h: &f{change_24h}%"
-      - "&7Trend: &f{trend}"
-    buy-name: "&aشراء {shares} سهم"
+    - '&7Last 24h: &f{change_24h}%'
+    - '&7Trend: &f{trend}'
+    buy-name: '&aشراء {shares} سهم'
     buy-lore:
-      - "&7يتم التداول بسعر التخزين المؤقت"
-      - "&7التكلفة المقدرة: &f{amount}"
-    sell-name: "&cبيع {shares} سهم"
+    - '&7Trades at the cached quote'
+    - '&7Estimated cost: &f{amount}'
+    sell-name: '&cبيع {shares} سهم'
     sell-lore:
-      - "&7يتم التداول بسعر التخزين المؤقت"
-      - "&7العائد المقدر: &f{amount}"
+    - '&7Trades at the cached quote'
+    - '&7Estimated proceeds: &f{amount}'
   portfolio:
-    title: "&6محفظتي"
+    title: '&6محفظتي'
     holding-lore:
-      - "&7الرمز: &f{symbol}"
-      - "&7الأسهم: &f{shares}"
-      - "&7التكلفة: &f{average_cost}"
-      - "&7السعر: &f{price}"
-      - "&7القيمة السوقية: &f{market_value}"
-      - "&7الربح/الخسارة: {profit_color}{profit}"
-      - ""
-      - "&eانقر للتداول"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&7Price: &f{price}'
+    - '&7Market value: &f{market_value}'
+    - '&7P/L: {profit_color}{profit}'
+    - ''
+    - '&eClick to trade'
     holding-missing-lore:
-      - "&7الرمز: &f{symbol}"
-      - "&7الأسهم: &f{shares}"
-      - "&7التكلفة: &f{average_cost}"
-      - "&cلا توجد أسعار مخزنة"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&cNo cached quote data'
   ranking:
-    winners-title: "&eأفضل المستثمرين"
-    losers-title: "&cقائمة الخاسرين"
-    entry-name: "&f#{rank} &e{player}"
+    winners-title: '&eأفضل المستثمرين'
+    losers-title: '&cقائمة الخاسرين'
+    entry-name: '&f#{rank} &e{player}'
     winner-lore:
-      - "&7اللاعب: &f{player}"
-      - "&7قيمة المحفظة: &f{value}"
-      - "&7ربح/خسارة غير محققة: {profit_color}{profit}"
-      - "&7العائد: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
     loser-lore:
-      - "&7اللاعب: &f{player}"
-      - "&7قيمة المحفظة: &f{value}"
-      - "&7ربح/خسارة غير محققة: {profit_color}{profit}"
-      - "&7العائد: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
   watchlist:
-    title: "&bقائمة المراقبة"
-    empty-name: "&7لا توجد أسهم مراقبة"
+    title: '&bقائمة المراقبة'
+    empty-name: '&7لا توجد أسهم مراقبة'
   admin:
-
-  confirm:
-    title: "&6تأكيد الصفقة"
-    summary-name: "&f{name} &8({symbol})"
-    summary-lore:
-      - "&7Shares: &f{shares}"
-      - "&7Unit price: &f{price}"
-      - "&7Estimated gross: &f{gross}"
-    accept-name: "&aتأكيد الصفقة"
-    accept-lore:
-      - "&7Click to execute this trade."
-    cancel-name: "&cإلغاء"
-    cancel-lore:
-      - "&7Return to the stock page."
-    total-holdings: "&fTotal Holdings"
-    total-players: "&fActive Players"
-    total-trades: "&fTotal Trades"
-    last-sync: "&fLast Sync"
-    vault: "&fVault Status"
-    paused: "&fالتداول متوقف"
-    close-name: "&cإغلاق"
-    stat-format: "&7{label}: &f{value}"
-
+    title: '&6SuperStocks Admin Panel'
+    total-holdings: '&fTotal Holdings'
+    total-players: '&fActive Players'
+    total-trades: '&fTotal Trades'
+    last-sync: '&fLast Sync'
+    paused: '&fTrading Paused'
+    vault: '&fVault Status'
+    close-name: '&cClose'
+    stat-format: '&7{label}: &f{value}'
   format:
-    market-name: "&a{name}"
-    stock-name: "&f{name}"
-    stock-symbol: "&f{symbol}"  certificate:
-    name: "&6Stock Certificate &f#{id}"
+    market-name: '&a{name}'
+    stock-name: '&f{name}'
+    stock-symbol: '&f{symbol}'
+  confirm:
+    title: '&6تأكيد الصفقة'
+    summary-name: '&f{name} &8({symbol})'
+    summary-lore:
+    - '&7Shares: &f{shares}'
+    - '&7Unit price: &f{price}'
+    - '&7Estimated gross: &f{gross}'
+    accept-name: '&aتأكيد الصفقة'
+    accept-lore:
+    - '&7Click to execute this trade.'
+    cancel-name: '&cإلغاء'
+    cancel-lore:
+    - '&7Return to the stock page.'
+  certificate:
+    name: '&6Stock Certificate &f#{id}'
     lore:
-      - "&7Stock: &f{symbol}"
-      - "&7Shares: &f{shares}"
-      - "&7Issue price: &f{price}"
-      - ""
-      - "&eRight-click air &7to redeem"
-      - "&7Can be traded between players"
-  common:
-    back-name: "&fرجوع"
-    back-main-name: "&fالعودة إلى الرئيسية"
-    close-name: "&cإغلاق"
-    previous-page-name: "&fالصفحة السابقة"
-    next-page-name: "&fالصفحة التالية"
-    page-name: "&eالصفحة {page}/{pages}"
-    filler-name: " "
-
+    - '&7Stock: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Issue price: &f{price}'
+    - ''
+    - '&eRight-click air &7to redeem'
+    - '&7Can be traded between players'
 bossbar:
-  pin-format: "&f{name} &7| &f{price} {arrow} &f{change_percent}%"
-  arrow-up: "&a▲"
-  arrow-down: "&c▼"
-
+  pin-format: '&f{name} &7| &f{price} {arrow} &f{change_percent}%'
+  arrow-up: '&a▲'
+  arrow-down: '&c▼'
 validators:
   errors:
-    language-not-found: "ملف اللغة غير موجود: {language}"
-    duplicate-market: "معرف سوق مكرر: {market}"
-    market-empty-symbol: "السوق {market} يحتوي على رمز فارغ"
-    duplicate-symbol: "رمز مكرر: {symbol}"
-    custom-market-id-empty: "{file} معرف السوق فارغ"
-    duplicate-market-id: "معرف سوق مكرر: {id} ({file})"
-    custom-market-invalid-material: "{file} يستخدم مادة غير صالحة: {icon}"
-    custom-market-no-stocks: "{file} لا يحتوي على قسم الأسهم"
-    custom-market-empty-symbol: "{file} يحتوي على رمز فارغ: {key}"
-    duplicate-symbol-file: "رمز مكرر: {symbol} ({file})"
-    custom-market-invalid-price: "{file} نطاق سعر غير صالح: {symbol}"
-    custom-market-negative-volatility: "{file} لا يمكن أن يكون التقلب سالبًا: {symbol}"
-    invalid-material: "مادة غير صالحة: gui.{key}={value}"
-    volatility-min-exceeds-max: "الحد الأدنى للتقلب العشوائي يتجاوز الحد الأقصى"
-    invalid-safety-price: "نطاق سعر الأمان غير صالح"
-    invalid-penalty-tier: "نطاق مستوى العقوبة غير صالح: {key}"
-    penalty-tier-overlap: "تداخل مستوى العقوبة: {previous} / {current}"
-    provider-missing-symbols: "يجب أن يحتوي endpoint الموفر على {symbols}: {active}"
-    provider-wrong-scheme: "يجب أن يستخدم endpoint الموفر HTTP/HTTPS: {active}"
-    provider-invalid-uri: "endpoint الموفر غير صالح: {active}"
-    invalid-market-hours: "إعدادات ساعات التداول غير صالحة: {market}"
-    invalid-closed-action: "يجب أن يكون closed-action إما DENY أو SELL_ONLY: {market}"
-    invalid-gui-size: "حجم GUI غير صالح: gui.{key}={size}"
+    language-not-found: 'ملف اللغة غير موجود: {language}'
+    duplicate-market: 'معرف سوق مكرر: {market}'
+    market-empty-symbol: السوق {market} يحتوي على رمز فارغ
+    duplicate-symbol: 'رمز مكرر: {symbol}'
+    custom-market-id-empty: '{file} معرف السوق فارغ'
+    duplicate-market-id: 'معرف سوق مكرر: {id} ({file})'
+    custom-market-invalid-material: '{file} يستخدم مادة غير صالحة: {icon}'
+    custom-market-no-stocks: '{file} لا يحتوي على قسم الأسهم'
+    custom-market-empty-symbol: '{file} يحتوي على رمز فارغ: {key}'
+    duplicate-symbol-file: 'رمز مكرر: {symbol} ({file})'
+    custom-market-invalid-price: '{file} نطاق سعر غير صالح: {symbol}'
+    custom-market-negative-volatility: '{file} لا يمكن أن يكون التقلب سالبًا: {symbol}'
+    invalid-material: 'مادة غير صالحة: gui.{key}={value}'
+    volatility-min-exceeds-max: الحد الأدنى للتقلب العشوائي يتجاوز الحد الأقصى
+    invalid-safety-price: نطاق سعر الأمان غير صالح
+    invalid-penalty-tier: 'نطاق مستوى العقوبة غير صالح: {key}'
+    penalty-tier-overlap: 'تداخل مستوى العقوبة: {previous} / {current}'
+    provider-missing-symbols: 'يجب أن يحتوي endpoint الموفر على {symbols}: {active}'
+    provider-wrong-scheme: 'يجب أن يستخدم endpoint الموفر HTTP/HTTPS: {active}'
+    provider-invalid-uri: 'endpoint الموفر غير صالح: {active}'
+    invalid-market-hours: 'إعدادات ساعات التداول غير صالحة: {market}'
+    invalid-closed-action: 'يجب أن يكون closed-action إما DENY أو SELL_ONLY: {market}'
+    invalid-gui-size: 'حجم GUI غير صالح: gui.{key}={size}'
   log:
-    banner: "========== فحص إعدادات SuperStocks =========="
-    language-line: "  اللغة: {language}"
-    provider-line: "  الموفر: {provider} (تحديث كل {seconds} ثانية)"
-    market-line: "  السوق {market}: {count} سهم"
-    custom-market-line: "  الأسواق المحلية: {count} ملفات"
-    feature-status: "  حالة الميزات:"
-    feature-on: "    ✓ {feature}"
-    feature-off: "    ✗ {feature} (معطل)"
-    high-risk-on: "مفعل ⚠"
-    high-risk-off: "الكل معطل ✓"
-    high-risk: "  الميزات عالية المخاطر: {state}"
-    all-passed: "  فحص الإعدادات: ناجح ✓"
-    errors-header: "  مشاكل الإعدادات ({count}):"
-    error-line: "    ✗ {error}"
-    footer: "==========================================="
+    banner: ========== فحص إعدادات SuperStocks ==========
+    language-line: 'اللغة: {language}'
+    provider-line: 'الموفر: {provider} (تحديث كل {seconds} ثانية)'
+    market-line: 'السوق {market}: {count} سهم'
+    custom-market-line: 'الأسواق المحلية: {count} ملفات'
+    feature-status: 'حالة الميزات:'
+    feature-on: ✓ {feature}
+    feature-off: ✗ {feature} (معطل)
+    high-risk-on: مفعل ⚠
+    high-risk-off: الكل معطل ✓
+    high-risk: 'الميزات عالية المخاطر: {state}'
+    all-passed: 'فحص الإعدادات: ناجح ✓'
+    errors-header: 'مشاكل الإعدادات ({count}):'
+    error-line: ✗ {error}
+    footer: ===========================================
   features:
-    quote-protection: "حماية الأسعار"
-    circuit-breaker: "قاطع الدائرة"
-    short-selling: "البيع على المكشوف"
-    competition: "المسابقات"
-    auto-orders: "الأوامر التلقائية"
-    price-alerts: "تنبيهات الأسعار"
-    price-history: "سجل الأسعار"
-    custom-markets: "الأسواق المحلية"
+    quote-protection: حماية الأسعار
+    circuit-breaker: قاطع الدائرة
+    short-selling: البيع على المكشوف
+    competition: المسابقات
+    auto-orders: الأوامر التلقائية
+    price-alerts: تنبيهات الأسعار
+    price-history: سجل الأسعار
+    custom-markets: الأسواق المحلية
+    back-main-name: '&fBack to Main'
+    close-name: '&cClose'
+    previous-page-name: '&fPrevious Page'
+    next-page-name: '&fNext Page'
+    page-name: '&ePage {page}/{pages}'
+    filler-name: ' '

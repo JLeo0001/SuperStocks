@@ -1,368 +1,364 @@
-prefix: "&8[&aSuperStocks&8] "
-
+prefix: '&8[&aSuperStocks&8]'
 commands:
-  no-permission: "&cУ вас нет права использовать эту команду."
-  player-only: "&cТолько игроки могут открыть интерфейс рынка акций."
-  reloaded: "&aSuperStocks перезагружен."
-  sync-started: "&aСинхронизация котировок выполнена."
-  unknown-subcommand: "&cНеизвестная подкоманда. Используйте /stocks help."
-  buy-usage: "&eИспользование: /stocks buy <тикер> <акции>"
-  sell-usage: "&eИспользование: /stocks sell <тикер> <акции>"
-  quote-usage: "&eИспользование: /stocks quote <тикер>"
-  invalid-amount: "&cКоличество должно быть больше 0."
-  quote-not-found: "&cКотировка в кэше не найдена."
-  history-usage: "&e/stocks history <symbol>"
-  history-empty: "&7История цен unavailable."
-  history-header: "&6===== История цен: {symbol} ====="
-  history-line: "&7{time} &8| &f{price}"
-  stats-header: "&6===== Statistics ====="
-  stats-line: "&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}"
-  watch-added: "&a{symbol} added to Список наблюдения."
-  watch-removed: "&a{symbol} removed from Список наблюдения."
-  watch-header: "&6===== Список наблюдения ====="
-  watch-line: "&e{symbol}"
-  alert-usage: "&e/stocks alert <symbol> <above|below> <price>"
-  alert-created: "&aAlert #{id}: {symbol} / {price}."
-  order-usage: "&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]"
-  order-header: "&6===== Открытые ордера ====="
-  order-line: "&f#{id} &e{type} {symbol} &7| Кол-во: &f{shares} &7| Триггер: &f{price}"
-  order-created: "&aOrder #{id} created."
-  order-limit: "&cOrder creation failed. Check funds, holdings, limits and quote status."
-  order-cancelled: "&aOrder #{id} cancelled."
-  order-not-found: "&cOpen order #{id} not found."
-  penalty-usage: "&e/stocks penalty history <player>"
-  penalty-header: "&6===== Штрафы за убытки: {player} ====="
-  penalty-line: "&7{time} &8| &e{tier} &7| Убыток: &f{loss} ({loss_percent}%) &7| Списание: &f{amount}"
-  status-header: "&6===== Статус SuperStocks ====="
-  status-line: "&7Источник: &f{provider} &7| Котировки: &f{loaded}/{configured} &7| Синхр: &f{last_sync} &7| Пауза: &f{paused} &7| Vault: &f{vault}"
-  paused: "&cStock trading paused."
-  resumed: "&aStock trading resumed."
-  admin-usage: "&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]"
-  admin-portfolio-header: "&6===== Портфель: {player} ====="
-  admin-given: "&aAdded {symbol} x {shares} to {player}."
-  admin-removed: "&aRemoved {symbol} x {shares} from {player}."
-  admin-cleared: "&aВсе позиции {player} очищены."
-  short-usage: "&eИспользование: /stocks short <тикер> <кол-во>"
-  pin-usage: "&eИспользование: /stocks pin <тикер>"
-  ipo-usage: "&eИспользование: /stocks ipo <list|subscribe> [ID] [кол-во]"
-  index-line: "&7{market}: &f{index} &7({count} stocks)"
-  index-header: "&6===== Индексы рынка ====="
-  cover-usage: "&eИспользование: /stocks cover <ID> [кол-во]"
-  competition-usage: "&eИспользование: /stocks competition <list|join|buy|sell> <ID> [тикер] [кол-во]"
-  cert-usage: "&eИспользование: /stocks certificate <issue|list> [тикер] [кол-во]"
-  portfolio-header: "&6===== Мой портфель ====="
-  portfolio-empty: "&7У вас пока нет позиций."
-  portfolio-line: "&e{symbol} &7| Акций: &f{shares} &7| Стоимость: &f{average_cost} &7| Цена: &f{price} &7| Значение: &f{value} &7| P/L: &f{profit}"
-  rank-winners-header: "&e===== Лидеры инвестиций ====="
-  rank-losers-header: "&c===== Антирейтинг ====="
-  rank-empty: "&7Нет данных для рейтинга."
-  rank-line: "&f#{rank} &e{player} &7| Значение: &f{value} &7| P/L: &f{profit} &7| Доходность: &f{profit_percent}%"
+  no-permission: '&cУ вас нет права использовать эту команду.'
+  player-only: '&cТолько игроки могут открыть интерфейс рынка акций.'
+  reloaded: '&aSuperStocks перезагружен.'
+  sync-started: '&aСинхронизация котировок выполнена.'
+  unknown-subcommand: '&cНеизвестная подкоманда. Используйте /stocks help.'
+  buy-usage: '&eИспользование: /stocks buy <тикер> <акции>'
+  sell-usage: '&eИспользование: /stocks sell <тикер> <акции>'
+  quote-usage: '&eИспользование: /stocks quote <тикер>'
+  invalid-amount: '&cКоличество должно быть больше 0.'
+  quote-not-found: '&cКотировка в кэше не найдена.'
+  history-usage: '&e/stocks history <symbol>'
+  history-empty: '&7История цен unavailable.'
+  history-header: '&6===== История цен: {symbol} ====='
+  history-line: '&7{time} &8| &f{price}'
+  stats-header: '&6===== Statistics ====='
+  stats-line: '&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}'
+  watch-added: '&a{symbol} added to Список наблюдения.'
+  watch-removed: '&a{symbol} removed from Список наблюдения.'
+  watch-header: '&6===== Список наблюдения ====='
+  watch-line: '&e{symbol}'
+  alert-usage: '&e/stocks alert <symbol> <above|below> <price>'
+  alert-created: '&aAlert #{id}: {symbol} / {price}.'
+  order-usage: '&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]'
+  order-header: '&6===== Открытые ордера ====='
+  order-line: '&f#{id} &e{type} {symbol} &7| Кол-во: &f{shares} &7| Триггер: &f{price}'
+  order-created: '&aOrder #{id} created.'
+  order-limit: '&cOrder creation failed. Check funds, holdings, limits and quote status.'
+  order-cancelled: '&aOrder #{id} cancelled.'
+  order-not-found: '&cOpen order #{id} not found.'
+  penalty-usage: '&e/stocks penalty history <player>'
+  penalty-header: '&6===== Штрафы за убытки: {player} ====='
+  penalty-line: '&7{time} &8| &e{tier} &7| Убыток: &f{loss} ({loss_percent}%) &7| Списание: &f{amount}'
+  status-header: '&6===== Статус SuperStocks ====='
+  status-line: '&7Источник: &f{provider} &7| Котировки: &f{loaded}/{configured} &7| Синхр: &f{last_sync} &7| Пауза: &f{paused} &7| Vault: &f{vault}'
+  paused: '&cStock trading paused.'
+  resumed: '&aStock trading resumed.'
+  admin-usage: '&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]'
+  admin-portfolio-header: '&6===== Портфель: {player} ====='
+  admin-given: '&aAdded {symbol} x {shares} to {player}.'
+  admin-removed: '&aRemoved {symbol} x {shares} from {player}.'
+  admin-cleared: '&aВсе позиции {player} очищены.'
+  short-usage: '&eИспользование: /stocks short <тикер> <кол-во>'
+  cover-usage: '&eИспользование: /stocks cover <ID> [кол-во]'
+  competition-usage: '&eИспользование: /stocks competition <list|join|buy|sell> <ID> [тикер] [кол-во]'
+  ipo-usage: '&eИспользование: /stocks ipo <list|subscribe> [ID] [кол-во]'
+  cert-usage: '&eИспользование: /stocks certificate <issue|list> [тикер] [кол-во]'
+  pin-usage: '&eИспользование: /stocks pin <тикер>'
+  index-header: '&6===== Индексы рынка ====='
+  index-line: '&7{market}: &f{index} &7({count} stocks)'
+  portfolio-header: '&6===== Мой портфель ====='
+  portfolio-empty: '&7У вас пока нет позиций.'
+  portfolio-line: '&e{symbol} &7| Акций: &f{shares} &7| Стоимость: &f{average_cost} &7| Цена: &f{price} &7| Значение: &f{value} &7| P/L: &f{profit}'
+  rank-winners-header: '&e===== Лидеры инвестиций ====='
+  rank-losers-header: '&c===== Антирейтинг ====='
+  rank-empty: '&7Нет данных для рейтинга.'
+  rank-line: '&f#{rank} &e{player} &7| Значение: &f{value} &7| P/L: &f{profit} &7| Доходность: &f{profit_percent}%'
   quote-info:
-    - "&6===== Котировка акции ====="
-    - "&7Название: &f{name}"
-    - "&7Тикер: &f{symbol}"
-    - "&7Рынок: &f{market}"
-    - "&7Цена: &f{price}"
-    - "&7Изменение: &f{change} ({change_percent}%)"
-    - "&7Обновлено: &f{updated_at}"
+  - '&6===== Stock Quote ====='
+  - '&7Name: &f{name}'
+  - '&7Symbol: &f{symbol}'
+  - '&7Market: &f{market}'
+  - '&7Price: &f{price}'
+  - '&7Change: &f{change} ({change_percent}%)'
+  - '&7Updated: &f{updated_at}'
   help:
-    - "&6===== Справка SuperStocks ====="
-    - "&e/stocks &7- Открыть GUI рынка"
-    - "&e/stocks help &7- Показать команды"
-    - "&e/stocks quote <тикер> &7- Показать котировку"
-    - "&e/stocks buy <тикер> <акции> &7- Купить акции"
-    - "&e/stocks sell <тикер> <акции> &7- Продать акции"
-    - "&e/stocks portfolio &7- Показать портфель"
-    - "&e/stocks rank winners &7- Показать лидеров"
-    - "&e/stocks rank losers &7- Показать антирейтинг"
-    - "&e/stocks sync &7- Админ: синхронизация"
-    - "&e/stocks reload &7- Админ: перезагрузка"
+  - '&6===== SuperStocks Help ====='
+  - '&e/stocks &7- Open the stock GUI'
+  - '&e/stocks help &7- Show all commands'
+  - '&e/stocks open &7- Open the stock GUI'
+  - '&e/stocks quote <symbol> &7- Show a quote'
+  - '&e/stocks buy <symbol> <shares> &7- Buy shares'
+  - '&e/stocks sell <symbol> <shares> &7- Sell shares'
+  - '&e/stocks portfolio &7- Show text portfolio'
+  - '&e/stocks rank winners &7- Show top investors'
+  - '&e/stocks rank losers &7- Show bottom board'
   help-advanced:
-    - "&e/stocks history <symbol> &7- История цен"
-    - "&e/stocks stats &7- Investment statistics"
-    - "&e/stocks watch <add|remove|list> [symbol] &7- Список наблюдения"
-    - "&e/stocks alert <symbol> <above|below> <price> &7- Price alert"
-    - "&e/stocks order <type|list|cancel> ... &7- Automated orders"
-    - "&e/stocks status &7- Admin: status"
-    - "&e/stocks pause|resume &7- Admin: pause/resume trading"
-    - "&e/stocks admin ... &7- Admin: manage holdings"
-    - "&e/stocks penalty history <player> &7- Admin: penalty records"
-    - "&e/stocks sync &7- Admin: sync quotes"
-    - "&e/stocks reload &7- Admin: reload plugin"
-
+  - '&e/stocks history <symbol> &7- Show 24-hour price history'
+  - '&e/stocks stats &7- Show investment statistics'
+  - '&e/stocks watch <add|remove|list> [symbol] &7- Manage watchlist'
+  - '&e/stocks alert <symbol> <above|below> <price> &7- Create a price alert'
+  - '&e/stocks order <type|list|cancel> ... &7- Manage automated orders'
+  - '&e/stocks status &7- Admin: show system status'
+  - '&e/stocks pause|resume &7- Admin: pause or resume trading'
+  - '&e/stocks admin ... &7- Admin: manage player holdings'
+  - '&e/stocks penalty history <player> &7- Admin: view penalty records'
+  - '&e/stocks sync &7- Admin: sync quotes'
+  - '&e/stocks reload &7- Admin: reload plugin'
+  - '&e/stocks short <symbol> <shares> &7- Open a short position'
+  - '&e/stocks cover <id> [shares] &7- Close a short position'
+  - '&e/stocks competition <list|join|buy|sell> &7- Investment competitions'
+  - '&e/stocks ipo <list|subscribe> &7- IPO subscriptions'
+  - '&e/stocks certificate <issue|list> &7- Stock certificates'
+  - '&e/stocks index &7- View market indices'
+  - '&e/stocks pin <symbol> &7- Pin stock to BossBar'
+  - '&e/stocks unpin &7- Remove BossBar pin'
+  - '&e/stocks report &7- View market report'
+  - '&e/stocks admin audit [player] [action] &7- View audit log'
+  - '&e/stocks admin panel &7- Open admin GUI'
 messages:
-  quote-unavailable: "&cДля этой акции пока нет котировки, торговля недоступна."
-  portfolio-load-failed: "&cНе удалось загрузить портфель. Обратитесь к администратору."
-  ranking-load-failed: "&cНе удалось загрузить рейтинг. Обратитесь к администратору."
-  watchlist-load-failed: "&cFailed to load Список наблюдения."
-  trade-failed: "&cСделка не выполнена. Обратитесь к администратору."
-  economy-unavailable: "Экономическая система не готова"
-  min-shares: "Минимальный объем сделки: {shares} акций"
-  not-enough-money: "Недостаточно средств. Требуется: {amount}"
-  withdraw-failed: "Списание не удалось"
-  buy-success: "Покупка выполнена: {name} x {shares}, стоимость {amount}"
-  not-enough-shares: "Недостаточно акций"
-  deposit-failed: "Продажа записана, но выплата не удалась. Обратитесь к администратору"
-  sell-success: "Продажа выполнена: {name} x {shares}, получено {amount}"
-  watchlist-load-failed: "&cFailed to load Список наблюдения."
-  trade-busy: "&cAnother trade is still being processed."
-  trade-limit: "&cЭта сделка превышает максимум акций за транзакцию."
-  trading-unavailable: "&cTrading unavailable: {reason}"
-  trade-cooldown: "&cYou are trading too quickly."
-  trade-rate-limit: "&cToo many trades in one minute."
-  position-limit: "&cЭта позиция превысит лимит стоимости."
-  order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
-  order-executed: "&aОрдер #{id} исполнен: {symbol} по {price}."
-  alert-triggered: "&eОповещение: {symbol} достиг {price}."
-  report-header: "  report-header: "&6===== Отчёт рынка SuperStocks ====="6===== SuperStocks Market Report ====="
-  report-avg: "  report-header: "&6===== Отчёт рынка SuperStocks ====="7{market} avg:   report-header: "&6===== Отчёт рынка SuperStocks ====="f{avg}"
-  report-top: "  report-header: "&6===== Отчёт рынка SuperStocks ====="7Top:   report-header: "&6===== Отчёт рынка SuperStocks ====="a{name}   report-header: "&6===== Отчёт рынка SuperStocks ====="f+{change}%"
-  report-bottom: "  report-header: "&6===== Отчёт рынка SuperStocks ====="7Bottom:   report-header: "&6===== Отчёт рынка SuperStocks ====="c{name}   report-header: "&6===== Отчёт рынка SuperStocks ====="f{change}%"
-  pin-removed: "&aЗакрепление BossBar снято."
-  pin-set: "&a{symbol} закреплён на BossBar."
-  pin-set: "&a{symbol} закреплён на BossBar."
-  pin-set: "&a{symbol} закреплён на BossBar."
-  certificate-redeemed: "&aСертификат погашен: {symbol} x{shares} в портфеле."
-  certificate-invalid: "&cЭтот сертификат больше не действите  competition-list-line: "&e#{id} &f{name} &7{status}"
-  ipo-list-line: "&e#{id} &f{symbol} {name} &7@{price} &7{status}"
-  cert-list-line: "&e#{id} &f{symbol} x{shares}"
-  audit-log-line: "&7{time} &f{actor} &e{action} &7{detail}"
-лен."
-  certificate-issued: "&aСертификат выпущен: {symbol} x{shares}. ПКМ для обмена."
-  ipo-symbol-exists: "&cАкция с таким тикером уже существует."
-  ipo-cancelled: "&cIPO {symbol} отменён. Все средства возвращены."
-  ipo-completed: "&6IPO for {symbol} ({name}) completed! Shares allocated."
-  ipo-allocated: "&aIPO {symbol}: выделено {shares} акций. Возврат: {refund}"
-  ipo-subscribed: "&aПодписано {shares} акций {symbol} IPO."
-  ipo-oversubscribed: "&cIPO полностью переподписано."
-  ipo-limit: "&cВы достигли лимита подписки на это IPO."
-  ipo-closed: "&cПериод подписки на IPO завершён."
-  ipo-not-found: "&cIPO не найдено."
-  ipo-created: "&aIPO #{id} создано: {symbol} {name} @ {price}."
-  competition-admin-ended: "&aСоревнование \"{name}\" завершено, награды распределены."
-  competition-reward: "&6Поздравляем! Место #{rank} в \"{name}\" – выигрыш {amount}!"
-  competition-ended: "&6===== Соревнование \"{name}\" завершено! Рейтинг: /stocks competition list ====="
-  competition-sold: "&aПродажа в соревновании: {symbol} x{shares} за {revenue}."
-  competition-bought: "&aПокупка в соревновании: {symbol} x{shares} за {cost}."
-  competition-not-joined: "&cВы не участвуете в этом соревновании."
-  competition-already-joined: "&cВы уже участвуете в этом соревновании."
-  competition-not-found: "&cСоревнование не найдено или завершено."
-  competition-joined: "&aВы присоединились к \"{name}\" с капиталом {capital}!"
-  competition-created: "&aСоревнование #{id} \"{name}\" создано с капиталом {capital}."
-  short-liquidated: "&cШорт {symbol} x{shares} принудительно закрыт по {price}. Маржа: {margin}"
-  short-not-found: "&cШорт-позиция не найдена."
-  short-covered: "&aШорт закрыт: {symbol} x{shares}. П/У: {pnl}"
-  short-opened: "&aШорт #{id} открыт: {symbol} x{shares} @ {price}. Маржа: {margin}"
-  market-event-positive: "&6📈 &eНовости рынка: &f{name} &7({symbol}) &aвырос на &f{impact}% &7на позитивных новостях!"
-  market-event-negative: "&6📉 &eНовости рынка: &f{name} &7({symbol}) &cупал на &f{impact}% &7на негативных новостях!"
-
+  quote-unavailable: '&cДля этой акции пока нет котировки, торговля недоступна.'
+  portfolio-load-failed: '&cНе удалось загрузить портфель. Обратитесь к администратору.'
+  ranking-load-failed: '&cНе удалось загрузить рейтинг. Обратитесь к администратору.'
+  watchlist-load-failed: '&cFailed to load Список наблюдения.'
+  trade-failed: '&cСделка не выполнена. Обратитесь к администратору.'
+  economy-unavailable: Экономическая система не готова
+  min-shares: 'Минимальный объем сделки: {shares} акций'
+  not-enough-money: 'Недостаточно средств. Требуется: {amount}'
+  withdraw-failed: Списание не удалось
+  buy-success: 'Покупка выполнена: {name} x {shares}, стоимость {amount}'
+  not-enough-shares: Недостаточно акций
+  deposit-failed: Продажа записана, но выплата не удалась. Обратитесь к администратору
+  sell-success: 'Продажа выполнена: {name} x {shares}, получено {amount}'
+  trade-busy: '&cAnother trade is still being processed.'
+  trade-limit: '&cЭта сделка превышает максимум акций за транзакцию.'
+  trading-unavailable: '&cTrading unavailable: {reason}'
+  trade-cooldown: '&cYou are trading too quickly.'
+  trade-rate-limit: '&cToo many trades in one minute.'
+  position-limit: '&cЭта позиция превысит лимит стоимости.'
+  order-reserve-insufficient: '&cReserved funds are not enough to execute this order.'
+  order-executed: '&aОрдер #{id} исполнен: {symbol} по {price}.'
+  alert-triggered: '&eОповещение: {symbol} достиг {price}.'
+  market-event-positive: '&6📈 &eMarket News: &f{name} &7({symbol}) &asurged &f{impact}% &7on positive news!'
+  market-event-negative: '&6📉 &eMarket News: &f{name} &7({symbol}) &cdropped &f{impact}% &7on negative news!'
+  short-opened: '&aShort position #{id} opened: {symbol} x{shares} @ {price}. Margin: {margin}'
+  short-covered: '&aShort covered: {symbol} x{shares}. P&L: {pnl}'
+  short-not-found: '&cShort position not found.'
+  short-liquidated: '&cYour short position on {symbol} x{shares} was force-liquidated at {price}. Margin lost: {margin}'
+  competition-created: '&aCompetition #{id} "{name}" created with {capital} starting capital.'
+  competition-joined: '&aYou joined "{name}" with {capital} starting capital!'
+  competition-not-found: '&cCompetition not found or ended.'
+  competition-already-joined: '&cYou are already in this competition.'
+  competition-not-joined: '&cYou haven''t joined this competition.'
+  competition-bought: '&aBought {symbol} x{shares} for {cost} (competition).'
+  competition-sold: '&aSold {symbol} x{shares} for {revenue} (competition).'
+  competition-ended: '&6===== Competition "{name}" has ended! Check rankings with /stocks competition list ====='
+  competition-reward: '&6Congratulations! You placed #{rank} in "{name}" and won {amount}!'
+  competition-admin-ended: '&aCompetition "{name}" ended and rewards distributed.'
+  ipo-created: '&aIPO #{id} created: {symbol} {name} @ {price}.'
+  ipo-not-found: '&cIPO not found.'
+  ipo-closed: '&cIPO subscription period has ended.'
+  ipo-limit: '&cYou have reached the maximum subscription for this IPO.'
+  ipo-oversubscribed: '&cIPO is fully subscribed.'
+  ipo-subscribed: '&aSubscribed {shares} shares of {symbol} IPO.'
+  ipo-allocated: '&aIPO {symbol}: allocated {shares} shares. Refund: {refund}'
+  ipo-completed: '&6IPO for {symbol} ({name}) completed! Shares allocated to subscribers.'
+  ipo-cancelled: '&cIPO for {symbol} cancelled. All funds refunded.'
+  ipo-symbol-exists: '&cA stock with this symbol already exists.'
+  certificate-issued: '&aStock certificate issued: {symbol} x{shares}. Right-click to redeem.'
+  certificate-invalid: '&cЭтот сертификат больше не действите  competition-list-line:'
+  certificate-redeemed: '&aСертификат погашен: {symbol} x{shares} в портфеле.'
+  pin-set: '&a{symbol} закреплён на BossBar.'
+  pin-removed: '&aЗакрепление BossBar снято.'
+  report-header: '&6===== Отчёт рынка SuperStocks ====='
+  report-avg: '&6===== Отчёт рынка SuperStocks ====='
+  report-top: '&6===== Отчёт рынка SuperStocks ====='
+  report-bottom: '&6===== Отчёт рынка SuperStocks ====='
+  competition-list-line: '&e#{id} &f{name} &7{status}'
+  ipo-list-line: '&e#{id} &f{symbol} {name} &7@{price} &7{status}'
+  cert-list-line: '&e#{id} &f{symbol} x{shares}'
+  audit-log-line: '&7{time} &f{actor} &e{action} &7{detail}'
 gui:
   main:
-    title: "&2&lSuperStocks &8| &fТорговый зал"
+    title: '&2&lSuperStocks &8| &fТорговый зал'
     market-lore:
-      - "&7Открыть рынок &f{market}"
-      - "&7Настроено акций: &f{configured}"
-      - "&7Загружено котировок: &a{loaded}"
-      - ""
-      - "&eНажмите для просмотра"
-    portfolio-name: "&6Мой портфель"
+    - '&7Open the &f{market}&7 market'
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - ''
+    - '&eClick to view'
+    portfolio-name: '&6Мой портфель'
     portfolio-lore:
-      - "&7Акции, стоимость, рыночная цена и P/L"
-      - "&7Котировки в кэше: &f{loaded_total}&7/&f{configured_total}"
-      - ""
-      - "&eНажмите, чтобы открыть"
-    winners-name: "&eЛидеры инвестиций"
+    - '&7View stocks, cost, value, and P/L'
+    - '&7Cached quotes: &f{loaded_total}&7/&f{configured_total}'
+    - ''
+    - '&eClick to open'
+    winners-name: '&eЛидеры инвестиций'
     winners-lore:
-      - "&7Рейтинг по текущей нереализованной P/L"
-      - "&7Чем выше прибыль, тем выше место"
-      - ""
-      - "&eНажмите для просмотра"
-    losers-name: "&cАнтирейтинг"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Higher profit ranks higher'
+    - ''
+    - '&eClick to view'
+    losers-name: '&cАнтирейтинг'
     losers-lore:
-      - "&7Рейтинг по текущей нереализованной P/L"
-      - "&7Самые большие убытки выше"
-      - ""
-      - "&eНажмите для просмотра"
-    watchlist-name: "&bСписок наблюдения"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Larger losses rank higher'
+    - ''
+    - '&eClick to view'
+    watchlist-name: '&bСписок наблюдения'
     watchlist-lore:
-      - "&7Список наблюдения"
-      - "&7/stocks watch add <symbol>"
-      - ""
-      - "&eClick to open"
-    stats-name: "&bСтатистика котировок"
+    - '&7View the stocks you follow'
+    - '&7Use /stocks watch add <symbol> to add one'
+    - ''
+    - '&eClick to open'
+    stats-name: '&bСтатистика котировок'
     stats-lore:
-      - "&7Источник: &f{provider}"
-      - "&7Настроено акций: &f{configured_total}"
-      - "&7Загружено акций: &a{loaded_total}"
-      - "&7Интервал: &f{refresh_seconds}s"
-      - ""
-      - "&7Последняя синхронизация: &f{last_sync}"
+    - '&7Source: &f{provider}'
+    - '&7Configured stocks: &f{configured_total}'
+    - '&7Loaded stocks: &a{loaded_total}'
+    - '&7Refresh interval: &f{refresh_seconds}s'
+    - ''
+    - '&7Last sync: &f{last_sync}'
   market:
-    title: "&2Рынок &8- &f{market}"
-    missing-name: "&7{symbol}"
+    title: '&2Рынок &8- &f{market}'
+    missing-name: '&7{symbol}'
     missing-lore:
-      - "&cНет котировки в кэше"
-      - "&7Ожидание следующей синхронизации"
-    stats-name: "&bСтатистика {market}"
+    - '&cNo cached quote data'
+    - '&7Waiting for the next sync'
+    stats-name: '&bСтатистика {market}'
     stats-lore:
-      - "&7Настроено акций: &f{configured}"
-      - "&7Загружено котировок: &a{loaded}"
-      - "&7Источник: &f{provider}"
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - '&7Source: &f{provider}'
   stock:
-    title: "&2Акция &8- &f{name}"
+    title: '&2Акция &8- &f{name}'
     quote-lore:
-      - "&8{market}"
-      - "&7Тикер: &f{symbol}"
-      - "&7Цена: &f{price}"
-      - "&7Изменение: {change_color}{change} ({change_percent}%)"
-      - "&7Обновлено: &f{updated_at}"
-      - ""
-      - "&eНажмите для сделки"
+    - '&8{market}'
+    - '&7Symbol: &f{symbol}'
+    - '&7Price: &f{price}'
+    - '&7Change: {change_color}{change} ({change_percent}%)'
+    - '&7Updated: &f{updated_at}'
+    - ''
+    - '&eClick to trade'
     history-lore:
-      - "&7Last 24h: &f{change_24h}%"
-      - "&7Trend: &f{trend}"
-    buy-name: "&aКупить {shares} акций"
+    - '&7Last 24h: &f{change_24h}%'
+    - '&7Trend: &f{trend}'
+    buy-name: '&aКупить {shares} акций'
     buy-lore:
-      - "&7Сделка по котировке из кэша"
-      - "&7Оценка затрат: &f{amount}"
-    sell-name: "&cПродать {shares} акций"
+    - '&7Trades at the cached quote'
+    - '&7Estimated cost: &f{amount}'
+    sell-name: '&cПродать {shares} акций'
     sell-lore:
-      - "&7Сделка по котировке из кэша"
-      - "&7Оценка выручки: &f{amount}"
+    - '&7Trades at the cached quote'
+    - '&7Estimated proceeds: &f{amount}'
   portfolio:
-    title: "&6Мой портфель"
+    title: '&6Мой портфель'
     holding-lore:
-      - "&7Тикер: &f{symbol}"
-      - "&7Акций: &f{shares}"
-      - "&7Стоимость: &f{average_cost}"
-      - "&7Цена: &f{price}"
-      - "&7Рыночная стоимость: &f{market_value}"
-      - "&7P/L: {profit_color}{profit}"
-      - ""
-      - "&eНажмите для сделки"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&7Price: &f{price}'
+    - '&7Market value: &f{market_value}'
+    - '&7P/L: {profit_color}{profit}'
+    - ''
+    - '&eClick to trade'
     holding-missing-lore:
-      - "&7Тикер: &f{symbol}"
-      - "&7Акций: &f{shares}"
-      - "&7Стоимость: &f{average_cost}"
-      - "&cНет котировки в кэше"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&cNo cached quote data'
   ranking:
-    winners-title: "&eЛидеры инвестиций"
-    losers-title: "&cАнтирейтинг"
-    entry-name: "&f#{rank} &e{player}"
+    winners-title: '&eЛидеры инвестиций'
+    losers-title: '&cАнтирейтинг'
+    entry-name: '&f#{rank} &e{player}'
     winner-lore:
-      - "&7Игрок: &f{player}"
-      - "&7Стоимость портфеля: &f{value}"
-      - "&7Нереализованная P/L: {profit_color}{profit}"
-      - "&7Доходность: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
     loser-lore:
-      - "&7Игрок: &f{player}"
-      - "&7Стоимость портфеля: &f{value}"
-      - "&7Нереализованная P/L: {profit_color}{profit}"
-      - "&7Доходность: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
   watchlist:
-    title: "&bСписок наблюдения"
-    empty-name: "&7Нет отслеживаемых акций"
+    title: '&bСписок наблюдения'
+    empty-name: '&7Нет отслеживаемых акций'
   admin:
-    title: "&6Панель Admin SuperStocks"
-    total-holdings: "&fВсего позиций"
-    total-players: "&fАктивных игроков"
-    total-trades: "&fВсего сделок"
-    last-sync: "&fПоследняя синхр."
-    paused: "&fТорги остановлены"
-    vault: "&fСтатус Vault"
-    close-name: "&cЗакрыть"  confirm:
-    stat-format: "&7{label}: &f{value}"
+    title: '&6Панель Admin SuperStocks'
+    total-holdings: '&fВсего позиций'
+    total-players: '&fАктивных игроков'
+    total-trades: '&fВсего сделок'
+    last-sync: '&fПоследняя синхр.'
+    paused: '&fТорги остановлены'
+    vault: '&fСтатус Vault'
+    close-name: '&cЗакрыть'
+    stat-format: '&7{label}: &f{value}'
   format:
-    market-name: "&a{name}"
-    stock-name: "&f{name}"
-    stock-symbol: "&f{symbol}"
-    title: "&6Подтвердить сделку"
-    summary-name: "&f{name} &8({symbol})"
+    market-name: '&a{name}'
+    stock-name: '&f{name}'
+    stock-symbol: '&f{symbol}'
+  confirm:
+    title: '&6Confirm Trade'
+    summary-name: '&f{name} &8({symbol})'
     summary-lore:
-      - "&7Shares: &f{shares}"
-      - "&7Unit price: &f{price}"
-      - "&7Estimated gross: &f{gross}"
-    accept-name: "&aПодтвердить сделку"
+    - '&7Shares: &f{shares}'
+    - '&7Unit price: &f{price}'
+    - '&7Estimated gross: &f{gross}'
+    accept-name: '&aConfirm Trade'
     accept-lore:
-      - "&7Click to execute this trade."
-    cancel-name: "&cОтмена"
+    - '&7Click to execute this trade.'
+    cancel-name: '&cCancel'
     cancel-lore:
-      - "&7Return to the stock page."
-  total-holdings: "&fTotal Holdings"
-  total-players: "&fActive Players"
-  total-trades: "&fTotal Trades"
-  last-sync: "&fLast Sync"
-  vault: "&fVault Status"
+    - '&7Return to the stock page.'
   certificate:
-    name: "&6Stock Certificate &f#{id}"
+    name: '&6Stock Certificate &f#{id}'
     lore:
-      - "&7Stock: &f{symbol}"
-      - "&7Shares: &f{shares}"
-      - "&7Issue price: &f{price}"
-      - ""
-      - "&eRight-click air &7to redeem"
-      - "&7Can be traded between players"
-  common:
-    back-name: "&fНазад"
-    back-main-name: "&fНазад в главное меню"
-    close-name: "&cЗакрыть"
-    previous-page-name: "&fПредыдущая страница"
-    next-page-name: "&fСледующая страница"
-    page-name: "&eСтраница {page}/{pages}"
-    filler-name: " "
-
+    - '&7Stock: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Issue price: &f{price}'
+    - ''
+    - '&eRight-click air &7to redeem'
+    - '&7Can be traded between players'
 bossbar:
-  pin-format: "&f{name} &7| &f{price} {arrow} &f{change_percent}%"
-  arrow-up: "&a▲"
-  arrow-down: "&c▼"
-
+  pin-format: '&f{name} &7| &f{price} {arrow} &f{change_percent}%'
+  arrow-up: '&a▲'
+  arrow-down: '&c▼'
 validators:
   errors:
-    language-not-found: "Языковой файл не найден: {language}"
-    duplicate-market: "Дублирующийся ID рынка: {market}"
-    market-empty-symbol: "Рынок {market} содержит пустой символ"
-    duplicate-symbol: "Дублирующийся символ: {symbol}"
-    custom-market-id-empty: "{file} ID рынка пуст"
-    duplicate-market-id: "Дублирующийся ID рынка: {id} ({file})"
-    custom-market-invalid-material: "{file} использует недопустимый Material: {icon}"
-    custom-market-no-stocks: "{file} не имеет секции stocks"
-    custom-market-empty-symbol: "{file} содержит пустой символ: {key}"
-    duplicate-symbol-file: "Дублирующийся символ: {symbol} ({file})"
-    custom-market-invalid-price: "{file} недопустимый диапазон цен: {symbol}"
-    custom-market-negative-volatility: "{file} волатильность не может быть отрицательной: {symbol}"
-    invalid-material: "Недопустимый Material: gui.{key}={value}"
-    volatility-min-exceeds-max: "Минимум случайной волатильности превышает максимум"
-    invalid-safety-price: "Недопустимый диапазон безопасных цен"
-    invalid-penalty-tier: "Недопустимый диапазон уровня штрафа: {key}"
-    penalty-tier-overlap: "Перекрытие уровней штрафа: {previous} / {current}"
-    provider-missing-symbols: "Endpoint провайдера должен содержать {symbols}: {active}"
-    provider-wrong-scheme: "Endpoint провайдера должен использовать HTTP/HTTPS: {active}"
-    provider-invalid-uri: "Endpoint провайдера недействителен: {active}"
-    invalid-market-hours: "Недопустимая конфигурация торговых часов: {market}"
-    invalid-closed-action: "closed-action должен быть DENY или SELL_ONLY: {market}"
-    invalid-gui-size: "Недопустимый размер GUI: gui.{key}={size}"
+    language-not-found: 'Языковой файл не найден: {language}'
+    duplicate-market: 'Дублирующийся ID рынка: {market}'
+    market-empty-symbol: Рынок {market} содержит пустой символ
+    duplicate-symbol: 'Дублирующийся символ: {symbol}'
+    custom-market-id-empty: '{file} ID рынка пуст'
+    duplicate-market-id: 'Дублирующийся ID рынка: {id} ({file})'
+    custom-market-invalid-material: '{file} использует недопустимый Material: {icon}'
+    custom-market-no-stocks: '{file} не имеет секции stocks'
+    custom-market-empty-symbol: '{file} содержит пустой символ: {key}'
+    duplicate-symbol-file: 'Дублирующийся символ: {symbol} ({file})'
+    custom-market-invalid-price: '{file} недопустимый диапазон цен: {symbol}'
+    custom-market-negative-volatility: '{file} волатильность не может быть отрицательной: {symbol}'
+    invalid-material: 'Недопустимый Material: gui.{key}={value}'
+    volatility-min-exceeds-max: Минимум случайной волатильности превышает максимум
+    invalid-safety-price: Недопустимый диапазон безопасных цен
+    invalid-penalty-tier: 'Недопустимый диапазон уровня штрафа: {key}'
+    penalty-tier-overlap: 'Перекрытие уровней штрафа: {previous} / {current}'
+    provider-missing-symbols: 'Endpoint провайдера должен содержать {symbols}: {active}'
+    provider-wrong-scheme: 'Endpoint провайдера должен использовать HTTP/HTTPS: {active}'
+    provider-invalid-uri: 'Endpoint провайдера недействителен: {active}'
+    invalid-market-hours: 'Недопустимая конфигурация торговых часов: {market}'
+    invalid-closed-action: 'closed-action должен быть DENY или SELL_ONLY: {market}'
+    invalid-gui-size: 'Недопустимый размер GUI: gui.{key}={size}'
   log:
-    banner: "========== Проверка конфигурации SuperStocks =========="
-    language-line: "  Язык: {language}"
-    provider-line: "  Провайдер: {provider} (обновление {seconds}с)"
-    market-line: "  Рынок {market}: {count} акций"
-    custom-market-line: "  Локальные рынки: {count} файлов"
-    feature-status: "  Функции:"
-    feature-on: "    ✓ {feature}"
-    feature-off: "    ✗ {feature} (откл)"
-    high-risk-on: "ВКЛЮЧЕНО ⚠"
-    high-risk-off: "ВСЁ ОТКЛЮЧЕНО ✓"
-    high-risk: "  Функции высокого риска: {state}"
-    all-passed: "  Проверка конфигурации: ПРОЙДЕНА ✓"
-    errors-header: "  Проблемы конфигурации ({count}):"
-    error-line: "    ✗ {error}"
-    footer: "==========================================="
+    banner: ========== Проверка конфигурации SuperStocks ==========
+    language-line: 'Язык: {language}'
+    provider-line: 'Провайдер: {provider} (обновление {seconds}с)'
+    market-line: 'Рынок {market}: {count} акций'
+    custom-market-line: 'Локальные рынки: {count} файлов'
+    feature-status: 'Функции:'
+    feature-on: ✓ {feature}
+    feature-off: ✗ {feature} (откл)
+    high-risk-on: ВКЛЮЧЕНО ⚠
+    high-risk-off: ВСЁ ОТКЛЮЧЕНО ✓
+    high-risk: 'Функции высокого риска: {state}'
+    all-passed: 'Проверка конфигурации: ПРОЙДЕНА ✓'
+    errors-header: 'Проблемы конфигурации ({count}):'
+    error-line: ✗ {error}
+    footer: ===========================================
   features:
-    quote-protection: "Защита котировок"
-    circuit-breaker: "Предохранитель"
-    short-selling: "Короткие продажи"
-    competition: "Соревнования"
-    auto-orders: "Авто-ордера"
-    price-alerts: "Ценовые оповещения"
-    price-history: "История цен"
-    custom-markets: "Локальные рынки"
+    quote-protection: Защита котировок
+    circuit-breaker: Предохранитель
+    short-selling: Короткие продажи
+    competition: Соревнования
+    auto-orders: Авто-ордера
+    price-alerts: Ценовые оповещения
+    price-history: История цен
+    custom-markets: Локальные рынки
+    back-main-name: '&fBack to Main'
+    close-name: '&cClose'
+    previous-page-name: '&fPrevious Page'
+    next-page-name: '&fNext Page'
+    page-name: '&ePage {page}/{pages}'
+    filler-name: ' '

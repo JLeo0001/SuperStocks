@@ -1,368 +1,364 @@
-prefix: "&8[&aSuperStocks&8] "
-
+prefix: '&8[&aSuperStocks&8]'
 commands:
-  no-permission: "&cVoce nao tem permissao para usar este comando."
-  player-only: "&cApenas jogadores podem abrir a interface da bolsa."
-  reloaded: "&aSuperStocks foi recarregado."
-  sync-started: "&aA sincronizacao de cotacoes foi executada."
-  unknown-subcommand: "&cSubcomando desconhecido. Use /stocks help."
-  buy-usage: "&eUso: /stocks buy <codigo> <acoes>"
-  sell-usage: "&eUso: /stocks sell <codigo> <acoes>"
-  quote-usage: "&eUso: /stocks quote <codigo>"
-  invalid-amount: "&cA quantidade deve ser maior que 0."
-  quote-not-found: "&cNenhuma cotacao em cache encontrada."
-  history-usage: "&e/stocks history <symbol>"
-  history-empty: "&7HistÃÂ³rico de preÃÂ§os unavailable."
-  history-header: "&6===== HistÃÂ³rico de preÃÂ§os: {symbol} ====="
-  history-line: "&7{time} &8| &f{price}"
-  stats-header: "&6===== Statistics ====="
-  stats-line: "&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}"
-  watch-added: "&a{symbol} added to Lista de observaÃÂ§ÃÂ£o."
-  watch-removed: "&a{symbol} removed from Lista de observaÃÂ§ÃÂ£o."
-  watch-header: "&6===== Lista de observaÃÂ§ÃÂ£o ====="
-  watch-line: "&e{symbol}"
-  alert-usage: "&e/stocks alert <symbol> <above|below> <price>"
-  alert-created: "&aAlert #{id}: {symbol} / {price}."
-  order-usage: "&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]"
-  order-header: "&6===== Ordens Abertas ====="
-  order-line: "&f#{id} &e{type} {symbol} &7| Qtd: &f{shares} &7| Gatilho: &f{price}"
-  order-created: "&aOrder #{id} created."
-  order-limit: "&cOrder creation failed. Check funds, holdings, limits and quote status."
-  order-cancelled: "&aOrder #{id} cancelled."
-  order-not-found: "&cOpen order #{id} not found."
-  penalty-usage: "&e/stocks penalty history <player>"
-  penalty-header: "&6===== Penalidades: {player} ====="
-  penalty-line: "&7{time} &8| &e{tier} &7| Perda: &f{loss} ({loss_percent}%) &7| CobranÃ§a: &f{amount}"
-  status-header: "&6===== Status SuperStocks ====="
-  status-line: "&7Fonte: &f{provider} &7| CotaÃ§Ãµes: &f{loaded}/{configured} &7| Ãltima sinc: &f{last_sync} &7| Pausado: &f{paused} &7| Vault: &f{vault}"
-  paused: "&cStock trading paused."
-  resumed: "&aStock trading resumed."
-  admin-usage: "&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]"
-  admin-portfolio-header: "&6===== Carteira: {player} ====="
-  admin-given: "&aAdded {symbol} x {shares} to {player}."
-  admin-removed: "&aRemoved {symbol} x {shares} from {player}."
-  admin-cleared: "&aTodas as posiÃ§Ãµes de {player} foram limpas."
-  short-usage: "&eUso: /stocks short <sÃ­mbolo> <quantidade>"
-  pin-usage: "&eUso: /stocks pin <sÃ­mbolo>"
-  ipo-usage: "&eUso: /stocks ipo <list|subscribe> [ID] [quantidade]"
-  index-line: "&7{market}: &f{index} &7({count} stocks)"
-  index-header: "&6===== Ãndices de Mercado ====="
-  cover-usage: "&eUso: /stocks cover <ID> [quantidade]"
-  competition-usage: "&eUso: /stocks competition <list|join|buy|sell> <ID> [sÃ­mbolo] [quantidade]"
-  cert-usage: "&eUso: /stocks certificate <issue|list> [sÃ­mbolo] [quantidade]"
-  portfolio-header: "&6===== Minha carteira ====="
-  portfolio-empty: "&7Voce ainda nao possui posicoes."
-  portfolio-line: "&e{symbol} &7| Acoes: &f{shares} &7| Custo: &f{average_cost} &7| Preco: &f{price} &7| Valor: &f{value} &7| L/P: &f{profit}"
-  rank-winners-header: "&e===== Melhores investidores ====="
-  rank-losers-header: "&c===== Piores resultados ====="
-  rank-empty: "&7Nao ha dados de ranking."
-  rank-line: "&f#{rank} &e{player} &7| Valor: &f{value} &7| L/P: &f{profit} &7| Retorno: &f{profit_percent}%"
+  no-permission: '&cVoce nao tem permissao para usar este comando.'
+  player-only: '&cApenas jogadores podem abrir a interface da bolsa.'
+  reloaded: '&aSuperStocks foi recarregado.'
+  sync-started: '&aA sincronizacao de cotacoes foi executada.'
+  unknown-subcommand: '&cSubcomando desconhecido. Use /stocks help.'
+  buy-usage: '&eUso: /stocks buy <codigo> <acoes>'
+  sell-usage: '&eUso: /stocks sell <codigo> <acoes>'
+  quote-usage: '&eUso: /stocks quote <codigo>'
+  invalid-amount: '&cA quantidade deve ser maior que 0.'
+  quote-not-found: '&cNenhuma cotacao em cache encontrada.'
+  history-usage: '&e/stocks history <symbol>'
+  history-empty: '&7Histórico de preços unavailable.'
+  history-header: '&6===== Histórico de preços: {symbol} ====='
+  history-line: '&7{time} &8| &f{price}'
+  stats-header: '&6===== Statistics ====='
+  stats-line: '&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}'
+  watch-added: '&a{symbol} added to Lista de observação.'
+  watch-removed: '&a{symbol} removed from Lista de observação.'
+  watch-header: '&6===== Lista de observação ====='
+  watch-line: '&e{symbol}'
+  alert-usage: '&e/stocks alert <symbol> <above|below> <price>'
+  alert-created: '&aAlert #{id}: {symbol} / {price}.'
+  order-usage: '&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]'
+  order-header: '&6===== Ordens Abertas ====='
+  order-line: '&f#{id} &e{type} {symbol} &7| Qtd: &f{shares} &7| Gatilho: &f{price}'
+  order-created: '&aOrder #{id} created.'
+  order-limit: '&cOrder creation failed. Check funds, holdings, limits and quote status.'
+  order-cancelled: '&aOrder #{id} cancelled.'
+  order-not-found: '&cOpen order #{id} not found.'
+  penalty-usage: '&e/stocks penalty history <player>'
+  penalty-header: '&6===== Penalidades: {player} ====='
+  penalty-line: '&7{time} &8| &e{tier} &7| Perda: &f{loss} ({loss_percent}%) &7| Cobrança: &f{amount}'
+  status-header: '&6===== Status SuperStocks ====='
+  status-line: '&7Fonte: &f{provider} &7| Cotações: &f{loaded}/{configured} &7| Última sinc: &f{last_sync} &7| Pausado: &f{paused} &7| Vault: &f{vault}'
+  paused: '&cStock trading paused.'
+  resumed: '&aStock trading resumed.'
+  admin-usage: '&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]'
+  admin-portfolio-header: '&6===== Carteira: {player} ====='
+  admin-given: '&aAdded {symbol} x {shares} to {player}.'
+  admin-removed: '&aRemoved {symbol} x {shares} from {player}.'
+  admin-cleared: '&aTodas as posições de {player} foram limpas.'
+  short-usage: '&eUso: /stocks short <símbolo> <quantidade>'
+  cover-usage: '&eUso: /stocks cover <ID> [quantidade]'
+  competition-usage: '&eUso: /stocks competition <list|join|buy|sell> <ID> [símbolo] [quantidade]'
+  ipo-usage: '&eUso: /stocks ipo <list|subscribe> [ID] [quantidade]'
+  cert-usage: '&eUso: /stocks certificate <issue|list> [símbolo] [quantidade]'
+  pin-usage: '&eUso: /stocks pin <símbolo>'
+  index-header: '&6===== Índices de Mercado ====='
+  index-line: '&7{market}: &f{index} &7({count} stocks)'
+  portfolio-header: '&6===== Minha carteira ====='
+  portfolio-empty: '&7Voce ainda nao possui posicoes.'
+  portfolio-line: '&e{symbol} &7| Acoes: &f{shares} &7| Custo: &f{average_cost} &7| Preco: &f{price} &7| Valor: &f{value} &7| L/P: &f{profit}'
+  rank-winners-header: '&e===== Melhores investidores ====='
+  rank-losers-header: '&c===== Piores resultados ====='
+  rank-empty: '&7Nao ha dados de ranking.'
+  rank-line: '&f#{rank} &e{player} &7| Valor: &f{value} &7| L/P: &f{profit} &7| Retorno: &f{profit_percent}%'
   quote-info:
-    - "&6===== Cotacao ====="
-    - "&7Nome: &f{name}"
-    - "&7Codigo: &f{symbol}"
-    - "&7Mercado: &f{market}"
-    - "&7Preco: &f{price}"
-    - "&7Variacao: &f{change} ({change_percent}%)"
-    - "&7Atualizado: &f{updated_at}"
+  - '&6===== Stock Quote ====='
+  - '&7Name: &f{name}'
+  - '&7Symbol: &f{symbol}'
+  - '&7Market: &f{market}'
+  - '&7Price: &f{price}'
+  - '&7Change: &f{change} ({change_percent}%)'
+  - '&7Updated: &f{updated_at}'
   help:
-    - "&6===== Ajuda do SuperStocks ====="
-    - "&e/stocks &7- Abrir GUI da bolsa"
-    - "&e/stocks help &7- Mostrar comandos"
-    - "&e/stocks quote <codigo> &7- Mostrar cotacao"
-    - "&e/stocks buy <codigo> <acoes> &7- Comprar acoes"
-    - "&e/stocks sell <codigo> <acoes> &7- Vender acoes"
-    - "&e/stocks portfolio &7- Mostrar carteira"
-    - "&e/stocks rank winners &7- Melhores investidores"
-    - "&e/stocks rank losers &7- Piores resultados"
-    - "&e/stocks sync &7- Admin: sincronizar"
-    - "&e/stocks reload &7- Admin: recarregar"
+  - '&6===== SuperStocks Help ====='
+  - '&e/stocks &7- Open the stock GUI'
+  - '&e/stocks help &7- Show all commands'
+  - '&e/stocks open &7- Open the stock GUI'
+  - '&e/stocks quote <symbol> &7- Show a quote'
+  - '&e/stocks buy <symbol> <shares> &7- Buy shares'
+  - '&e/stocks sell <symbol> <shares> &7- Sell shares'
+  - '&e/stocks portfolio &7- Show text portfolio'
+  - '&e/stocks rank winners &7- Show top investors'
+  - '&e/stocks rank losers &7- Show bottom board'
   help-advanced:
-    - "&e/stocks history <symbol> &7- HistÃÂ³rico de preÃÂ§os"
-    - "&e/stocks stats &7- Investment statistics"
-    - "&e/stocks watch <add|remove|list> [symbol] &7- Lista de observaÃÂ§ÃÂ£o"
-    - "&e/stocks alert <symbol> <above|below> <price> &7- Price alert"
-    - "&e/stocks order <type|list|cancel> ... &7- Automated orders"
-    - "&e/stocks status &7- Admin: status"
-    - "&e/stocks pause|resume &7- Admin: pause/resume trading"
-    - "&e/stocks admin ... &7- Admin: manage holdings"
-    - "&e/stocks penalty history <player> &7- Admin: penalty records"
-    - "&e/stocks sync &7- Admin: sync quotes"
-    - "&e/stocks reload &7- Admin: reload plugin"
-
+  - '&e/stocks history <symbol> &7- Show 24-hour price history'
+  - '&e/stocks stats &7- Show investment statistics'
+  - '&e/stocks watch <add|remove|list> [symbol] &7- Manage watchlist'
+  - '&e/stocks alert <symbol> <above|below> <price> &7- Create a price alert'
+  - '&e/stocks order <type|list|cancel> ... &7- Manage automated orders'
+  - '&e/stocks status &7- Admin: show system status'
+  - '&e/stocks pause|resume &7- Admin: pause or resume trading'
+  - '&e/stocks admin ... &7- Admin: manage player holdings'
+  - '&e/stocks penalty history <player> &7- Admin: view penalty records'
+  - '&e/stocks sync &7- Admin: sync quotes'
+  - '&e/stocks reload &7- Admin: reload plugin'
+  - '&e/stocks short <symbol> <shares> &7- Open a short position'
+  - '&e/stocks cover <id> [shares] &7- Close a short position'
+  - '&e/stocks competition <list|join|buy|sell> &7- Investment competitions'
+  - '&e/stocks ipo <list|subscribe> &7- IPO subscriptions'
+  - '&e/stocks certificate <issue|list> &7- Stock certificates'
+  - '&e/stocks index &7- View market indices'
+  - '&e/stocks pin <symbol> &7- Pin stock to BossBar'
+  - '&e/stocks unpin &7- Remove BossBar pin'
+  - '&e/stocks report &7- View market report'
+  - '&e/stocks admin audit [player] [action] &7- View audit log'
+  - '&e/stocks admin panel &7- Open admin GUI'
 messages:
-  quote-unavailable: "&cEsta acao ainda nao tem cotacao e nao pode ser negociada."
-  portfolio-load-failed: "&cNao foi possivel carregar sua carteira. Contate um administrador."
-  ranking-load-failed: "&cNao foi possivel carregar o ranking. Contate um administrador."
-  watchlist-load-failed: "&cFailed to load Lista de observaÃÂ§ÃÂ£o."
-  trade-failed: "&cA operacao falhou. Contate um administrador."
-  economy-unavailable: "O sistema economico nao esta pronto"
-  min-shares: "A quantidade minima e {shares} acoes"
-  not-enough-money: "Saldo insuficiente. Necessario: {amount}"
-  withdraw-failed: "Falha no pagamento"
-  buy-success: "Compra concluida: {name} x {shares}, custo {amount}"
-  not-enough-shares: "Acoes insuficientes"
-  deposit-failed: "Venda registrada, mas o pagamento falhou. Contate um administrador"
-  sell-success: "Venda concluida: {name} x {shares}, recebido {amount}"
-  watchlist-load-failed: "&cFailed to load Lista de observaÃÂ§ÃÂ£o."
-  trade-busy: "&cAnother trade is still being processed."
-  trade-limit: "&cEsta negociaÃ§Ã£o excede o mÃ¡ximo de aÃ§Ãµes por transaÃ§Ã£o."
-  trading-unavailable: "&cTrading unavailable: {reason}"
-  trade-cooldown: "&cYou are trading too quickly."
-  trade-rate-limit: "&cToo many trades in one minute."
-  position-limit: "&cEsta posiÃ§Ã£o excederia o limite de valor."
-  order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
-  order-executed: "&aOrdem #{id} executada: {symbol} a {price}."
-  alert-triggered: "&eAlerta: {symbol} atingiu {price}."
-  report-header: "  report-header: "&6===== Relat6===== SuperStocks Market Report ====="
-  report-avg: "  report-header: "&6===== Relat7{market} avg:   report-header: "&6===== Relatf{avg}"
-  report-top: "  report-header: "&6===== Relat7Top:   report-header: "&6===== Relata{name}   report-header: "&6===== Relatf+{change}%"
-  report-bottom: "  report-header: "&6===== Relat7Bottom:   report-header: "&6===== Relatc{name}   report-header: "&6===== Relatf{change}%"Ã³rio de Mercado SuperStocks ====="
-  pin-removed: "&aPin da BossBar removido."
-  pin-set: "&a{symbol} fixado na BossBar."
-  pin-set: "&a{symbol} fixado na BossBar."
-  pin-set: "&a{symbol} fixado na BossBar."
-  certificate-redeemed: "&aCertificado resgatado: {symbol} x{shares} na sua carteira."
-  certificate-invalid: "&cEste certificado nÃ£o Ã© mais vÃ¡  competition-list-line: "&e#{id} &f{name} &7{status}"
-  ipo-list-line: "&e#{id} &f{symbol} {name} &7@{price} &7{status}"
-  cert-list-line: "&e#{id} &f{symbol} x{shares}"
-  audit-log-line: "&7{time} &f{actor} &e{action} &7{detail}"
-lido."
-  certificate-issued: "&aCertificado emitido: {symbol} x{shares}. Clique direito para resgatar."
-  ipo-symbol-exists: "&cJÃ¡ existe uma aÃ§Ã£o com este sÃ­mbolo."
-  ipo-cancelled: "&cIPO {symbol} cancelado. Todos os fundos reembolsados."
-  ipo-completed: "&6IPO for {symbol} ({name}) completed! Shares allocated."
-  ipo-allocated: "&aIPO {symbol}: {shares} aÃ§Ãµes alocadas. Reembolso: {refund}"
-  ipo-subscribed: "&a{subscribed} {shares} aÃ§Ãµes de {symbol} IPO."
-  ipo-oversubscribed: "&cIPO completamente subscrito em excesso."
-  ipo-limit: "&cVocÃª atingiu o limite de subscriÃ§Ã£o para este IPO."
-  ipo-closed: "&cO perÃ­odo de subscriÃ§Ã£o do IPO terminou."
-  ipo-not-found: "&cIPO nÃ£o encontrado."
-  ipo-created: "&aIPO #{id} criado: {symbol} {name} @ {price}."
-  competition-admin-ended: "&aCompetiÃ§Ã£o \"{name}\" encerrada, prÃªmios distribuÃ­dos."
-  competition-reward: "&6ParabÃÂ©ns! ColocaÃÂ§ÃÂ£o #{rank} em \"{name}\" Ã¢ÂÂ ganhou {amount}!"
-  competition-ended: "&6===== CompetiÃ§Ã£o \"{name}\" encerrada! Rankings: /stocks competition list ====="
-  competition-sold: "&aVenda da competiÃ§Ã£o: {symbol} x{shares} por {revenue}."
-  competition-bought: "&aCompra da competiÃ§Ã£o: {symbol} x{shares} por {cost}."
-  competition-not-joined: "&cVocÃª nÃ£o entrou nesta competiÃ§Ã£o."
-  competition-already-joined: "&cVocÃª jÃ¡ estÃ¡ nesta competiÃ§Ã£o."
-  competition-not-found: "&cCompetiÃ§Ã£o nÃ£o encontrada ou encerrada."
-  competition-joined: "&aVocÃª entrou em \"{name}\" com {capital} inicial!"
-  competition-created: "&aCompetiÃ§Ã£o #{id} \"{name}\" criada com {capital} inicial."
-  short-liquidated: "&cVendido {symbol} x{shares} liquidado forÃ§adamente a {price}. Margem: {margin}"
-  short-not-found: "&cPosiÃ§Ã£o vendida nÃ£o encontrada."
-  short-covered: "&aVendido coberto: {symbol} x{shares}. L/P: {pnl}"
-  short-opened: "&aVendido #{id} aberto: {symbol} x{shares} @ {price}. Margem: {margin}"
-  market-event-positive: "&6Ã°ÂÂÂ &eNotÃÂ­cias: &f{name} &7({symbol}) &asubiu &f{impact}% &7apÃÂ³s notÃÂ­cias positivas!"
-  market-event-negative: "&6Ã°ÂÂÂ &eNotÃÂ­cias: &f{name} &7({symbol}) &ccaiu &f{impact}% &7apÃÂ³s notÃÂ­cias negativas!"
-
+  quote-unavailable: '&cEsta acao ainda nao tem cotacao e nao pode ser negociada.'
+  portfolio-load-failed: '&cNao foi possivel carregar sua carteira. Contate um administrador.'
+  ranking-load-failed: '&cNao foi possivel carregar o ranking. Contate um administrador.'
+  watchlist-load-failed: '&cFailed to load Lista de observação.'
+  trade-failed: '&cA operacao falhou. Contate um administrador.'
+  economy-unavailable: O sistema economico nao esta pronto
+  min-shares: A quantidade minima e {shares} acoes
+  not-enough-money: 'Saldo insuficiente. Necessario: {amount}'
+  withdraw-failed: Falha no pagamento
+  buy-success: 'Compra concluida: {name} x {shares}, custo {amount}'
+  not-enough-shares: Acoes insuficientes
+  deposit-failed: Venda registrada, mas o pagamento falhou. Contate um administrador
+  sell-success: 'Venda concluida: {name} x {shares}, recebido {amount}'
+  trade-busy: '&cAnother trade is still being processed.'
+  trade-limit: '&cEsta negociação excede o máximo de ações por transação.'
+  trading-unavailable: '&cTrading unavailable: {reason}'
+  trade-cooldown: '&cYou are trading too quickly.'
+  trade-rate-limit: '&cToo many trades in one minute.'
+  position-limit: '&cEsta posição excederia o limite de valor.'
+  order-reserve-insufficient: '&cReserved funds are not enough to execute this order.'
+  order-executed: '&aOrdem #{id} executada: {symbol} a {price}.'
+  alert-triggered: '&eAlerta: {symbol} atingiu {price}.'
+  market-event-positive: '&6📈 &eMarket News: &f{name} &7({symbol}) &asurged &f{impact}% &7on positive news!'
+  market-event-negative: '&6📉 &eMarket News: &f{name} &7({symbol}) &cdropped &f{impact}% &7on negative news!'
+  short-opened: '&aShort position #{id} opened: {symbol} x{shares} @ {price}. Margin: {margin}'
+  short-covered: '&aShort covered: {symbol} x{shares}. P&L: {pnl}'
+  short-not-found: '&cShort position not found.'
+  short-liquidated: '&cYour short position on {symbol} x{shares} was force-liquidated at {price}. Margin lost: {margin}'
+  competition-created: '&aCompetition #{id} "{name}" created with {capital} starting capital.'
+  competition-joined: '&aYou joined "{name}" with {capital} starting capital!'
+  competition-not-found: '&cCompetition not found or ended.'
+  competition-already-joined: '&cYou are already in this competition.'
+  competition-not-joined: '&cYou haven''t joined this competition.'
+  competition-bought: '&aBought {symbol} x{shares} for {cost} (competition).'
+  competition-sold: '&aSold {symbol} x{shares} for {revenue} (competition).'
+  competition-ended: '&6===== Competition "{name}" has ended! Check rankings with /stocks competition list ====='
+  competition-reward: '&6Congratulations! You placed #{rank} in "{name}" and won {amount}!'
+  competition-admin-ended: '&aCompetition "{name}" ended and rewards distributed.'
+  ipo-created: '&aIPO #{id} created: {symbol} {name} @ {price}.'
+  ipo-not-found: '&cIPO not found.'
+  ipo-closed: '&cIPO subscription period has ended.'
+  ipo-limit: '&cYou have reached the maximum subscription for this IPO.'
+  ipo-oversubscribed: '&cIPO is fully subscribed.'
+  ipo-subscribed: '&aSubscribed {shares} shares of {symbol} IPO.'
+  ipo-allocated: '&aIPO {symbol}: allocated {shares} shares. Refund: {refund}'
+  ipo-completed: '&6IPO for {symbol} ({name}) completed! Shares allocated to subscribers.'
+  ipo-cancelled: '&cIPO for {symbol} cancelled. All funds refunded.'
+  ipo-symbol-exists: '&cA stock with this symbol already exists.'
+  certificate-issued: '&aStock certificate issued: {symbol} x{shares}. Right-click to redeem.'
+  certificate-invalid: '&cEste certificado não é mais vá  competition-list-line:'
+  certificate-redeemed: '&aCertificado resgatado: {symbol} x{shares} na sua carteira.'
+  pin-set: '&a{symbol} fixado na BossBar.'
+  pin-removed: '&aPin da BossBar removido.'
+  report-header: '&6===== Relat6===== SuperStocks Market Report ====='
+  report-avg: '&6===== Relat7{market} avg:   report-header:'
+  report-top: '&6===== Relat7Top:   report-header:'
+  report-bottom: '&6===== Relat7Bottom:   report-header:'
+  competition-list-line: '&e#{id} &f{name} &7{status}'
+  ipo-list-line: '&e#{id} &f{symbol} {name} &7@{price} &7{status}'
+  cert-list-line: '&e#{id} &f{symbol} x{shares}'
+  audit-log-line: '&7{time} &f{actor} &e{action} &7{detail}'
 gui:
   main:
-    title: "&2&lSuperStocks &8| &fSala de negociacao"
+    title: '&2&lSuperStocks &8| &fSala de negociacao'
     market-lore:
-      - "&7Abrir o mercado &f{market}"
-      - "&7Acoes configuradas: &f{configured}"
-      - "&7Cotacoes carregadas: &a{loaded}"
-      - ""
-      - "&eClique para ver"
-    portfolio-name: "&6Minha carteira"
+    - '&7Open the &f{market}&7 market'
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - ''
+    - '&eClick to view'
+    portfolio-name: '&6Minha carteira'
     portfolio-lore:
-      - "&7Ver acoes, custo, valor e L/P"
-      - "&7Cotacoes em cache: &f{loaded_total}&7/&f{configured_total}"
-      - ""
-      - "&eClique para abrir"
-    winners-name: "&eMelhores investidores"
+    - '&7View stocks, cost, value, and P/L'
+    - '&7Cached quotes: &f{loaded_total}&7/&f{configured_total}'
+    - ''
+    - '&eClick to open'
+    winners-name: '&eMelhores investidores'
     winners-lore:
-      - "&7Classificado pelo L/P nao realizado atual"
-      - "&7Maior lucro fica acima"
-      - ""
-      - "&eClique para ver"
-    losers-name: "&cPiores resultados"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Higher profit ranks higher'
+    - ''
+    - '&eClick to view'
+    losers-name: '&cPiores resultados'
     losers-lore:
-      - "&7Classificado pelo L/P nao realizado atual"
-      - "&7Maiores perdas ficam acima"
-      - ""
-      - "&eClique para ver"
-    watchlist-name: "&bLista de observaÃÂ§ÃÂ£o"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Larger losses rank higher'
+    - ''
+    - '&eClick to view'
+    watchlist-name: '&bLista de observação'
     watchlist-lore:
-      - "&7Lista de observaÃÂ§ÃÂ£o"
-      - "&7/stocks watch add <symbol>"
-      - ""
-      - "&eClick to open"
-    stats-name: "&bEstatisticas de cotacoes"
+    - '&7View the stocks you follow'
+    - '&7Use /stocks watch add <symbol> to add one'
+    - ''
+    - '&eClick to open'
+    stats-name: '&bEstatisticas de cotacoes'
     stats-lore:
-      - "&7Fonte: &f{provider}"
-      - "&7Acoes configuradas: &f{configured_total}"
-      - "&7Acoes carregadas: &a{loaded_total}"
-      - "&7Intervalo: &f{refresh_seconds}s"
-      - ""
-      - "&7Ultima sincronizacao: &f{last_sync}"
+    - '&7Source: &f{provider}'
+    - '&7Configured stocks: &f{configured_total}'
+    - '&7Loaded stocks: &a{loaded_total}'
+    - '&7Refresh interval: &f{refresh_seconds}s'
+    - ''
+    - '&7Last sync: &f{last_sync}'
   market:
-    title: "&2Mercado &8- &f{market}"
-    missing-name: "&7{symbol}"
+    title: '&2Mercado &8- &f{market}'
+    missing-name: '&7{symbol}'
     missing-lore:
-      - "&cSem cotacao em cache"
-      - "&7Aguardando a proxima sincronizacao"
-    stats-name: "&bEstatisticas de {market}"
+    - '&cNo cached quote data'
+    - '&7Waiting for the next sync'
+    stats-name: '&bEstatisticas de {market}'
     stats-lore:
-      - "&7Acoes configuradas: &f{configured}"
-      - "&7Cotacoes carregadas: &a{loaded}"
-      - "&7Fonte: &f{provider}"
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - '&7Source: &f{provider}'
   stock:
-    title: "&2Acao &8- &f{name}"
+    title: '&2Acao &8- &f{name}'
     quote-lore:
-      - "&8{market}"
-      - "&7Codigo: &f{symbol}"
-      - "&7Preco: &f{price}"
-      - "&7Variacao: {change_color}{change} ({change_percent}%)"
-      - "&7Atualizado: &f{updated_at}"
-      - ""
-      - "&eClique para negociar"
+    - '&8{market}'
+    - '&7Symbol: &f{symbol}'
+    - '&7Price: &f{price}'
+    - '&7Change: {change_color}{change} ({change_percent}%)'
+    - '&7Updated: &f{updated_at}'
+    - ''
+    - '&eClick to trade'
     history-lore:
-      - "&7Last 24h: &f{change_24h}%"
-      - "&7Trend: &f{trend}"
-    buy-name: "&aComprar {shares} acoes"
+    - '&7Last 24h: &f{change_24h}%'
+    - '&7Trend: &f{trend}'
+    buy-name: '&aComprar {shares} acoes'
     buy-lore:
-      - "&7Negocia pela cotacao em cache"
-      - "&7Custo estimado: &f{amount}"
-    sell-name: "&cVender {shares} acoes"
+    - '&7Trades at the cached quote'
+    - '&7Estimated cost: &f{amount}'
+    sell-name: '&cVender {shares} acoes'
     sell-lore:
-      - "&7Negocia pela cotacao em cache"
-      - "&7Receita estimada: &f{amount}"
+    - '&7Trades at the cached quote'
+    - '&7Estimated proceeds: &f{amount}'
   portfolio:
-    title: "&6Minha carteira"
+    title: '&6Minha carteira'
     holding-lore:
-      - "&7Codigo: &f{symbol}"
-      - "&7Acoes: &f{shares}"
-      - "&7Custo: &f{average_cost}"
-      - "&7Preco: &f{price}"
-      - "&7Valor de mercado: &f{market_value}"
-      - "&7L/P: {profit_color}{profit}"
-      - ""
-      - "&eClique para negociar"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&7Price: &f{price}'
+    - '&7Market value: &f{market_value}'
+    - '&7P/L: {profit_color}{profit}'
+    - ''
+    - '&eClick to trade'
     holding-missing-lore:
-      - "&7Codigo: &f{symbol}"
-      - "&7Acoes: &f{shares}"
-      - "&7Custo: &f{average_cost}"
-      - "&cSem cotacao em cache"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&cNo cached quote data'
   ranking:
-    winners-title: "&eMelhores investidores"
-    losers-title: "&cPiores resultados"
-    entry-name: "&f#{rank} &e{player}"
+    winners-title: '&eMelhores investidores'
+    losers-title: '&cPiores resultados'
+    entry-name: '&f#{rank} &e{player}'
     winner-lore:
-      - "&7Jogador: &f{player}"
-      - "&7Valor da carteira: &f{value}"
-      - "&7L/P nao realizado: {profit_color}{profit}"
-      - "&7Retorno: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
     loser-lore:
-      - "&7Jogador: &f{player}"
-      - "&7Valor da carteira: &f{value}"
-      - "&7L/P nao realizado: {profit_color}{profit}"
-      - "&7Retorno: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
   watchlist:
-    title: "&bLista de observaÃÂ§ÃÂ£o"
-    empty-name: "&7Nenhuma aÃ§Ã£o observada"
+    title: '&bLista de observação'
+    empty-name: '&7Nenhuma ação observada'
   admin:
-    title: "&6Painel Admin SuperStocks"
-    total-holdings: "&fTotal de PosiÃ§Ãµes"
-    total-players: "&fJogadores Ativos"
-    total-trades: "&fTotal de NegociaÃ§Ãµes"
-    last-sync: "&fÃltima Sinc"
-    paused: "&fNegociaÃ§Ã£o Pausada"
-    vault: "&fStatus Vault"
-    close-name: "&cFechar"  confirm:
-    stat-format: "&7{label}: &f{value}"
+    title: '&6Painel Admin SuperStocks'
+    total-holdings: '&fTotal de Posições'
+    total-players: '&fJogadores Ativos'
+    total-trades: '&fTotal de Negociações'
+    last-sync: '&fÚltima Sinc'
+    paused: '&fNegociação Pausada'
+    vault: '&fStatus Vault'
+    close-name: '&cFechar'
+    stat-format: '&7{label}: &f{value}'
   format:
-    market-name: "&a{name}"
-    stock-name: "&f{name}"
-    stock-symbol: "&f{symbol}"
-    title: "&6Confirmar negociaÃÂ§ÃÂ£o"
-    summary-name: "&f{name} &8({symbol})"
+    market-name: '&a{name}'
+    stock-name: '&f{name}'
+    stock-symbol: '&f{symbol}'
+  confirm:
+    title: '&6Confirm Trade'
+    summary-name: '&f{name} &8({symbol})'
     summary-lore:
-      - "&7Shares: &f{shares}"
-      - "&7Unit price: &f{price}"
-      - "&7Estimated gross: &f{gross}"
-    accept-name: "&aConfirmar negociaÃÂ§ÃÂ£o"
+    - '&7Shares: &f{shares}'
+    - '&7Unit price: &f{price}'
+    - '&7Estimated gross: &f{gross}'
+    accept-name: '&aConfirm Trade'
     accept-lore:
-      - "&7Click to execute this trade."
-    cancel-name: "&cCancelar"
+    - '&7Click to execute this trade.'
+    cancel-name: '&cCancel'
     cancel-lore:
-      - "&7Return to the stock page."
-  total-holdings: "&fTotal Holdings"
-  total-players: "&fActive Players"
-  total-trades: "&fTotal Trades"
-  last-sync: "&fLast Sync"
-  vault: "&fVault Status"
+    - '&7Return to the stock page.'
   certificate:
-    name: "&6Stock Certificate &f#{id}"
+    name: '&6Stock Certificate &f#{id}'
     lore:
-      - "&7Stock: &f{symbol}"
-      - "&7Shares: &f{shares}"
-      - "&7Issue price: &f{price}"
-      - ""
-      - "&eRight-click air &7to redeem"
-      - "&7Can be traded between players"
-  common:
-    back-name: "&fVoltar"
-    back-main-name: "&fVoltar ao inicio"
-    close-name: "&cFechar"
-    previous-page-name: "&fPÃÂ¡gina anterior"
-    next-page-name: "&fPrÃÂ³xima pÃÂ¡gina"
-    page-name: "&ePÃÂ¡gina {page}/{pages}"
-    filler-name: " "
-
+    - '&7Stock: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Issue price: &f{price}'
+    - ''
+    - '&eRight-click air &7to redeem'
+    - '&7Can be traded between players'
 bossbar:
-  pin-format: "&f{name} &7| &f{price} {arrow} &f{change_percent}%"
-  arrow-up: "&a▲"
-  arrow-down: "&c▼"
-
+  pin-format: '&f{name} &7| &f{price} {arrow} &f{change_percent}%'
+  arrow-up: '&a▲'
+  arrow-down: '&c▼'
 validators:
   errors:
-    language-not-found: "Arquivo de idioma não encontrado: {language}"
-    duplicate-market: "ID de mercado duplicado: {market}"
-    market-empty-symbol: "Mercado {market} contém um símbolo vazio"
-    duplicate-symbol: "Símbolo duplicado: {symbol}"
-    custom-market-id-empty: "{file} ID de mercado vazio"
-    duplicate-market-id: "ID de mercado duplicado: {id} ({file})"
-    custom-market-invalid-material: "{file} usa Material inválido: {icon}"
-    custom-market-no-stocks: "{file} não tem seção de ações"
-    custom-market-empty-symbol: "{file} contém símbolo vazio: {key}"
-    duplicate-symbol-file: "Símbolo duplicado: {symbol} ({file})"
-    custom-market-invalid-price: "{file} faixa de preço inválida: {symbol}"
-    custom-market-negative-volatility: "{file} volatilidade não pode ser negativa: {symbol}"
-    invalid-material: "Material inválido: gui.{key}={value}"
-    volatility-min-exceeds-max: "Volatilidade aleatória mínima excede a máxima"
-    invalid-safety-price: "Faixa de preço de segurança inválida"
-    invalid-penalty-tier: "Faixa de nível de penalidade inválida: {key}"
-    penalty-tier-overlap: "Sobreposição de níveis de penalidade: {previous} / {current}"
-    provider-missing-symbols: "Endpoint do provedor deve conter {symbols}: {active}"
-    provider-wrong-scheme: "Endpoint do provedor deve usar HTTP/HTTPS: {active}"
-    provider-invalid-uri: "Endpoint do provedor inválido: {active}"
-    invalid-market-hours: "Configuração de horário de mercado inválida: {market}"
-    invalid-closed-action: "closed-action deve ser DENY ou SELL_ONLY: {market}"
-    invalid-gui-size: "Tamanho de GUI inválido: gui.{key}={size}"
+    language-not-found: 'Arquivo de idioma não encontrado: {language}'
+    duplicate-market: 'ID de mercado duplicado: {market}'
+    market-empty-symbol: Mercado {market} contém um símbolo vazio
+    duplicate-symbol: 'Símbolo duplicado: {symbol}'
+    custom-market-id-empty: '{file} ID de mercado vazio'
+    duplicate-market-id: 'ID de mercado duplicado: {id} ({file})'
+    custom-market-invalid-material: '{file} usa Material inválido: {icon}'
+    custom-market-no-stocks: '{file} não tem seção de ações'
+    custom-market-empty-symbol: '{file} contém símbolo vazio: {key}'
+    duplicate-symbol-file: 'Símbolo duplicado: {symbol} ({file})'
+    custom-market-invalid-price: '{file} faixa de preço inválida: {symbol}'
+    custom-market-negative-volatility: '{file} volatilidade não pode ser negativa: {symbol}'
+    invalid-material: 'Material inválido: gui.{key}={value}'
+    volatility-min-exceeds-max: Volatilidade aleatória mínima excede a máxima
+    invalid-safety-price: Faixa de preço de segurança inválida
+    invalid-penalty-tier: 'Faixa de nível de penalidade inválida: {key}'
+    penalty-tier-overlap: 'Sobreposição de níveis de penalidade: {previous} / {current}'
+    provider-missing-symbols: 'Endpoint do provedor deve conter {symbols}: {active}'
+    provider-wrong-scheme: 'Endpoint do provedor deve usar HTTP/HTTPS: {active}'
+    provider-invalid-uri: 'Endpoint do provedor inválido: {active}'
+    invalid-market-hours: 'Configuração de horário de mercado inválida: {market}'
+    invalid-closed-action: 'closed-action deve ser DENY ou SELL_ONLY: {market}'
+    invalid-gui-size: 'Tamanho de GUI inválido: gui.{key}={size}'
   log:
-    banner: "========== Verificação de Config SuperStocks =========="
-    language-line: "  Idioma: {language}"
-    provider-line: "  Provedor: {provider} (atualização {seconds}s)"
-    market-line: "  Mercado {market}: {count} ações"
-    custom-market-line: "  Mercados locais: {count} arquivos"
-    feature-status: "  Funcionalidades:"
-    feature-on: "    ✓ {feature}"
-    feature-off: "    ✗ {feature} (desativado)"
-    high-risk-on: "ATIVADO ⚠"
-    high-risk-off: "TUDO DESATIVADO ✓"
-    high-risk: "  Funcionalidades de alto risco: {state}"
-    all-passed: "  Verificação de config: APROVADA ✓"
-    errors-header: "  Problemas de config ({count}):"
-    error-line: "    ✗ {error}"
-    footer: "==========================================="
+    banner: ========== Verificação de Config SuperStocks ==========
+    language-line: 'Idioma: {language}'
+    provider-line: 'Provedor: {provider} (atualização {seconds}s)'
+    market-line: 'Mercado {market}: {count} ações'
+    custom-market-line: 'Mercados locais: {count} arquivos'
+    feature-status: 'Funcionalidades:'
+    feature-on: ✓ {feature}
+    feature-off: ✗ {feature} (desativado)
+    high-risk-on: ATIVADO ⚠
+    high-risk-off: TUDO DESATIVADO ✓
+    high-risk: 'Funcionalidades de alto risco: {state}'
+    all-passed: 'Verificação de config: APROVADA ✓'
+    errors-header: 'Problemas de config ({count}):'
+    error-line: ✗ {error}
+    footer: ===========================================
   features:
-    quote-protection: "Proteção de cotação"
-    circuit-breaker: "Disjuntor"
-    short-selling: "Venda a descoberto"
-    competition: "Competições"
-    auto-orders: "Ordens automáticas"
-    price-alerts: "Alertas de preço"
-    price-history: "Histórico de preços"
-    custom-markets: "Mercados locais"
+    quote-protection: Proteção de cotação
+    circuit-breaker: Disjuntor
+    short-selling: Venda a descoberto
+    competition: Competições
+    auto-orders: Ordens automáticas
+    price-alerts: Alertas de preço
+    price-history: Histórico de preços
+    custom-markets: Mercados locais
+    back-main-name: '&fBack to Main'
+    close-name: '&cClose'
+    previous-page-name: '&fPrevious Page'
+    next-page-name: '&fNext Page'
+    page-name: '&ePage {page}/{pages}'
+    filler-name: ' '

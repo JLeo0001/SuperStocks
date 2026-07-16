@@ -1,368 +1,364 @@
-prefix: "&8[&aSuperStocks&8] "
-
+prefix: '&8[&aSuperStocks&8]'
 commands:
-  no-permission: "&cこのコマンドを使用する権限がありません。"
-  player-only: "&c株式市場GUIを開けるのはプレイヤーのみです。"
-  reloaded: "&aSuperStocksを再読み込みしました。"
-  sync-started: "&a株価同期タスクを実行しました。"
-  unknown-subcommand: "&c不明なサブコマンドです。/stocks help を使用してください。"
-  buy-usage: "&e使い方: /stocks buy <コード> <株数>"
-  sell-usage: "&e使い方: /stocks sell <コード> <株数>"
-  quote-usage: "&e使い方: /stocks quote <コード>"
-  invalid-amount: "&c数量は0より大きい数値である必要があります。"
-  quote-not-found: "&cキャッシュ株価が見つかりません。"
-  history-usage: "&e/stocks history <symbol>"
-  history-empty: "&7価格履歴 unavailable."
-  history-header: "&6===== 価格履歴: {symbol} ====="
-  history-line: "&7{time} &8| &f{price}"
-  stats-header: "&6===== Statistics ====="
-  stats-line: "&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}"
-  watch-added: "&a{symbol} added to ウォッチリスト."
-  watch-removed: "&a{symbol} removed from ウォッチリスト."
-  watch-header: "&6===== ウォッチリスト ====="
-  watch-line: "&e{symbol}"
-  alert-usage: "&e/stocks alert <symbol> <above|below> <price>"
-  alert-created: "&aAlert #{id}: {symbol} / {price}."
-  order-usage: "&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]"
-  order-header: "&6===== 未約定注文 ====="
-  order-line: "&f#{id} &e{type} {symbol} &7| 数量: &f{shares} &7| トリガー: &f{price}"
-  order-created: "&aOrder #{id} created."
-  order-limit: "&cOrder creation failed. Check funds, holdings, limits and quote status."
-  order-cancelled: "&aOrder #{id} cancelled."
-  order-not-found: "&cOpen order #{id} not found."
-  penalty-usage: "&e/stocks penalty history <player>"
-  penalty-header: "&6===== 損失ペナルティ: {player} ====="
-  penalty-line: "&7{time} &8| &e{tier} &7| 損失: &f{loss} ({loss_percent}%) &7| 課金: &f{amount}"
-  status-header: "&6===== SuperStocks 状態 ====="
-  status-line: "&7ソース: &f{provider} &7| 相場: &f{loaded}/{configured} &7| 最終同期: &f{last_sync} &7| 停止: &f{paused} &7| Vault: &f{vault}"
-  paused: "&cStock trading paused."
-  resumed: "&aStock trading resumed."
-  admin-usage: "&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]"
-  admin-portfolio-header: "&6===== ポートフォリオ: {player} ====="
-  admin-given: "&aAdded {symbol} x {shares} to {player}."
-  admin-removed: "&aRemoved {symbol} x {shares} from {player}."
-  admin-cleared: "&a{player} の全保有を消去しました。"
-  short-usage: "&e使用法: /stocks short <銘柄> <数量>"
-  pin-usage: "&e使用法: /stocks pin <銘柄>"
-  ipo-usage: "&e使用法: /stocks ipo <list|subscribe> [ID] [数量]"
-  index-line: "&7{market}: &f{index} &7({count} stocks)"
-  index-header: "&6===== 市場指数 ====="
-  cover-usage: "&e使用法: /stocks cover <ID> [数量]"
-  competition-usage: "&e使用法: /stocks competition <list|join|buy|sell> <ID> [銘柄] [数量]"
-  cert-usage: "&e使用法: /stocks certificate <issue|list> [銘柄] [数量]"
-  portfolio-header: "&6===== マイポートフォリオ ====="
-  portfolio-empty: "&7まだ保有銘柄がありません。"
-  portfolio-line: "&e{symbol} &7| 株数: &f{shares} &7| 取得単価: &f{average_cost} &7| 価格: &f{price} &7| 価値: &f{value} &7| 損益: &f{profit}"
-  rank-winners-header: "&e===== 投資家ランキング ====="
-  rank-losers-header: "&c===== 損失ランキング ====="
-  rank-empty: "&7ランキングデータがありません。"
-  rank-line: "&f#{rank} &e{player} &7| 価値: &f{value} &7| 損益: &f{profit} &7| 収益率: &f{profit_percent}%"
+  no-permission: '&cこのコマンドを使用する権限がありません。'
+  player-only: '&c株式市場GUIを開けるのはプレイヤーのみです。'
+  reloaded: '&aSuperStocksを再読み込みしました。'
+  sync-started: '&a株価同期タスクを実行しました。'
+  unknown-subcommand: '&c不明なサブコマンドです。/stocks help を使用してください。'
+  buy-usage: '&e使い方: /stocks buy <コード> <株数>'
+  sell-usage: '&e使い方: /stocks sell <コード> <株数>'
+  quote-usage: '&e使い方: /stocks quote <コード>'
+  invalid-amount: '&c数量は0より大きい数値である必要があります。'
+  quote-not-found: '&cキャッシュ株価が見つかりません。'
+  history-usage: '&e/stocks history <symbol>'
+  history-empty: '&7価格履歴 unavailable.'
+  history-header: '&6===== 価格履歴: {symbol} ====='
+  history-line: '&7{time} &8| &f{price}'
+  stats-header: '&6===== Statistics ====='
+  stats-line: '&7P/L: &f{realized_profit} &7| Fees: &f{fees} &7| Dividends: &f{dividends} &7| Peak: &f{highest} &7| Trades: &f{trades}'
+  watch-added: '&a{symbol} added to ウォッチリスト.'
+  watch-removed: '&a{symbol} removed from ウォッチリスト.'
+  watch-header: '&6===== ウォッチリスト ====='
+  watch-line: '&e{symbol}'
+  alert-usage: '&e/stocks alert <symbol> <above|below> <price>'
+  alert-created: '&aAlert #{id}: {symbol} / {price}.'
+  order-usage: '&e/stocks order <buy|sell|stop-loss|take-profit> <symbol> <shares> <price> [seconds]'
+  order-header: '&6===== 未約定注文 ====='
+  order-line: '&f#{id} &e{type} {symbol} &7| 数量: &f{shares} &7| トリガー: &f{price}'
+  order-created: '&aOrder #{id} created.'
+  order-limit: '&cOrder creation failed. Check funds, holdings, limits and quote status.'
+  order-cancelled: '&aOrder #{id} cancelled.'
+  order-not-found: '&cOpen order #{id} not found.'
+  penalty-usage: '&e/stocks penalty history <player>'
+  penalty-header: '&6===== 損失ペナルティ: {player} ====='
+  penalty-line: '&7{time} &8| &e{tier} &7| 損失: &f{loss} ({loss_percent}%) &7| 課金: &f{amount}'
+  status-header: '&6===== SuperStocks 状態 ====='
+  status-line: '&7ソース: &f{provider} &7| 相場: &f{loaded}/{configured} &7| 最終同期: &f{last_sync} &7| 停止: &f{paused} &7| Vault: &f{vault}'
+  paused: '&cStock trading paused.'
+  resumed: '&aStock trading resumed.'
+  admin-usage: '&e/stocks admin <portfolio|give|remove|clear> <player> [symbol] [shares]'
+  admin-portfolio-header: '&6===== ポートフォリオ: {player} ====='
+  admin-given: '&aAdded {symbol} x {shares} to {player}.'
+  admin-removed: '&aRemoved {symbol} x {shares} from {player}.'
+  admin-cleared: '&a{player} の全保有を消去しました。'
+  short-usage: '&e使用法: /stocks short <銘柄> <数量>'
+  cover-usage: '&e使用法: /stocks cover <ID> [数量]'
+  competition-usage: '&e使用法: /stocks competition <list|join|buy|sell> <ID> [銘柄] [数量]'
+  ipo-usage: '&e使用法: /stocks ipo <list|subscribe> [ID] [数量]'
+  cert-usage: '&e使用法: /stocks certificate <issue|list> [銘柄] [数量]'
+  pin-usage: '&e使用法: /stocks pin <銘柄>'
+  index-header: '&6===== 市場指数 ====='
+  index-line: '&7{market}: &f{index} &7({count} stocks)'
+  portfolio-header: '&6===== マイポートフォリオ ====='
+  portfolio-empty: '&7まだ保有銘柄がありません。'
+  portfolio-line: '&e{symbol} &7| 株数: &f{shares} &7| 取得単価: &f{average_cost} &7| 価格: &f{price} &7| 価値: &f{value} &7| 損益: &f{profit}'
+  rank-winners-header: '&e===== 投資家ランキング ====='
+  rank-losers-header: '&c===== 損失ランキング ====='
+  rank-empty: '&7ランキングデータがありません。'
+  rank-line: '&f#{rank} &e{player} &7| 価値: &f{value} &7| 損益: &f{profit} &7| 収益率: &f{profit_percent}%'
   quote-info:
-    - "&6===== 株価情報 ====="
-    - "&7名称: &f{name}"
-    - "&7コード: &f{symbol}"
-    - "&7市場: &f{market}"
-    - "&7価格: &f{price}"
-    - "&7騰落: &f{change} ({change_percent}%)"
-    - "&7更新時刻: &f{updated_at}"
+  - '&6===== Stock Quote ====='
+  - '&7Name: &f{name}'
+  - '&7Symbol: &f{symbol}'
+  - '&7Market: &f{market}'
+  - '&7Price: &f{price}'
+  - '&7Change: &f{change} ({change_percent}%)'
+  - '&7Updated: &f{updated_at}'
   help:
-    - "&6===== SuperStocks ヘルプ ====="
-    - "&e/stocks &7- 株式GUIを開く"
-    - "&e/stocks help &7- コマンド一覧"
-    - "&e/stocks quote <コード> &7- 株価を表示"
-    - "&e/stocks buy <コード> <株数> &7- 株を買う"
-    - "&e/stocks sell <コード> <株数> &7- 株を売る"
-    - "&e/stocks portfolio &7- 保有一覧を表示"
-    - "&e/stocks rank winners &7- 投資家ランキング"
-    - "&e/stocks rank losers &7- 損失ランキング"
-    - "&e/stocks sync &7- 管理者: 株価同期"
-    - "&e/stocks reload &7- 管理者: 再読み込み"
+  - '&6===== SuperStocks Help ====='
+  - '&e/stocks &7- Open the stock GUI'
+  - '&e/stocks help &7- Show all commands'
+  - '&e/stocks open &7- Open the stock GUI'
+  - '&e/stocks quote <symbol> &7- Show a quote'
+  - '&e/stocks buy <symbol> <shares> &7- Buy shares'
+  - '&e/stocks sell <symbol> <shares> &7- Sell shares'
+  - '&e/stocks portfolio &7- Show text portfolio'
+  - '&e/stocks rank winners &7- Show top investors'
+  - '&e/stocks rank losers &7- Show bottom board'
   help-advanced:
-    - "&e/stocks history <symbol> &7- 価格履歴"
-    - "&e/stocks stats &7- Investment statistics"
-    - "&e/stocks watch <add|remove|list> [symbol] &7- ウォッチリスト"
-    - "&e/stocks alert <symbol> <above|below> <price> &7- Price alert"
-    - "&e/stocks order <type|list|cancel> ... &7- Automated orders"
-    - "&e/stocks status &7- Admin: status"
-    - "&e/stocks pause|resume &7- Admin: pause/resume trading"
-    - "&e/stocks admin ... &7- Admin: manage holdings"
-    - "&e/stocks penalty history <player> &7- Admin: penalty records"
-    - "&e/stocks sync &7- Admin: sync quotes"
-    - "&e/stocks reload &7- Admin: reload plugin"
-
+  - '&e/stocks history <symbol> &7- Show 24-hour price history'
+  - '&e/stocks stats &7- Show investment statistics'
+  - '&e/stocks watch <add|remove|list> [symbol] &7- Manage watchlist'
+  - '&e/stocks alert <symbol> <above|below> <price> &7- Create a price alert'
+  - '&e/stocks order <type|list|cancel> ... &7- Manage automated orders'
+  - '&e/stocks status &7- Admin: show system status'
+  - '&e/stocks pause|resume &7- Admin: pause or resume trading'
+  - '&e/stocks admin ... &7- Admin: manage player holdings'
+  - '&e/stocks penalty history <player> &7- Admin: view penalty records'
+  - '&e/stocks sync &7- Admin: sync quotes'
+  - '&e/stocks reload &7- Admin: reload plugin'
+  - '&e/stocks short <symbol> <shares> &7- Open a short position'
+  - '&e/stocks cover <id> [shares] &7- Close a short position'
+  - '&e/stocks competition <list|join|buy|sell> &7- Investment competitions'
+  - '&e/stocks ipo <list|subscribe> &7- IPO subscriptions'
+  - '&e/stocks certificate <issue|list> &7- Stock certificates'
+  - '&e/stocks index &7- View market indices'
+  - '&e/stocks pin <symbol> &7- Pin stock to BossBar'
+  - '&e/stocks unpin &7- Remove BossBar pin'
+  - '&e/stocks report &7- View market report'
+  - '&e/stocks admin audit [player] [action] &7- View audit log'
+  - '&e/stocks admin panel &7- Open admin GUI'
 messages:
-  quote-unavailable: "&cこの銘柄の株価データはまだなく、取引できません。"
-  portfolio-load-failed: "&cポートフォリオを読み込めませんでした。管理者に連絡してください。"
-  ranking-load-failed: "&cランキングを読み込めませんでした。管理者に連絡してください。"
-  watchlist-load-failed: "&cFailed to load ウォッチリスト."
-  trade-failed: "&c取引に失敗しました。管理者に連絡してください。"
-  economy-unavailable: "経済システムの準備ができていません"
-  min-shares: "最小取引数量は {shares} 株です"
-  not-enough-money: "残高が不足しています。必要額: {amount}"
-  withdraw-failed: "支払いに失敗しました"
-  buy-success: "購入しました: {name} x {shares}、費用 {amount}"
-  not-enough-shares: "保有株数が不足しています"
-  deposit-failed: "売却は記録されましたが、入金に失敗しました。管理者に連絡してください"
-  sell-success: "売却しました: {name} x {shares}、受取額 {amount}"
-  watchlist-load-failed: "&cFailed to load ウォッチリスト."
-  trade-busy: "&cAnother trade is still being processed."
-  trade-limit: "&cこの取引は1回あたりの最大株数を超えています。"
-  trading-unavailable: "&cTrading unavailable: {reason}"
-  trade-cooldown: "&cYou are trading too quickly."
-  trade-rate-limit: "&cToo many trades in one minute."
-  position-limit: "&cこのポジションは評価額上限を超えます。"
-  order-reserve-insufficient: "&cReserved funds are not enough to execute this order."
-  order-executed: "&a注文 #{id} 約定: {symbol} @ {price}。"
-  alert-triggered: "&e価格アラート: {symbol} が {price} に達しました。"
-  report-header: "  report-header: "&6===== SuperStocks 市場レポート ====="6===== SuperStocks Market Report ====="
-  report-avg: "  report-header: "&6===== SuperStocks 市場レポート ====="7{market} avg:   report-header: "&6===== SuperStocks 市場レポート ====="f{avg}"
-  report-top: "  report-header: "&6===== SuperStocks 市場レポート ====="7Top:   report-header: "&6===== SuperStocks 市場レポート ====="a{name}   report-header: "&6===== SuperStocks 市場レポート ====="f+{change}%"
-  report-bottom: "  report-header: "&6===== SuperStocks 市場レポート ====="7Bottom:   report-header: "&6===== SuperStocks 市場レポート ====="c{name}   report-header: "&6===== SuperStocks 市場レポート ====="f{change}%"
-  pin-removed: "&aBossBarピン解除。"
-  pin-set: "&a{symbol} をBossBarに固定。"
-  pin-set: "&a{symbol} をBossBarに固定。"
-  pin-set: "&a{symbol} をBossBarに固定。"
-  certificate-redeemed: "&a株券換金: {symbol} x{shares} をポートフォリオに戻しました。"
-  certificate-invalid: "&cこの株券は無効です。"
-  certificate-issued: "&a株券発行: {symbol} x{shares}。右  competition-list-line: "&e#{id} &f{name} &7{status}"
-  ipo-list-line: "&e#{id} &f{symbol} {name} &7@{price} &7{status}"
-  cert-list-line: "&e#{id} &f{symbol} x{shares}"
-  audit-log-line: "&7{time} &f{actor} &e{action} &7{detail}"
-クリックで換金。"
-  ipo-symbol-exists: "&cこの銘柄コードは既に存在します。"
-  ipo-cancelled: "&cIPO {symbol} 中止。全額返金済み。"
-  ipo-completed: "&6IPO for {symbol} ({name}) completed! Shares allocated."
-  ipo-allocated: "&aIPO {symbol}: {shares} 株割当。返金: {refund}"
-  ipo-subscribed: "&a{symbol} IPOに {shares} 株申込ました。"
-  ipo-oversubscribed: "&cIPOが完全に超過申込です。"
-  ipo-limit: "&cこのIPOの申込上限に達しました。"
-  ipo-closed: "&cIPO申込期間が終了しました。"
-  ipo-not-found: "&cIPOが見つかりません。"
-  ipo-created: "&aIPO #{id} 作成: {symbol} {name} @ {price}。"
-  competition-admin-ended: "&aコンペ \"{name}\" 終了、報酬配布済み。"
-  competition-reward: "&6おめでとう！\"{name}\" で #{rank} 位、{amount} 獲得！"
-  competition-ended: "&6===== コンペ \"{name}\" 終了！順位: /stocks competition list ====="
-  competition-sold: "&aコンペ売却: {symbol} x{shares}、{revenue}。"
-  competition-bought: "&aコンペ購入: {symbol} x{shares}、{cost}。"
-  competition-not-joined: "&cこのコンペに参加していません。"
-  competition-already-joined: "&c既にこのコンペに参加しています。"
-  competition-not-found: "&cコンペが見つからないか終了しています。"
-  competition-joined: "&a\"{name}\" に参加しました！初期資金 {capital}。"
-  competition-created: "&aコンペ #{id} \"{name}\" 作成、初期資金 {capital}。"
-  short-liquidated: "&c空売り {symbol} x{shares} 強制決済 @ {price}。証拠金: {margin}"
-  short-not-found: "&c空売りポジションが見つかりません。"
-  short-covered: "&a空売り決済: {symbol} x{shares}。損益: {pnl}"
-  short-opened: "&a空売り #{id} 約定: {symbol} x{shares} @ {price}。証拠金: {margin}"
-  market-event-positive: "&6📈 &e市場ニュース: &f{name} &7({symbol}) &a上昇 &f{impact}% &7（好材料）"
-  market-event-negative: "&6📉 &e市場ニュース: &f{name} &7({symbol}) &c下落 &f{impact}% &7（悪材料）"
-
+  quote-unavailable: '&cこの銘柄の株価データはまだなく、取引できません。'
+  portfolio-load-failed: '&cポートフォリオを読み込めませんでした。管理者に連絡してください。'
+  ranking-load-failed: '&cランキングを読み込めませんでした。管理者に連絡してください。'
+  watchlist-load-failed: '&cFailed to load ウォッチリスト.'
+  trade-failed: '&c取引に失敗しました。管理者に連絡してください。'
+  economy-unavailable: 経済システムの準備ができていません
+  min-shares: 最小取引数量は {shares} 株です
+  not-enough-money: '残高が不足しています。必要額: {amount}'
+  withdraw-failed: 支払いに失敗しました
+  buy-success: '購入しました: {name} x {shares}、費用 {amount}'
+  not-enough-shares: 保有株数が不足しています
+  deposit-failed: 売却は記録されましたが、入金に失敗しました。管理者に連絡してください
+  sell-success: '売却しました: {name} x {shares}、受取額 {amount}'
+  trade-busy: '&cAnother trade is still being processed.'
+  trade-limit: '&cこの取引は1回あたりの最大株数を超えています。'
+  trading-unavailable: '&cTrading unavailable: {reason}'
+  trade-cooldown: '&cYou are trading too quickly.'
+  trade-rate-limit: '&cToo many trades in one minute.'
+  position-limit: '&cこのポジションは評価額上限を超えます。'
+  order-reserve-insufficient: '&cReserved funds are not enough to execute this order.'
+  order-executed: '&a注文 #{id} 約定: {symbol} @ {price}。'
+  alert-triggered: '&e価格アラート: {symbol} が {price} に達しました。'
+  market-event-positive: '&6📈 &eMarket News: &f{name} &7({symbol}) &asurged &f{impact}% &7on positive news!'
+  market-event-negative: '&6📉 &eMarket News: &f{name} &7({symbol}) &cdropped &f{impact}% &7on negative news!'
+  short-opened: '&aShort position #{id} opened: {symbol} x{shares} @ {price}. Margin: {margin}'
+  short-covered: '&aShort covered: {symbol} x{shares}. P&L: {pnl}'
+  short-not-found: '&cShort position not found.'
+  short-liquidated: '&cYour short position on {symbol} x{shares} was force-liquidated at {price}. Margin lost: {margin}'
+  competition-created: '&aCompetition #{id} "{name}" created with {capital} starting capital.'
+  competition-joined: '&aYou joined "{name}" with {capital} starting capital!'
+  competition-not-found: '&cCompetition not found or ended.'
+  competition-already-joined: '&cYou are already in this competition.'
+  competition-not-joined: '&cYou haven''t joined this competition.'
+  competition-bought: '&aBought {symbol} x{shares} for {cost} (competition).'
+  competition-sold: '&aSold {symbol} x{shares} for {revenue} (competition).'
+  competition-ended: '&6===== Competition "{name}" has ended! Check rankings with /stocks competition list ====='
+  competition-reward: '&6Congratulations! You placed #{rank} in "{name}" and won {amount}!'
+  competition-admin-ended: '&aCompetition "{name}" ended and rewards distributed.'
+  ipo-created: '&aIPO #{id} created: {symbol} {name} @ {price}.'
+  ipo-not-found: '&cIPO not found.'
+  ipo-closed: '&cIPO subscription period has ended.'
+  ipo-limit: '&cYou have reached the maximum subscription for this IPO.'
+  ipo-oversubscribed: '&cIPO is fully subscribed.'
+  ipo-subscribed: '&aSubscribed {shares} shares of {symbol} IPO.'
+  ipo-allocated: '&aIPO {symbol}: allocated {shares} shares. Refund: {refund}'
+  ipo-completed: '&6IPO for {symbol} ({name}) completed! Shares allocated to subscribers.'
+  ipo-cancelled: '&cIPO for {symbol} cancelled. All funds refunded.'
+  ipo-symbol-exists: '&cA stock with this symbol already exists.'
+  certificate-issued: '&a株券発行: {symbol} x{shares}。右  competition-list-line:'
+  certificate-invalid: '&cこの株券は無効です。'
+  certificate-redeemed: '&a株券換金: {symbol} x{shares} をポートフォリオに戻しました。'
+  pin-set: '&a{symbol} をBossBarに固定。'
+  pin-removed: '&aBossBarピン解除。'
+  report-header: '&6===== SuperStocks 市場レポート ====='
+  report-avg: '&6===== SuperStocks 市場レポート ====='
+  report-top: '&6===== SuperStocks 市場レポート ====='
+  report-bottom: '&6===== SuperStocks 市場レポート ====='
+  competition-list-line: '&e#{id} &f{name} &7{status}'
+  ipo-list-line: '&e#{id} &f{symbol} {name} &7@{price} &7{status}'
+  cert-list-line: '&e#{id} &f{symbol} x{shares}'
+  audit-log-line: '&7{time} &f{actor} &e{action} &7{detail}'
 gui:
   main:
-    title: "&2&lSuperStocks &8| &f取引ホール"
+    title: '&2&lSuperStocks &8| &f取引ホール'
     market-lore:
-      - "&f{market}&7 市場を開く"
-      - "&7設定銘柄数: &f{configured}"
-      - "&7取得済み株価: &a{loaded}"
-      - ""
-      - "&eクリックして表示"
-    portfolio-name: "&6マイポートフォリオ"
+    - '&7Open the &f{market}&7 market'
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - ''
+    - '&eClick to view'
+    portfolio-name: '&6マイポートフォリオ'
     portfolio-lore:
-      - "&7銘柄、取得単価、時価、損益を表示"
-      - "&7キャッシュ済み株価: &f{loaded_total}&7/&f{configured_total}"
-      - ""
-      - "&eクリックして開く"
-    winners-name: "&e投資家ランキング"
+    - '&7View stocks, cost, value, and P/L'
+    - '&7Cached quotes: &f{loaded_total}&7/&f{configured_total}'
+    - ''
+    - '&eClick to open'
+    winners-name: '&e投資家ランキング'
     winners-lore:
-      - "&7現在の含み損益でランキング"
-      - "&7利益が大きいほど上位"
-      - ""
-      - "&eクリックして表示"
-    losers-name: "&c損失ランキング"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Higher profit ranks higher'
+    - ''
+    - '&eClick to view'
+    losers-name: '&c損失ランキング'
     losers-lore:
-      - "&7現在の含み損益でランキング"
-      - "&7損失が大きいほど上位"
-      - ""
-      - "&eクリックして表示"
-    watchlist-name: "&bウォッチリスト"
+    - '&7Ranked by current unrealized P/L'
+    - '&7Larger losses rank higher'
+    - ''
+    - '&eClick to view'
+    watchlist-name: '&bウォッチリスト'
     watchlist-lore:
-      - "&7ウォッチリスト"
-      - "&7/stocks watch add <symbol>"
-      - ""
-      - "&eClick to open"
-    stats-name: "&b株価統計"
+    - '&7View the stocks you follow'
+    - '&7Use /stocks watch add <symbol> to add one'
+    - ''
+    - '&eClick to open'
+    stats-name: '&b株価統計'
     stats-lore:
-      - "&7データ元: &f{provider}"
-      - "&7設定銘柄数: &f{configured_total}"
-      - "&7取得済み銘柄数: &a{loaded_total}"
-      - "&7更新間隔: &f{refresh_seconds}s"
-      - ""
-      - "&7最終同期: &f{last_sync}"
+    - '&7Source: &f{provider}'
+    - '&7Configured stocks: &f{configured_total}'
+    - '&7Loaded stocks: &a{loaded_total}'
+    - '&7Refresh interval: &f{refresh_seconds}s'
+    - ''
+    - '&7Last sync: &f{last_sync}'
   market:
-    title: "&2市場 &8- &f{market}"
-    missing-name: "&7{symbol}"
+    title: '&2市場 &8- &f{market}'
+    missing-name: '&7{symbol}'
     missing-lore:
-      - "&cキャッシュされた株価がありません"
-      - "&7次回の同期を待っています"
-    stats-name: "&b{market} 統計"
+    - '&cNo cached quote data'
+    - '&7Waiting for the next sync'
+    stats-name: '&b{market} 統計'
     stats-lore:
-      - "&7設定銘柄数: &f{configured}"
-      - "&7取得済み株価: &a{loaded}"
-      - "&7データ元: &f{provider}"
+    - '&7Configured stocks: &f{configured}'
+    - '&7Loaded quotes: &a{loaded}'
+    - '&7Source: &f{provider}'
   stock:
-    title: "&2銘柄 &8- &f{name}"
+    title: '&2銘柄 &8- &f{name}'
     quote-lore:
-      - "&8{market}"
-      - "&7コード: &f{symbol}"
-      - "&7価格: &f{price}"
-      - "&7騰落: {change_color}{change} ({change_percent}%)"
-      - "&7更新時刻: &f{updated_at}"
-      - ""
-      - "&eクリックして取引"
+    - '&8{market}'
+    - '&7Symbol: &f{symbol}'
+    - '&7Price: &f{price}'
+    - '&7Change: {change_color}{change} ({change_percent}%)'
+    - '&7Updated: &f{updated_at}'
+    - ''
+    - '&eClick to trade'
     history-lore:
-      - "&7Last 24h: &f{change_24h}%"
-      - "&7Trend: &f{trend}"
-    buy-name: "&a{shares} 株を買う"
+    - '&7Last 24h: &f{change_24h}%'
+    - '&7Trend: &f{trend}'
+    buy-name: '&a{shares} 株を買う'
     buy-lore:
-      - "&7キャッシュ株価で約定"
-      - "&7概算費用: &f{amount}"
-    sell-name: "&c{shares} 株を売る"
+    - '&7Trades at the cached quote'
+    - '&7Estimated cost: &f{amount}'
+    sell-name: '&c{shares} 株を売る'
     sell-lore:
-      - "&7キャッシュ株価で約定"
-      - "&7概算受取額: &f{amount}"
+    - '&7Trades at the cached quote'
+    - '&7Estimated proceeds: &f{amount}'
   portfolio:
-    title: "&6マイポートフォリオ"
+    title: '&6マイポートフォリオ'
     holding-lore:
-      - "&7コード: &f{symbol}"
-      - "&7株数: &f{shares}"
-      - "&7取得単価: &f{average_cost}"
-      - "&7現在値: &f{price}"
-      - "&7時価: &f{market_value}"
-      - "&7損益: {profit_color}{profit}"
-      - ""
-      - "&eクリックして取引"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&7Price: &f{price}'
+    - '&7Market value: &f{market_value}'
+    - '&7P/L: {profit_color}{profit}'
+    - ''
+    - '&eClick to trade'
     holding-missing-lore:
-      - "&7コード: &f{symbol}"
-      - "&7株数: &f{shares}"
-      - "&7取得単価: &f{average_cost}"
-      - "&cキャッシュされた株価がありません"
+    - '&7Symbol: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Cost: &f{average_cost}'
+    - '&cNo cached quote data'
   ranking:
-    winners-title: "&e投資家ランキング"
-    losers-title: "&c損失ランキング"
-    entry-name: "&f#{rank} &e{player}"
+    winners-title: '&e投資家ランキング'
+    losers-title: '&c損失ランキング'
+    entry-name: '&f#{rank} &e{player}'
     winner-lore:
-      - "&7プレイヤー: &f{player}"
-      - "&7ポートフォリオ時価: &f{value}"
-      - "&7含み損益: {profit_color}{profit}"
-      - "&7収益率: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
     loser-lore:
-      - "&7プレイヤー: &f{player}"
-      - "&7ポートフォリオ時価: &f{value}"
-      - "&7含み損益: {profit_color}{profit}"
-      - "&7収益率: {profit_color}{profit_percent}%"
+    - '&7Player: &f{player}'
+    - '&7Portfolio value: &f{value}'
+    - '&7Unrealized P/L: {profit_color}{profit}'
+    - '&7Return: {profit_color}{profit_percent}%'
   watchlist:
-    title: "&bウォッチリスト"
-    empty-name: "&7ウォッチリストは空です"
+    title: '&bウォッチリスト'
+    empty-name: '&7ウォッチリストは空です'
   admin:
-    title: "&6SuperStocks 管理パネル"
-    total-holdings: "&f総保有数"
-    total-players: "&fアクティブプレイヤー"
-    total-trades: "&f総取引数"
-    last-sync: "&f最終同期"
-    paused: "&f取引停止中"
-    vault: "&fVault状態"
-    close-name: "&c閉じる"  confirm:
-    stat-format: "&7{label}: &f{value}"
+    title: '&6SuperStocks 管理パネル'
+    total-holdings: '&f総保有数'
+    total-players: '&fアクティブプレイヤー'
+    total-trades: '&f総取引数'
+    last-sync: '&f最終同期'
+    paused: '&f取引停止中'
+    vault: '&fVault状態'
+    close-name: '&c閉じる'
+    stat-format: '&7{label}: &f{value}'
   format:
-    market-name: "&a{name}"
-    stock-name: "&f{name}"
-    stock-symbol: "&f{symbol}"
-    title: "&6取引確認"
-    summary-name: "&f{name} &8({symbol})"
+    market-name: '&a{name}'
+    stock-name: '&f{name}'
+    stock-symbol: '&f{symbol}'
+  confirm:
+    title: '&6Confirm Trade'
+    summary-name: '&f{name} &8({symbol})'
     summary-lore:
-      - "&7Shares: &f{shares}"
-      - "&7Unit price: &f{price}"
-      - "&7Estimated gross: &f{gross}"
-    accept-name: "&a取引確認"
+    - '&7Shares: &f{shares}'
+    - '&7Unit price: &f{price}'
+    - '&7Estimated gross: &f{gross}'
+    accept-name: '&aConfirm Trade'
     accept-lore:
-      - "&7Click to execute this trade."
-    cancel-name: "&cキャンセル"
+    - '&7Click to execute this trade.'
+    cancel-name: '&cCancel'
     cancel-lore:
-      - "&7Return to the stock page."
-  total-holdings: "&fTotal Holdings"
-  total-players: "&fActive Players"
-  total-trades: "&fTotal Trades"
-  last-sync: "&fLast Sync"
-  vault: "&fVault Status"
+    - '&7Return to the stock page.'
   certificate:
-    name: "&6Stock Certificate &f#{id}"
+    name: '&6Stock Certificate &f#{id}'
     lore:
-      - "&7Stock: &f{symbol}"
-      - "&7Shares: &f{shares}"
-      - "&7Issue price: &f{price}"
-      - ""
-      - "&eRight-click air &7to redeem"
-      - "&7Can be traded between players"
-  common:
-    back-name: "&f戻る"
-    back-main-name: "&fメインに戻る"
-    close-name: "&c閉じる"
-    previous-page-name: "&f前のページ"
-    next-page-name: "&f次のページ"
-    page-name: "&eページ {page}/{pages}"
-    filler-name: " "
-
+    - '&7Stock: &f{symbol}'
+    - '&7Shares: &f{shares}'
+    - '&7Issue price: &f{price}'
+    - ''
+    - '&eRight-click air &7to redeem'
+    - '&7Can be traded between players'
 bossbar:
-  pin-format: "&f{name} &7| &f{price} {arrow} &f{change_percent}%"
-  arrow-up: "&a▲"
-  arrow-down: "&c▼"
-
+  pin-format: '&f{name} &7| &f{price} {arrow} &f{change_percent}%'
+  arrow-up: '&a▲'
+  arrow-down: '&c▼'
 validators:
   errors:
-    language-not-found: "言語ファイルが見つかりません: {language}"
-    duplicate-market: "重複した市場ID: {market}"
-    market-empty-symbol: "市場 {market} に空の銘柄コードが含まれています"
-    duplicate-symbol: "重複した銘柄コード: {symbol}"
-    custom-market-id-empty: "{file} 市場IDが空です"
-    duplicate-market-id: "重複した市場ID: {id} ({file})"
-    custom-market-invalid-material: "{file} 無効なMaterial: {icon}"
-    custom-market-no-stocks: "{file} にstocksセクションがありません"
-    custom-market-empty-symbol: "{file} に空の銘柄コードが含まれています: {key}"
-    duplicate-symbol-file: "重複した銘柄コード: {symbol} ({file})"
-    custom-market-invalid-price: "{file} 無効な価格範囲: {symbol}"
-    custom-market-negative-volatility: "{file} ボラティリティは0未満にできません: {symbol}"
-    invalid-material: "無効なMaterial: gui.{key}={value}"
-    volatility-min-exceeds-max: "ランダムボラティリティの下限が上限を超えています"
-    invalid-safety-price: "ゲーム内価格の安全範囲が無効です"
-    invalid-penalty-tier: "無効なペナルティ段階範囲: {key}"
-    penalty-tier-overlap: "ペナルティ段階の重複: {previous} / {current}"
-    provider-missing-symbols: "プロバイダーエンドポイントに {symbols} が必要です: {active}"
-    provider-wrong-scheme: "プロバイダーエンドポイントはHTTP/HTTPSを使用する必要があります: {active}"
-    provider-invalid-uri: "プロバイダーエンドポイントが無効です: {active}"
-    invalid-market-hours: "市場取引時間の設定が無効です: {market}"
-    invalid-closed-action: "closed-actionはDENYまたはSELL_ONLYである必要があります: {market}"
-    invalid-gui-size: "無効なGUIサイズ: gui.{key}={size}"
+    language-not-found: '言語ファイルが見つかりません: {language}'
+    duplicate-market: '重複した市場ID: {market}'
+    market-empty-symbol: 市場 {market} に空の銘柄コードが含まれています
+    duplicate-symbol: '重複した銘柄コード: {symbol}'
+    custom-market-id-empty: '{file} 市場IDが空です'
+    duplicate-market-id: '重複した市場ID: {id} ({file})'
+    custom-market-invalid-material: '{file} 無効なMaterial: {icon}'
+    custom-market-no-stocks: '{file} にstocksセクションがありません'
+    custom-market-empty-symbol: '{file} に空の銘柄コードが含まれています: {key}'
+    duplicate-symbol-file: '重複した銘柄コード: {symbol} ({file})'
+    custom-market-invalid-price: '{file} 無効な価格範囲: {symbol}'
+    custom-market-negative-volatility: '{file} ボラティリティは0未満にできません: {symbol}'
+    invalid-material: '無効なMaterial: gui.{key}={value}'
+    volatility-min-exceeds-max: ランダムボラティリティの下限が上限を超えています
+    invalid-safety-price: ゲーム内価格の安全範囲が無効です
+    invalid-penalty-tier: '無効なペナルティ段階範囲: {key}'
+    penalty-tier-overlap: 'ペナルティ段階の重複: {previous} / {current}'
+    provider-missing-symbols: 'プロバイダーエンドポイントに {symbols} が必要です: {active}'
+    provider-wrong-scheme: 'プロバイダーエンドポイントはHTTP/HTTPSを使用する必要があります: {active}'
+    provider-invalid-uri: 'プロバイダーエンドポイントが無効です: {active}'
+    invalid-market-hours: '市場取引時間の設定が無効です: {market}'
+    invalid-closed-action: 'closed-actionはDENYまたはSELL_ONLYである必要があります: {market}'
+    invalid-gui-size: '無効なGUIサイズ: gui.{key}={size}'
   log:
-    banner: "========== SuperStocks 設定チェック =========="
-    language-line: "  言語: {language}"
-    provider-line: "  プロバイダー: {provider} (更新間隔 {seconds}秒)"
-    market-line: "  市場 {market}: {count} 銘柄"
-    custom-market-line: "  ローカル市場: {count} ファイル"
-    feature-status: "  機能状態:"
-    feature-on: "    ✓ {feature}"
-    feature-off: "    ✗ {feature} (無効)"
-    high-risk-on: "有効 ⚠"
-    high-risk-off: "すべて無効 ✓"
-    high-risk: "  高リスク機能: {state}"
-    all-passed: "  設定チェック: 合格 ✓"
-    errors-header: "  設定の問題 ({count}):"
-    error-line: "    ✗ {error}"
-    footer: "==========================================="
+    banner: ========== SuperStocks 設定チェック ==========
+    language-line: '言語: {language}'
+    provider-line: 'プロバイダー: {provider} (更新間隔 {seconds}秒)'
+    market-line: '市場 {market}: {count} 銘柄'
+    custom-market-line: 'ローカル市場: {count} ファイル'
+    feature-status: '機能状態:'
+    feature-on: ✓ {feature}
+    feature-off: ✗ {feature} (無効)
+    high-risk-on: 有効 ⚠
+    high-risk-off: すべて無効 ✓
+    high-risk: '高リスク機能: {state}'
+    all-passed: '設定チェック: 合格 ✓'
+    errors-header: '設定の問題 ({count}):'
+    error-line: ✗ {error}
+    footer: ===========================================
   features:
-    quote-protection: "株価保護"
-    circuit-breaker: "サーキットブレーカー"
-    short-selling: "空売り"
-    competition: "投資コンテスト"
-    auto-orders: "自動注文"
-    price-alerts: "価格アラート"
-    price-history: "価格履歴"
-    custom-markets: "ローカル市場"
+    quote-protection: 株価保護
+    circuit-breaker: サーキットブレーカー
+    short-selling: 空売り
+    competition: 投資コンテスト
+    auto-orders: 自動注文
+    price-alerts: 価格アラート
+    price-history: 価格履歴
+    custom-markets: ローカル市場
+    back-main-name: '&fBack to Main'
+    close-name: '&cClose'
+    previous-page-name: '&fPrevious Page'
+    next-page-name: '&fNext Page'
+    page-name: '&ePage {page}/{pages}'
+    filler-name: ' '
